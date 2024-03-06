@@ -3,14 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable  implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +23,69 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'social_id',
+        'social_type'
     ];
+
+    protected $guarded= ['isAdmin'];
+
+    const ISADMIN =[
+        0 => 'User',
+        1 => 'Admin'
+    ];
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
+
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
+    public function team()
+    {
+        return $this->hasOne(Team::class);
+    }
+    public function job()
+    {
+        return $this->hasOne(Job::class);
+    }
+
+
+    function comments(){
+
+        return $this->hasMany(Comment::class);
+    }
+
+
+
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function contactUs()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class,'user_project')->withPivot('numberSales', 'price');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class,'user_role');
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class,'user_permission');
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -32,6 +96,16 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     /**
      * The attributes that should be cast.
