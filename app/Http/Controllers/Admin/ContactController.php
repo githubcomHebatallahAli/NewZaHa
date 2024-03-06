@@ -15,23 +15,27 @@ class ContactController extends Controller
     public function showAll()
     {
         $users = User::with('contactUs')->get();
-
-        $processedUsers = [];
-        foreach ($users as $user) {
-            $processedUsers[] = [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'contactUs' => $user->contactUs->pluck('message')->toArray(),
-            ];
+    $processedUsers = [];
+    foreach ($users as $user) {
+        $phoneNumber = null;
+        $userMessages = [];
+        if ($user->contactUs->isNotEmpty()) {
+            $phoneNumber = $user->contactUs->first()->phoneNumber;
+            $userMessages = $user->contactUs->pluck('message')->toArray();
         }
+        $processedUsers[] = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phoneNumber' => $phoneNumber,
+            'user_messages' => $userMessages,
+        ];
 
-        return response()->json([
-            'users' => $processedUsers,
-            'message' => "Show All Users Successfully."
-        ], 200);
-}
-
+}    return response()->json([
+        'users' => $processedUsers,
+        'message' => "Show All Users Successfully."
+    ], 200);
+    }
 
 
     public function create(ContactRequest $request)
@@ -59,6 +63,8 @@ class ContactController extends Controller
         'user_messages' => ($userContacts),
         'message' => "Show Contact for User Successfully."
     ], 200);
+
+
 
     }
 
