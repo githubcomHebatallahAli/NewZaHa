@@ -33,7 +33,7 @@ class ContactController extends Controller
 
 }    return response()->json([
         'users' => $processedUsers,
-        'message' => "Show All Users Successfully."
+        'message' => "Show All Users With Messages Successfully."
     ], 200);
     }
 
@@ -84,7 +84,7 @@ class ContactController extends Controller
     {
        $contact =Contact::findOrFail($id);
        $contact->update([
-        'phone' => $request->phone,
+        'phoneNumber' => $request->phoneNumber,
         'message' => $request->message,
         'user_id' => $request->user_id,
         ]);

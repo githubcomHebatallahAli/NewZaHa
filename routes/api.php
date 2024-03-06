@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\Admin\BestCommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +71,29 @@ Route::group([
     Route::get('/showDeleted/contact', [ContactController::class, 'showDeleted']);
     Route::get('/restore/contact/{id}', [ContactController::class, 'restore']);
     Route::delete('/forceDelete/contact/{id}', [ContactController::class, 'forceDelete']);
+
+    // COMMENT
+    Route::get('/showAll/comment', [CommentController::class, 'showAll']);
+    Route::post('/create/comment', [CommentController::class, 'create']);
+    Route::get('/show/comment/{id}', [CommentController::class, 'show']);
+    Route::get('/edit/comment/{id}', [CommentController::class, 'edit']);
+    Route::put('/update/comment/{id}', [CommentController::class, 'update']);
+    Route::delete('/softDelete/comment/{id}', [CommentController::class, 'destroy']);
+    Route::get('/showDeleted/comment', [CommentController::class, 'showDeleted']);
+    Route::get('/restore/comment/{id}', [CommentController::class, 'restore']);
+    Route::delete('/forceDelete/comment/{id}', [CommentController::class, 'forceDelete']);
+
+    //BestComment
+    Route::get('/showAll/bestComment', [BestCommentController::class, 'showAll']);
+    Route::post('/create/bestComment', [BestCommentController::class, 'create']);
+    Route::get('/show/bestComment/{id}', [BestCommentController::class, 'show']);
+    Route::get('/edit/bestComment/{id}', [BestCommentController::class, 'edit']);
+    Route::put('/update/bestComment/{id}', [BestCommentController::class, 'update']);
+    Route::delete('/softDelete/bestComment/{id}', [BestCommentController::class, 'destroy']);
+    Route::get('/showDeleted/bestComment', [BestCommentController::class, 'showDeleted']);
+    Route::get('/restore/bestComment/{id}', [BestCommentController::class, 'restore']);
+    Route::delete('/forceDelete/bestComment/{id}', [BestCommentController::class, 'forceDelete']);
+
     //ROLE&PERMISSION
     Route::post('/create/role', [RolesAndPermissionsController::class, 'createRole']);
     Route::get('/edit/role/{id}', [RolesAndPermissionsController::class, 'editRole']);

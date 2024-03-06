@@ -10,8 +10,7 @@ class BestComment extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = [
-        'bestComment',
-        'user_id',
+        // 'bestComment',
         'comment_id'
     ];
     public function comment()

@@ -16,9 +16,9 @@ class BestCommentResource extends JsonResource
     {
         return [
             "id" => $this ->id,
-            'bestComment'=>$this ->bestComment,
+            // 'bestComment'=>$this ->bestComment,
             'comment'=> new CommentResource($this->comment),
             ];
     }
-}   
+}
 

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ContactResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,9 @@ class ContactResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'phoneNumber' => $this->phoneNumber,
-            'message'=> $this ->message,
+            'comment' => $this->comment,
             'user' => new UserResource($this->user),
 
         ];
-
     }
 }
