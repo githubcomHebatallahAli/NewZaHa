@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Http\Requests\ContactRequest;
 use App\Http\Resources\ContactResource;
 
@@ -12,12 +14,25 @@ class ContactController extends Controller
 {
     public function showAll()
     {
-         $contacts = Contact::with('user')->get();
-            return response()->json([
-            'contact' =>ContactResource::collection($contacts),
-            'message' => "Show All Contact Successfully."
+        $users = User::with('contactUs')->get();
+
+        $processedUsers = [];
+        foreach ($users as $user) {
+            $processedUsers[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'contactUs' => $user->contactUs->pluck('message')->toArray(),
+            ];
+        }
+
+        return response()->json([
+            'users' => $processedUsers,
+            'message' => "Show All Users Successfully."
         ], 200);
-    }
+}
+
+
 
     public function create(ContactRequest $request)
     {
@@ -31,33 +46,31 @@ class ContactController extends Controller
             'contact' =>new ContactResource($contact),
             'message' => "Contact Created Successfully."
         ], 200);
-            // if($contact){
-
-            //     return $this->apiResponse(new ContactResource($contact),'The User Contact Created Successfully.',201);
-            // }
-
-            // return $this->apiResponse(null,'The User Contact Not Save',400);
 
         }
 
 
     public function show(string $id)
     {
-       $contact =Contact::with('user')->find($id);
-       return response()->json([
+    $contact = Contact::with('user.contactUs')->find($id);
+    $userContacts = $contact->user->contactUs->pluck('message')->toArray();
+    return response()->json([
         'contact' =>new ContactResource($contact),
-        'message' => " Show Contact By Id Successfully."
+        'user_messages' => ($userContacts),
+        'message' => "Show Contact for User Successfully."
     ], 200);
 
     }
 
     public function edit(string $id)
     {
-       $contact =Contact::with('user')->find($id);
-       return response()->json([
-        'contact' =>new ContactResource($contact),
-        'message' => " Edit Contact By Id Successfully."
-    ], 200);
+        $contact = Contact::with('user.contactUs')->find($id);
+        $userContacts = $contact->user->contactUs->pluck('message')->toArray();
+        return response()->json([
+            'contact' =>new ContactResource($contact),
+            'user_messages' => ($userContacts),
+            'message' => "Edit Contact for User Successfully."
+        ], 200);
 
     }
 

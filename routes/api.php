@@ -49,15 +49,15 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
     // Admin
-    // Route::get('/showAll/admin', [AdminController::class, 'showAll']);
-    // Route::post('/create/admin', [AdminController::class, 'create']);
-    // Route::get('/show/admin/{id}', [AdminController::class, 'show']);
-    // Route::get('/edit/admin/{id}', [AdminController::class, 'edit']);
-    // Route::put('/update/admin/{id}', [AdminController::class, 'update']);
-    // Route::delete('/softDelete/admin/{id}', [AdminController::class, 'destroy']);
-    // Route::get('/showDeleted/admin', [AdminController::class, 'showDeleted']);
-    // Route::get('/restore/admin/{id}', [AdminController::class, 'restore']);
-    // Route::delete('/forceDelete/admin/{id}', [AdminController::class, 'forceDelete']);
+    Route::get('/showAll/admin', [AdminController::class, 'showAll']);
+    Route::post('/create/admin', [AdminController::class, 'create']);
+    Route::get('/show/admin/{id}', [AdminController::class, 'show']);
+    Route::get('/edit/admin/{id}', [AdminController::class, 'edit']);
+    Route::put('/update/admin/{id}', [AdminController::class, 'update']);
+    Route::delete('/softDelete/admin/{id}', [AdminController::class, 'destroy']);
+    Route::get('/showDeleted/admin', [AdminController::class, 'showDeleted']);
+    Route::get('/restore/admin/{id}', [AdminController::class, 'restore']);
+    Route::delete('/forceDelete/admin/{id}', [AdminController::class, 'forceDelete']);
 
     // CONTACT
     Route::get('/showAll/contact', [ContactController::class, 'showAll']);
