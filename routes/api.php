@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\ResetPasswordController;
 
 /*
@@ -47,26 +49,26 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
     // Admin
-    Route::get('/showAll/admin', [AdminController::class, 'showAll']);
-    Route::post('/create/admin', [AdminController::class, 'create']);
-    Route::get('/showAll/admin/{id}', [AdminController::class, 'show']);
-    Route::get('/edit/admin/{id}', [AdminController::class, 'edit']);
-    Route::put('/update/admin/{id}', [AdminController::class, 'update']);
-    Route::delete('/softDelete/admin/{id}', [AdminController::class, 'destroy']);
-    Route::get('/showDeleted/admin', [AdminController::class, 'showDeleted']);
-    Route::get('/restore/admin/{id}', [AdminController::class, 'restore']);
-    Route::delete('/forceDelete/admin/{id}', [AdminController::class, 'forceDelete']);
+    // Route::get('/showAll/admin', [AdminController::class, 'showAll']);
+    // Route::post('/create/admin', [AdminController::class, 'create']);
+    // Route::get('/show/admin/{id}', [AdminController::class, 'show']);
+    // Route::get('/edit/admin/{id}', [AdminController::class, 'edit']);
+    // Route::put('/update/admin/{id}', [AdminController::class, 'update']);
+    // Route::delete('/softDelete/admin/{id}', [AdminController::class, 'destroy']);
+    // Route::get('/showDeleted/admin', [AdminController::class, 'showDeleted']);
+    // Route::get('/restore/admin/{id}', [AdminController::class, 'restore']);
+    // Route::delete('/forceDelete/admin/{id}', [AdminController::class, 'forceDelete']);
 
     // CONTACT
-    Route::get('/showAll/contact', [AdminController::class, 'showAll']);
-    Route::post('/create/contact', [AdminController::class, 'create']);
-    Route::get('/showAll/contact/{id}', [AdminController::class, 'show']);
-    Route::get('/edit/contact/{id}', [AdminController::class, 'edit']);
-    Route::put('/update/contact/{id}', [AdminController::class, 'update']);
-    Route::delete('/softDelete/contact/{id}', [AdminController::class, 'destroy']);
-    Route::get('/showDeleted/contact', [AdminController::class, 'showDeleted']);
-    Route::get('/restore/contact/{id}', [AdminController::class, 'restore']);
-    Route::delete('/forceDelete/contact/{id}', [AdminController::class, 'forceDelete']);
+    Route::get('/showAll/contact', [ContactController::class, 'showAll']);
+    Route::post('/create/contact', [ContactController::class, 'create']);
+    Route::get('/show/contact/{id}', [ContactController::class, 'show']);
+    Route::get('/edit/contact/{id}', [ContactController::class, 'edit']);
+    Route::put('/update/contact/{id}', [ContactController::class, 'update']);
+    Route::delete('/softDelete/contact/{id}', [ContactController::class, 'destroy']);
+    Route::get('/showDeleted/contact', [ContactController::class, 'showDeleted']);
+    Route::get('/restore/contact/{id}', [ContactController::class, 'restore']);
+    Route::delete('/forceDelete/contact/{id}', [ContactController::class, 'forceDelete']);
     //ROLE&PERMISSION
     Route::post('/create/role', [RolesAndPermissionsController::class, 'createRole']);
     Route::get('/edit/role/{id}', [RolesAndPermissionsController::class, 'editRole']);

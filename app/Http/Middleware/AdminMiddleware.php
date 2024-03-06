@@ -15,7 +15,8 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && $request->user()->type == 1) {
+        // dd($request->user()->isAdmin == 1);
+        if ($request->user() && $request->user()->isAdmin == 1) {
             return $next($request);
         }
 
@@ -23,4 +24,4 @@ class AdminMiddleware
         return response()->json(['message' => 'Unauthorized User'], 403);
     }
     }
-}
+
