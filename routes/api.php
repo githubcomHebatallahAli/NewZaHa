@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\ResetPasswordController;
@@ -93,6 +94,17 @@ Route::group([
     Route::get('/showDeleted/bestComment', [BestCommentController::class, 'showDeleted']);
     Route::get('/restore/bestComment/{id}', [BestCommentController::class, 'restore']);
     Route::delete('/forceDelete/bestComment/{id}', [BestCommentController::class, 'forceDelete']);
+
+    // ORDER
+    Route::get('/showAll/order', [OrderController::class, 'showAll']);
+    Route::post('/create/order', [OrderController::class, 'create']);
+    Route::get('/show/order/{id}', [OrderController::class, 'show']);
+    Route::get('/edit/order/{id}', [OrderController::class, 'edit']);
+    Route::put('/update/order/{id}', [OrderController::class, 'update']);
+    Route::delete('/softDelete/order/{id}', [OrderController::class, 'destroy']);
+    Route::get('/showDeleted/order', [OrderController::class, 'showDeleted']);
+    Route::get('/restore/order/{id}', [OrderController::class, 'restore']);
+    Route::delete('/forceDelete/order/{id}', [OrderController::class, 'forceDelete']);
 
     //ROLE&PERMISSION
     Route::post('/create/role', [RolesAndPermissionsController::class, 'createRole']);
