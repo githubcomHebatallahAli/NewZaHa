@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdminResource extends JsonResource
+class MediaResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,8 @@ class AdminResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-        "id" => $this ->id,
-        'job'=>$this ->job,
-        'user'=> new UserResource($this->user),
-        'media' => MediaResource::collection($this->getMedia('Admins')),
+            // "id" => $this ->id,
+            'url'   =>  $this->getFullUrl()
         ];
     }
 }

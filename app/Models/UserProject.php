@@ -12,7 +12,10 @@ class UserProject extends Model
         'user_id',
         'project_id',
         'numberSales',
-        'price'
+        'price',
+        'startingDate',
+        'endingDate',
+        'nameOfTeam'
     ];
 
 }

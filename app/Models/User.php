@@ -73,7 +73,8 @@ class User extends Authenticatable  implements JWTSubject
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class,'user_project')->withPivot('numberSales', 'price');
+        return $this->belongsToMany(User::class,'user_projects')->withPivot('numberSales', 'price',
+        'startingDate', 'endingDate','nameOfTeam');
     }
 
     public function roles()

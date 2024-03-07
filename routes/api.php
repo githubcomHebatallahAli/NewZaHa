@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
@@ -56,7 +57,7 @@ Route::group([
     Route::post('/create/admin', [AdminController::class, 'create']);
     Route::get('/show/admin/{id}', [AdminController::class, 'show']);
     Route::get('/edit/admin/{id}', [AdminController::class, 'edit']);
-    Route::put('/update/admin/{id}', [AdminController::class, 'update']);
+    Route::post('/update/admin/{id}', [AdminController::class, 'update']);
     Route::delete('/softDelete/admin/{id}', [AdminController::class, 'destroy']);
     Route::get('/showDeleted/admin', [AdminController::class, 'showDeleted']);
     Route::get('/restore/admin/{id}', [AdminController::class, 'restore']);
@@ -105,6 +106,17 @@ Route::group([
     Route::get('/showDeleted/order', [OrderController::class, 'showDeleted']);
     Route::get('/restore/order/{id}', [OrderController::class, 'restore']);
     Route::delete('/forceDelete/order/{id}', [OrderController::class, 'forceDelete']);
+
+    // JOB
+    Route::get('/showAll/job', [JobController::class, 'showAll']);
+    Route::post('/create/job', [JobController::class, 'create']);
+    Route::get('/show/job/{id}', [JobController::class, 'show']);
+    Route::get('/edit/job/{id}', [JobController::class, 'edit']);
+    Route::put('/update/job/{id}', [JobController::class, 'update']);
+    Route::delete('/softDelete/job/{id}', [JobController::class, 'destroy']);
+    Route::get('/showDeleted/job', [JobController::class, 'showDeleted']);
+    Route::get('/restore/job/{id}', [JobController::class, 'restore']);
+    Route::delete('/forceDelete/job/{id}', [JobController::class, 'forceDelete']);
 
     //ROLE&PERMISSION
     Route::post('/create/role', [RolesAndPermissionsController::class, 'createRole']);

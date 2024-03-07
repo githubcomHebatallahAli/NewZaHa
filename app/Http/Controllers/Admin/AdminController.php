@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use App\Http\Requests\AdminRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminResource;
 
@@ -12,6 +13,7 @@ class AdminController extends Controller
     public function showAll()
     {
          $admins = Admin::with('user')->get();
+
             return response()->json([
             'admin' =>AdminResource::collection($admins),
             'message' => "Show All admins Successfully."
@@ -22,9 +24,9 @@ class AdminController extends Controller
     {
            $admin =Admin::create ([
                 'job' => $request->job,
-                'imgAdmin' => $request->file('imgAdmin')->store('Admin'),
                 'user_id' => $request->user_id,
             ]);
+            $admin->addMediaFromRequest('media')->toMediaCollection('Admins');
            $admin->save();
            return response()->json([
             'admin' =>new AdminResource($admin),
@@ -59,10 +61,13 @@ class AdminController extends Controller
     {
        $admin =Admin::findOrFail($id);
        $admin->update([
-        'phone' => $request->phone,
-        'message' => $request->message,
+        'job' => $request->job,
         'user_id' => $request->user_id,
         ]);
+        $admin->clearMediaCollection('Admins');
+        if ($request->hasFile('media')) {
+            $admin->addMedia($request->file('media'))->toMediaCollection('Admins');
+        }
 
        $admin->save();
        return response()->json([
@@ -94,9 +99,15 @@ public function restore(string $id){
     ], 200);
 }
 public function forceDelete(string $id){
-    $admin=Admin::withTrashed()->where('id',$id)->forceDelete();
+    $admin=Admin::withTrashed()->where('id',$id)->first();
+    if ($admin) {
+        $admin->getMedia('Admins')->each(function ($media) {
+            $media->delete();
+        });
+        $admin->forceDelete();
     return response()->json([
         'message' => " Force Delete Admin By Id Successfully."
     ], 200);
+}
 }
 }

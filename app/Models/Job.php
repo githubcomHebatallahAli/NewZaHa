@@ -15,7 +15,8 @@ class Job extends Model
         'qualification',
         'job',
         'yearsOfExperience',
-        'skills'
+        'skills',
+        'user_id'
     ];
     const job = [
         'Ui&Ux Designer',

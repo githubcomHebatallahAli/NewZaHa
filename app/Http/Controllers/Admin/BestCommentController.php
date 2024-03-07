@@ -42,7 +42,7 @@ class BestCommentController extends Controller
         $bestComments = BestComment::with('comment')->find($id);
         return response()->json([
             'bestComments' =>new BestCommentResource($bestComments),
-            'message' => "Show All Best Comments Successfully."
+            'message' => "Show Best Comment By ID Successfully."
         ], 200);
     }
 
@@ -51,7 +51,7 @@ class BestCommentController extends Controller
         $bestComments = BestComment::with('comment')->find($id);
         return response()->json([
             'bestComments' =>new BestCommentResource($bestComments),
-            'message' => "Edit All Best Comments Successfully."
+            'message' => "Edit Best Comment By ID Successfully."
         ], 200);
 
     }
