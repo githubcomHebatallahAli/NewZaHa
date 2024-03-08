@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class AdminRequest extends FormRequest
+class TeamRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,14 @@ class AdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job'=> 'required|string',
+            'job'=> 'nullable|string',
+            "skills" => 'nullable|string',
+            "numProject" => 'nullable|string',
+            "address" => 'nullable|string',
+            'phoneNumber' => 'nullable|string',
+            'qualification' => 'nullable|string',
             'media'=>'nullable',
             'media.*'=>'image|mimes:jpg,jpeg,png,gif,svg',
-
         ];
     }
     public function failedValidation(Validator $validator)

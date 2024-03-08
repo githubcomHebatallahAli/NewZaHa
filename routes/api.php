@@ -5,10 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\Admin\BestCommentController;
 
@@ -118,7 +121,41 @@ Route::group([
     Route::get('/restore/job/{id}', [JobController::class, 'restore']);
     Route::delete('/forceDelete/job/{id}', [JobController::class, 'forceDelete']);
 
+    // TEAM
+    Route::get('/showAll/team', [TeamController::class, 'showAll']);
+    Route::post('/create/team', [TeamController::class, 'create']);
+    Route::get('/show/team/{id}', [TeamController::class, 'show']);
+    Route::get('/edit/team/{id}', [TeamController::class, 'edit']);
+    Route::post('/update/team/{id}', [TeamController::class, 'update']);
+    Route::delete('/softDelete/team/{id}', [TeamController::class, 'destroy']);
+    Route::get('/showDeleted/team', [TeamController::class, 'showDeleted']);
+    Route::get('/restore/team/{id}', [TeamController::class, 'restore']);
+    Route::delete('/forceDelete/team/{id}', [TeamController::class, 'forceDelete']);
+
+    // CLIENT
+    Route::get('/showAll/client', [ClientController::class, 'showAll']);
+    Route::post('/create/client', [ClientController::class, 'create']);
+    Route::get('/show/client/{id}', [ClientController::class, 'show']);
+    Route::get('/edit/client/{id}', [ClientController::class, 'edit']);
+    Route::post('/update/client/{id}', [ClientController::class, 'update']);
+    Route::delete('/softDelete/client/{id}', [clientController::class, 'destroy']);
+    Route::get('/showDeleted/client', [ClientController::class, 'showDeleted']);
+    Route::get('/restore/client/{id}', [ClientController::class, 'restore']);
+    Route::delete('/forceDelete/client/{id}', [clientController::class, 'forceDelete']);
+
+    // PROJECT
+    Route::get('/showAll/project', [ProjectController::class, 'showAll']);
+    Route::post('/create/project', [ProjectController::class, 'create']);
+    Route::get('/show/project/{id}', [ProjectController::class, 'show']);
+    Route::get('/edit/project/{id}', [ProjectController::class, 'edit']);
+    Route::post('/update/project/{id}', [ProjectController::class, 'update']);
+    Route::delete('/softDelete/project/{id}', [ProjectController::class, 'destroy']);
+    Route::get('/showDeleted/project', [ProjectController::class, 'showDeleted']);
+    Route::get('/restore/project/{id}', [ProjectController::class, 'restore']);
+    Route::delete('/forceDelete/project/{id}', [ProjectController::class, 'forceDelete']);
+
     //ROLE&PERMISSION
+    Route::get('/showAll/roles', [RolesAndPermissionsController::class, 'showAllRoles']);
     Route::post('/create/role', [RolesAndPermissionsController::class, 'createRole']);
     Route::get('/edit/role/{id}', [RolesAndPermissionsController::class, 'editRole']);
     Route::put('/update/role/{id}', [RolesAndPermissionsController::class, 'updateRole']);

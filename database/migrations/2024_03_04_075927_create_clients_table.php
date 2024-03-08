@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('phoneNumber')->nullable();
             $table->string('projectName')->nullable();
             $table->text('description')->nullable();
-            // $table->string('imgClient')->nullable();
+            // $table->string('photo')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();

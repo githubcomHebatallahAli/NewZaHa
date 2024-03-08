@@ -5,8 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
-
-class AdminRequest extends FormRequest
+class ProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +23,16 @@ class AdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job'=> 'required|string',
+            'nameProject'=> 'nullable|string',
+            'skills'=> 'nullable|string',
+            'numberSales' => 'required|integer',
+            'price' => 'required|integer',
+            'startingDate' => 'required|date',
+            'endingDate' => 'required|date|after:startingDate',
+            'nameOfTeam' => 'required|string',
             'media'=>'nullable',
             'media.*'=>'image|mimes:jpg,jpeg,png,gif,svg',
-
+            'media.*'=>'url',
         ];
     }
     public function failedValidation(Validator $validator)

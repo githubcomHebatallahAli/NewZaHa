@@ -14,11 +14,7 @@ class Project extends Model implements HasMedia
 
     protected $fillable = [
         'nameProject',
-        // 'imgProject',
-        // 'url',
         'skills',
-        // 'numberSales',
-        // 'price',
 
     ];
 
@@ -26,8 +22,6 @@ class Project extends Model implements HasMedia
     {
         return $this->belongsToMany(User::class,'user_projects')->withPivot('numberSales', 'price',
         'startingDate', 'endingDate','nameOfTeam');
-
-
     }
 }
 

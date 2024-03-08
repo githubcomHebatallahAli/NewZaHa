@@ -26,7 +26,7 @@ class AdminController extends Controller
                 'job' => $request->job,
                 'user_id' => $request->user_id,
             ]);
-            $admin->addMediaFromRequest('media')->toMediaCollection('Admins');
+            $admin->addMediaFromRequest('photo')->toMediaCollection('Admins');
            $admin->save();
            return response()->json([
             'admin' =>new AdminResource($admin),
@@ -65,8 +65,8 @@ class AdminController extends Controller
         'user_id' => $request->user_id,
         ]);
         $admin->clearMediaCollection('Admins');
-        if ($request->hasFile('media')) {
-            $admin->addMedia($request->file('media'))->toMediaCollection('Admins');
+        if ($request->hasFile('photo')) {
+            $admin->addMedia($request->file('photo'))->toMediaCollection('Admins');
         }
 
        $admin->save();
