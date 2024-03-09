@@ -18,11 +18,38 @@ class ProjectResource extends JsonResource
             'id' => $this->id,
             'nameProject' => $this->nameProject,
             'skills'=> $this ->skills,
-            'user' => new UserResource($this->user),
-            // 'userProject'=> new UserProjectResource($this->userProject),
-
+            'description'=> $this ->description,
+                        'users' => $this->users->map(function ($user) {
+                    return [
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'pivot' => $user->pivot->toArray(),
+                    ];
+                          }),
             'media' => MediaResource::collection($this->getMedia('Projects')),
-
         ];
     }
 }
+
+        //     return [
+        //         'id' => $this->id,
+        //         'nameProject' => $this->nameProject,
+        //         'skills' => $this->skills,
+        //         'description' => $this->description,
+        //         'users' => $this->users->map(function ($user) {
+        //             return [
+        //                 'name' => $user->name,
+        //                 'email' => $user->email,
+        //                 'pivot' => $user->pivot->toArray(),
+        //             ];
+        //         }),
+        //         'media' => $this->getMedia('Projects')->map(function ($mediaItem) {
+        //             return [
+        //                 'url' => $mediaItem->getUrl(),
+        //             ];
+        //         }),
+        //     ];
+        // }
+
+
+

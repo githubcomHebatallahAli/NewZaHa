@@ -25,6 +25,7 @@ class ProjectRequest extends FormRequest
         return [
             'nameProject'=> 'nullable|string',
             'skills'=> 'nullable|string',
+            'description'=> 'nullable|string',
             'numberSales' => 'required|integer',
             'price' => 'required|integer',
             'startingDate' => 'required|date',

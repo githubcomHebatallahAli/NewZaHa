@@ -25,6 +25,7 @@ class ProjectController extends Controller
     $project = Project::create([
         'nameProject' => $request->nameProject,
         'skills' => $request->skills,
+        'description' => $request->description,
 
     ]);
     $userProject = UserProject::create([
@@ -36,10 +37,16 @@ class ProjectController extends Controller
         'endingDate' => $request->endingDate,
         'nameOfTeam' => $request->nameOfTeam,
     ]);
+    $project->users()->sync([$request->user_id]);
+
     $project->addMediaFromRequest('imgProject')->toMediaCollection('Projects');
     $project->addMediaFromRequest('url')->toMediaCollection('Projects');
+
+    $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
+        $query->where('user_id', $request->user_id);
+    }])->find($project->id);
     return response()->json([
-        'project' => new ProjectResource($project),
+        'project' =>new ProjectResource($projectWithPivot),
         'message' => "Create Project Successfully."
     ], 201);
     }
@@ -80,6 +87,7 @@ class ProjectController extends Controller
             'endingDate' => $request->endingDate,
             'nameOfTeam' => $request->nameOfTeam,
         ]);
+        $project->users()->sync([$request->user_id]);
         $project->clearMediaCollection('Projects');
         if ($request->hasFile('imgProject')) {
         $project->addMediaFromRequest('imgProject')->toMediaCollection('Projects');
@@ -87,8 +95,11 @@ class ProjectController extends Controller
     if ($request->hasFile('url')) {
         $project->addMediaFromRequest('url')->toMediaCollection('Projects');
     }
+    $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
+        $query->where('user_id', $request->user_id);
+    }])->find($project->id);
         return response()->json([
-            'project' =>new ProjectResource($project),
+            'project' =>new ProjectResource($projectWithPivot),
             'message' => " Update Project By Id Successfully."
         ], 200);
     }
