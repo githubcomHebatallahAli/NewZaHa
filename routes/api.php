@@ -160,13 +160,18 @@ Route::group([
     Route::get('/edit/role/{id}', [RolesAndPermissionsController::class, 'editRole']);
     Route::put('/update/role/{id}', [RolesAndPermissionsController::class, 'updateRole']);
     Route::delete('/delete/role/{id}', [RolesAndPermissionsController::class, 'deleteRole']);
+    Route::get('/showAll/permissions', [RolesAndPermissionsController::class, 'showAllPermissions']);
     Route::post('/create/permission', [RolesAndPermissionsController::class, 'createPermission']);
     Route::get('/edit/permission/{id}', [RolesAndPermissionsController::class, 'editPermission']);
     Route::put('/update/permission/{id}', [RolesAndPermissionsController::class, 'updatePermission']);
     Route::delete('/delete/permission/{id}', [RolesAndPermissionsController::class, 'deletePermission']);
-    Route::get('/showAll/permissions', [RolesAndPermissionsController::class, 'showAllPermissions']);
+
+    Route::post('/assign/role/{roleId}/to/permissions', [RolesAndPermissionsController::class, 'assignRoleToPermissions']);
     Route::post('/assign/role/{roleId}/to/permission/{permissionId}', [RolesAndPermissionsController::class, 'assignRoleToPermission']);
-    Route::delete('/revoke/role/{roleId}/from/permission/{permissionId}', [RolesAndPermissionsController::class, 'unassignRoleToPermission']);
+    Route::delete('/revoke/role/{roleId}/from/permissions', [RolesAndPermissionsController::class, 'revokeRoleFromPermissions']);
+    Route::delete('/revoke/role/{roleId}/from/permission/{permissionId}', [RolesAndPermissionsController::class, ' revokeRoleFromPermission']);
+
+
     Route::get('/showAll/rolesWithPermissions', [RolesAndPermissionsController::class, 'showAll']);
     Route::post('admin/assign/role/{roleId}/to/user/{userId}', [RolesAndPermissionsController::class, 'assignRoleToUser']);
     Route::delete('/revoke/role/{roleId}/from/user/{userId}', [RolesAndPermissionsController::class, 'revokeRoleFromUser']);

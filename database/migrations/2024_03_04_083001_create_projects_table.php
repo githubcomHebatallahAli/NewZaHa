@@ -17,11 +17,8 @@ return new class extends Migration
             // $table->string('imgProject')->nullable();
             // $table->string('url')->nullable();
             $table->text('skills')->nullable();
-            // $table->integer('numberSales')->nullable();
-            // $table->integer('price')->nullable();
             $table->text('description')->nullable();
             $table->softDeletes();
-
             $table->timestamps();
         });
     }

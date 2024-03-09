@@ -16,15 +16,12 @@ class ProjectResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nameProject' => $this->address,
+            'nameProject' => $this->nameProject,
             'skills'=> $this ->skills,
-            'numberSales' => $this->pivot->numberSales,
-            'price' => $this->pivot->price,
-            'startingDate' => $this->pivot->startingDate,
-            'endingDate' => $this->pivot->endingDate,
-            'nameOfTeam' => $this->pivot->nameOfTeam,
             'user' => new UserResource($this->user),
-            'media' => MediaResource::collection($this->getMedia('Teams')),
+            // 'userProject'=> new UserProjectResource($this->userProject),
+
+            'media' => MediaResource::collection($this->getMedia('Projects')),
 
         ];
     }
