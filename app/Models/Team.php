@@ -12,16 +12,15 @@ class Team extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes,InteractsWithMedia;
     protected $fillable = [
-        // 'imgTeam',
         'job',
         'skills',
         'numProject',
-        // 'imgIDCard',
         'address',
         'phoneNumber',
         'qualification',
         'user_id'
     ];
+    
     public function user()
     {
         return $this->belongsTo(User::class);

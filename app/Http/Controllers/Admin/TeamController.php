@@ -12,16 +12,18 @@ class TeamController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
          $Teams = Team::with('user')->get();
 
             return response()->json([
-            'Team' =>TeamResource::collection($Teams),
+            'data' =>TeamResource::collection($Teams),
             'message' => "Show All Teams Successfully."
-        ], 200);
+        ]);
     }
 
     public function create(TeamRequest $request)
     {
+        $this->authorize('manage_users');
            $Team =Team::create ([
                 'job' => $request->job,
                 'skills' => $request->skills,
@@ -35,36 +37,37 @@ class TeamController extends Controller
             $Team->addMediaFromRequest('imgIDCard')->toMediaCollection('Teams');
            $Team->save();
            return response()->json([
-            'Team' =>new TeamResource($Team),
+            'data' =>new TeamResource($Team),
             'message' => "Team Created Successfully."
-        ], 200);
-
-
+        ]);
         }
 
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
        $Team =Team::with('user')->find($id);
        return response()->json([
-        'Team' =>new TeamResource($Team),
+        'data' =>new TeamResource($Team),
         'message' => " Show Team By Id Successfully."
-    ], 200);
+    ]);
 
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
        $Team =Team::with('user')->find($id);
        return response()->json([
-        'Team' =>new TeamResource($Team),
+        'data' =>new TeamResource($Team),
         'message' => " Edit Team By Id Successfully."
-    ], 200);
-
+    ]);
     }
 
+    
     public function update(TeamRequest $request, string $id)
     {
+        $this->authorize('manage_users');
        $Team =Team::findOrFail($id);
        $Team->update([
         'job' => $request->job,
@@ -84,34 +87,39 @@ class TeamController extends Controller
         }
        $Team->save();
        return response()->json([
-        'Team' =>new TeamResource($Team),
+        'data' =>new TeamResource($Team),
         'message' => " Update Team By Id Successfully."
-    ], 200);
+    ]);
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
     $Team =Team::find($id);
     $Team->delete($id);
     return response()->json([
-        'Team' =>new TeamResource($Team),
+        'data' =>new TeamResource($Team),
         'message' => " Soft Delete Team By Id Successfully."
-    ], 200);
+    ]);
 }
 public function showDeleted(){
+    $this->authorize('manage_users');
     $Teams=Team::onlyTrashed()->with('user')->get();
     return response()->json([
-        'Team' =>TeamResource::collection($Teams),
+        'data' =>TeamResource::collection($Teams),
         'message' => "Show Deleted Team Successfully."
-    ], 200);
+    ]);
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
     $Team=Team::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Team By Id Successfully."
-    ], 200);
+    ]);
 }
+
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
     $Team=Team::withTrashed()->where('id',$id)->first();
     if ($Team) {
         $Team->getMedia('Teams')->each(function ($media) {
@@ -120,7 +128,7 @@ public function forceDelete(string $id){
         $Team->forceDelete();
     return response()->json([
         'message' => " Force Delete Team By Id Successfully."
-    ], 200);
+    ]);
 }
 }
 }

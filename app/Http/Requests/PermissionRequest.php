@@ -24,7 +24,8 @@ class PermissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|string'
+            'permission_id' => 'required|array',
+            'permission_id.*' => 'integer',
         ];
     }
     public function failedValidation(Validator $validator)

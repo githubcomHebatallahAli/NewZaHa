@@ -34,6 +34,7 @@ class User extends Authenticatable  implements JWTSubject
         1 => 'Admin'
     ];
 
+
     public function admin()
     {
         return $this->hasOne(Admin::class);
@@ -79,12 +80,12 @@ class User extends Authenticatable  implements JWTSubject
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class,'user_role');
+        return $this->belongsToMany(Role::class,'user_roles');
     }
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class,'user_permission');
+        return $this->belongsToMany(Permission::class,'user_permissions');
     }
 
 

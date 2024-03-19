@@ -14,6 +14,7 @@ class OrderController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
         $users = User::with('orders')->get();
     $processedUsers = [];
     foreach ($users as $user) {
@@ -29,14 +30,15 @@ class OrderController extends Controller
         ];
 
 }    return response()->json([
-        'users' => $processedUsers,
+        'data' => $processedUsers,
         'message' => "Show All Users With Orders Successfully."
-    ], 200);
+    ]);
     }
 
 
     public function create(OrderRequest $request)
     {
+        $this->authorize('manage_users');
            $Order =Order::create ([
                 'phoneNumber' => $request->phoneNumber,
                 'nameProject' => $request->nameProject,
@@ -47,38 +49,53 @@ class OrderController extends Controller
             ]);
            $Order->save();
            return response()->json([
-            'Order' =>new OrderResource($Order),
+            'data' =>new OrderResource($Order),
             'message' => "Order Created Successfully."
-        ], 200);
+        ]);
 
         }
 
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
     $Order = Order::with('user.orders')->find($id);
+    if (!$Order) {
+        return response()->json([
+            'message' => "Order not found."
+        ], 404);
+    }
     return response()->json([
-        'Order' =>new OrderResource($Order),
+        'data' =>new OrderResource($Order),
         'message' => "Show Order for User Successfully."
-    ], 200);
-
-
-
+    ]);
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
         $Order = Order::with('user.orders')->find($id);
+        if (!$Order) {
+            return response()->json([
+                'message' => "Order not found."
+            ], 404);
+        }
         return response()->json([
-            'Order' =>new OrderResource($Order),
+            'data' =>new OrderResource($Order),
             'message' => "Edit Order for User Successfully."
-        ], 200);
+        ]);
 
     }
 
     public function update(OrderRequest $request, string $id)
     {
+        $this->authorize('manage_users');
        $Order =Order::findOrFail($id);
+       if (!$Order) {
+        return response()->json([
+            'message' => "Order not found."
+        ], 404);
+    }
        $Order->update([
         'phoneNumber' => $request->phoneNumber,
         'message' => $request->message,
@@ -87,37 +104,47 @@ class OrderController extends Controller
 
        $Order->save();
        return response()->json([
-        'Order' =>new OrderResource($Order),
+        'data' =>new OrderResource($Order),
         'message' => " Update Order By Id Successfully."
-    ], 200);
+    ]);
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
     $Order =Order::find($id);
+    if (!$Order) {
+        return response()->json([
+            'message' => "Order not found."
+        ], 404);
+    }
     $Order->delete($id);
     return response()->json([
-        'Order' =>new OrderResource($Order),
+        'data' =>new OrderResource($Order),
         'message' => " Soft Delete Order By Id Successfully."
-    ], 200);
+    ]);
 }
+
 public function showDeleted(){
+    $this->authorize('manage_users');
     $Orders=Order::onlyTrashed()->with('user')->get();
     return response()->json([
-        'Order' =>OrderResource::collection($Orders),
+        'data' =>OrderResource::collection($Orders),
         'message' => "Show Deleted Order Successfully."
-    ], 200);
+    ]);
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
     $Order=Order::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Order By Id Successfully."
-    ], 200);
+    ]);
 }
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
     $Order=Order::withTrashed()->where('id',$id)->forceDelete();
     return response()->json([
         'message' => " Force Delete Order By Id Successfully."
-    ], 200);
+    ]);
 }
 }

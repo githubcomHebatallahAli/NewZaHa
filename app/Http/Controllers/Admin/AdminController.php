@@ -12,26 +12,30 @@ class AdminController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
          $admins = Admin::with('user')->get();
 
             return response()->json([
-            'admin' =>AdminResource::collection($admins),
+            'data' =>AdminResource::collection($admins),
             'message' => "Show All admins Successfully."
-        ], 200);
+        ]);
     }
 
     public function create(AdminRequest $request)
     {
+        $this->authorize('manage_users');
            $admin =Admin::create ([
                 'job' => $request->job,
                 'user_id' => $request->user_id,
             ]);
-            $admin->addMediaFromRequest('photo')->toMediaCollection('Admins');
+            if ($request->hasFile('photo')) {
+                $admin->addMediaFromRequest('photo')->toMediaCollection('Admins');
+            }
            $admin->save();
            return response()->json([
-            'admin' =>new AdminResource($admin),
+            'data' =>new AdminResource($admin),
             'message' => "Admin Created Successfully."
-        ], 200);
+        ]);
 
 
         }
@@ -39,27 +43,45 @@ class AdminController extends Controller
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
        $admin =Admin::with('user')->find($id);
+       if (!$admin) {
+        return response()->json([
+            'message' => "Admin not found."
+        ], 404);
+    }
        return response()->json([
-        'admin' =>new AdminResource($admin),
+        'data' =>new AdminResource($admin),
         'message' => " Show Admin By Id Successfully."
-    ], 200);
+    ]);
 
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
        $admin =Admin::with('user')->find($id);
+       if (!$admin) {
+        return response()->json([
+            'message' => "Admin not found."
+        ], 404);
+    }
        return response()->json([
-        'admin' =>new AdminResource($admin),
+        'data' =>new AdminResource($admin),
         'message' => " Edit Admin By Id Successfully."
-    ], 200);
+    ]);
 
     }
 
     public function update(AdminRequest $request, string $id)
     {
+        $this->authorize('manage_users');
        $admin =Admin::findOrFail($id);
+       if (!$admin) {
+        return response()->json([
+            'message' => "Admin not found."
+        ], 404);
+    }
        $admin->update([
         'job' => $request->job,
         'user_id' => $request->user_id,
@@ -71,34 +93,43 @@ class AdminController extends Controller
 
        $admin->save();
        return response()->json([
-        'admin' =>new AdminResource($admin),
+        'data' =>new AdminResource($admin),
         'message' => " Update Admin By Id Successfully."
-    ], 200);
+    ]);
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
     $admin =Admin::find($id);
+    if (!$admin) {
+        return response()->json([
+            'message' => "Admin not found."
+        ], 404);
+    }
     $admin->delete($id);
     return response()->json([
-        'admin' =>new AdminResource($admin),
+        'data' =>new AdminResource($admin),
         'message' => " Soft Delete Admin By Id Successfully."
-    ], 200);
+    ]);
 }
 public function showDeleted(){
+    $this->authorize('manage_users');
     $admins=Admin::onlyTrashed()->with('user')->get();
     return response()->json([
-        'admin' =>AdminResource::collection($admins),
+        'data' =>AdminResource::collection($admins),
         'message' => "Show Deleted Admin Successfully."
-    ], 200);
+    ]);
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
     $admin=Admin::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Admin By Id Successfully."
-    ], 200);
+    ]);
 }
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
     $admin=Admin::withTrashed()->where('id',$id)->first();
     if ($admin) {
         $admin->getMedia('Admins')->each(function ($media) {
@@ -107,7 +138,7 @@ public function forceDelete(string $id){
         $admin->forceDelete();
     return response()->json([
         'message' => " Force Delete Admin By Id Successfully."
-    ], 200);
+    ]);
 }
 }
 }

@@ -12,16 +12,18 @@ class ClientController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
          $Clients = Client::with('user')->get();
 
             return response()->json([
             'Client' =>ClientResource::collection($Clients),
             'message' => "Show All Clients Successfully."
-        ], 200);
+        ]);
     }
 
     public function create(ClientRequest $request)
     {
+        $this->authorize('manage_users');
            $Client =Client::create ([
                 'phoneNumber' => $request->phoneNumber,
                 'projectName' => $request->projectName,
@@ -33,35 +35,49 @@ class ClientController extends Controller
            return response()->json([
             'Client' =>new ClientResource($Client),
             'message' => "Client Created Successfully."
-        ], 200);
-
-
+        ]);
         }
 
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
        $Client =Client::with('user')->find($id);
+       if (!$Client) {
+        return response()->json([
+            'message' => "Client not found."
+        ], 404);
+    }
        return response()->json([
         'Client' =>new ClientResource($Client),
         'message' => " Show Client By Id Successfully."
-    ], 200);
-
+    ]);
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
        $Client =Client::with('user')->find($id);
+       if (!$Client) {
+        return response()->json([
+            'message' => "Client not found."
+        ], 404);
+    }
        return response()->json([
         'Client' =>new ClientResource($Client),
         'message' => " Edit Client By Id Successfully."
-    ], 200);
-
+    ]);
     }
 
     public function update(ClientRequest $request, string $id)
     {
+        $this->authorize('manage_users');
        $Client =Client::findOrFail($id);
+       if (!$Client) {
+        return response()->json([
+            'message' => "Client not found."
+        ], 404);
+    }
        $Client->update([
         'phoneNumber' => $request->phoneNumber,
         'projectName' => $request->projectName,
@@ -77,32 +93,43 @@ class ClientController extends Controller
        return response()->json([
         'Client' =>new ClientResource($Client),
         'message' => " Update Client By Id Successfully."
-    ], 200);
+    ]);
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
     $Client =Client::find($id);
+    if (!$Client) {
+        return response()->json([
+            'message' => "Client not found."
+        ], 404);
+    }
     $Client->delete($id);
     return response()->json([
         'Client' =>new ClientResource($Client),
         'message' => " Soft Delete Client By Id Successfully."
-    ], 200);
+    ]);
 }
+
 public function showDeleted(){
+    $this->authorize('manage_users');
     $Clients=Client::onlyTrashed()->with('user')->get();
     return response()->json([
         'Client' =>ClientResource::collection($Clients),
         'message' => "Show Deleted Client Successfully."
-    ], 200);
+    ]);
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
     $Client=Client::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Client By Id Successfully."
-    ], 200);
+    ]);
 }
+
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
     $Client=Client::withTrashed()->where('id',$id)->first();
     if ($Client) {
         $Client->getMedia('Clients')->each(function ($media) {
@@ -111,7 +138,7 @@ public function forceDelete(string $id){
         $Client->forceDelete();
     return response()->json([
         'message' => " Force Delete Client By Id Successfully."
-    ], 200);
+    ]);
 }
 }
 }

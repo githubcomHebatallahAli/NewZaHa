@@ -15,87 +15,117 @@ class BestCommentController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
         $bestComments = BestComment::with('comment')->get();
         return response()->json([
-            'bestComments' => BestCommentResource::collection($bestComments),
+            'data' => BestCommentResource::collection($bestComments),
             'message' => "Show All Best Comments Successfully."
-        ], 200);
+        ]);
     }
 
 
     public function create(Request $request)
     {
+        $this->authorize('manage_users');
            $BestComment =BestComment::create ([
                 'comment_id' => $request->comment_id,
             ]);
            $BestComment->save();
            return response()->json([
-            'bestComment' =>new BestCommentResource($BestComment),
+            'data' =>new BestCommentResource($BestComment),
             'message' => "Best Comment Created Successfully."
-        ], 200);
+        ]);
 
         }
 
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
         $bestComments = BestComment::with('comment')->find($id);
+        if (!$BestComment) {
+            return response()->json([
+                'message' => "BestComment not found."
+            ], 404);
+        }
         return response()->json([
-            'bestComments' =>new BestCommentResource($bestComments),
+            'data' =>new BestCommentResource($bestComments),
             'message' => "Show Best Comment By ID Successfully."
-        ], 200);
+        ]);
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
         $bestComments = BestComment::with('comment')->find($id);
+        if (!$BestComment) {
+            return response()->json([
+                'message' => "BestComment not found."
+            ], 404);
+        }
         return response()->json([
-            'bestComments' =>new BestCommentResource($bestComments),
+            'data' =>new BestCommentResource($bestComments),
             'message' => "Edit Best Comment By ID Successfully."
-        ], 200);
+        ]);
 
     }
 
     public function update(Request $request, string $id)
     {
+        $this->authorize('manage_users');
        $BestComment =BestComment::findOrFail($id);
+       if (!$BestComment) {
+        return response()->json([
+            'message' => "BestComment not found."
+        ], 404);
+    }
        $BestComment->update([
         'comment_id' => $request->comment_id,
         ]);
 
        $BestComment->save();
        return response()->json([
-        'bestComment' =>new BestCommentResource($BestComment),
+        'data' =>new BestCommentResource($BestComment),
         'message' => " Update  Best Comment By Id Successfully."
-    ], 200);
+    ]);
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
     $BestComment =BestComment::find($id);
+
+    if (!$BestComment) {
+     return response()->json([
+         'message' => "BestComment not found."
+     ], 404);
+ }
     $BestComment->delete($id);
     return response()->json([
-        'bestComment' =>new BestCommentResource($BestComment),
+        'data' =>new BestCommentResource($BestComment),
         'message' => " Soft Delete Best Comment By Id Successfully."
-    ], 200);
+    ]);
 }
 public function showDeleted(){
+    $this->authorize('manage_users');
     $BestComments=BestComment::onlyTrashed()->get();
     return response()->json([
-        'bestComment' =>BestCommentResource::collection($BestComments),
+        'data' =>BestCommentResource::collection($BestComments),
         'message' => "Show Deleted Best Comment Successfully."
-    ], 200);
+    ]);
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
     $BestComment=BestComment::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Best Comment By Id Successfully."
-    ], 200);
+    ]);
 }
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
     $BestComment=BestComment::withTrashed()->where('id',$id)->forceDelete();
     return response()->json([
         'message' => " Force Delete Best Comment By Id Successfully."
-    ], 200);
+    ]);
 }
 }

@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->string('job');
             // $table->string('photo');
+            $table->string('job');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

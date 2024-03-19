@@ -14,6 +14,7 @@ class ContactController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
         $users = User::with('contactUs')->get();
     $processedUsers = [];
     foreach ($users as $user) {
@@ -32,14 +33,15 @@ class ContactController extends Controller
         ];
 
 }    return response()->json([
-        'users' => $processedUsers,
+        'data' => $processedUsers,
         'message' => "Show All Users With Messages Successfully."
-    ], 200);
+    ]);
     }
 
 
     public function create(ContactRequest $request)
     {
+        $this->authorize('manage_users');
            $contact =Contact::create ([
                 'phoneNumber' => $request->phoneNumber,
                 'message' => $request->message,
@@ -47,42 +49,55 @@ class ContactController extends Controller
             ]);
            $contact->save();
            return response()->json([
-            'contact' =>new ContactResource($contact),
+            'data' =>new ContactResource($contact),
             'message' => "Contact Created Successfully."
-        ], 200);
-
+        ]);
         }
 
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
     $contact = Contact::with('user.contactUs')->find($id);
+    if (!$contact) {
+        return response()->json([
+            'message' => "Contact not found."
+        ], 404);
+    }
     $userContacts = $contact->user->contactUs->pluck('message')->toArray();
     return response()->json([
-        'contact' =>new ContactResource($contact),
+        'data' =>new ContactResource($contact),
         'user_messages' => ($userContacts),
         'message' => "Show Contact for User Successfully."
-    ], 200);
-
-
-
+    ]);
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
         $contact = Contact::with('user.contactUs')->find($id);
+        if (!$contact) {
+            return response()->json([
+                'message' => "Contact not found."
+            ], 404);
+        }
         $userContacts = $contact->user->contactUs->pluck('message')->toArray();
         return response()->json([
-            'contact' =>new ContactResource($contact),
+            'data' =>new ContactResource($contact),
             'user_messages' => ($userContacts),
             'message' => "Edit Contact for User Successfully."
-        ], 200);
-
+        ]);
     }
 
     public function update(ContactRequest $request, string $id)
     {
+        $this->authorize('manage_users');
        $contact =Contact::findOrFail($id);
+       if (!$contact) {
+        return response()->json([
+            'message' => "Contact not found."
+        ], 404);
+    }
        $contact->update([
         'phoneNumber' => $request->phoneNumber,
         'message' => $request->message,
@@ -91,37 +106,48 @@ class ContactController extends Controller
 
        $contact->save();
        return response()->json([
-        'contact' =>new ContactResource($contact),
+        'data' =>new ContactResource($contact),
         'message' => " Update Contact By Id Successfully."
-    ], 200);
+    ]);
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
     $contact =Contact::find($id);
+    if (!$contact) {
+        return response()->json([
+            'message' => "Contact not found."
+        ], 404);
+    }
     $contact->delete($id);
     return response()->json([
-        'contact' =>new ContactResource($contact),
+        'data' =>new ContactResource($contact),
         'message' => " Soft Delete Contact By Id Successfully."
-    ], 200);
+    ]);
 }
+
 public function showDeleted(){
+    $this->authorize('manage_users');
     $contacts=Contact::onlyTrashed()->with('user')->get();
     return response()->json([
-        'contact' =>ContactResource::collection($contacts),
+        'data' =>ContactResource::collection($contacts),
         'message' => "Show Deleted Contact Successfully."
-    ], 200);
+    ]);
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
     $contact=Contact::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Contact By Id Successfully."
-    ], 200);
+    ]);
 }
+
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
     $contact=Contact::withTrashed()->where('id',$id)->forceDelete();
     return response()->json([
         'message' => " Force Delete Contact By Id Successfully."
-    ], 200);
+    ]);
 }
 }

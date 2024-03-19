@@ -15,9 +15,9 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // dd($request->user()->isAdmin == 1);
         if ($request->user() && $request->user()->isAdmin == 1) {
             return $next($request);
+
         }
 
         // If not admin, redirect or return unauthorized response

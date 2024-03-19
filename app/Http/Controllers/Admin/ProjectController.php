@@ -13,20 +13,21 @@ class ProjectController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
         $projects= Project::with('users')->get();
         return response()->json([
-            'project' =>ProjectResource::collection($projects),
+            'data' =>ProjectResource::collection($projects),
             'message' => "Show All Projects Successfully."
-        ], 200);
+        ]);
     }
 
     public function create(ProjectRequest $request)
     {
+        $this->authorize('manage_users');
     $project = Project::create([
         'nameProject' => $request->nameProject,
         'skills' => $request->skills,
         'description' => $request->description,
-
     ]);
     $userProject = UserProject::create([
         'user_id' => $request->user_id,
@@ -46,34 +47,53 @@ class ProjectController extends Controller
         $query->where('user_id', $request->user_id);
     }])->find($project->id);
     return response()->json([
-        'project' =>new ProjectResource($projectWithPivot),
+        'data' =>new ProjectResource($projectWithPivot),
         'message' => "Create Project Successfully."
-    ], 201);
-    }
+    ]);
 
+}
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
         $project =Project::with('users')->find($id);
+    if (!$project) {
         return response()->json([
-         'project' =>new ProjectResource($project),
-         'message' => " Show Project By Id Successfully."
-     ], 200);
+            'message' => 'Project not found.'
+        ], 404);
+    }
+    return response()->json([
+        'data' => new ProjectResource($project),
+        'message' => "Show Project By Id Successfully."
+    ]);
+
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
         $project =Project::with('users')->find($id);
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found.'
+            ], 404);
+        }
         return response()->json([
-         'project' =>new ProjectResource($project),
+         'data' =>new ProjectResource($project),
          'message' => " Edit Project By Id Successfully."
-     ], 200);
+     ]);
     }
 
 
     public function update(ProjectRequest $request, string $id)
     {
+        $this->authorize('manage_users');
         $project =Project::findOrFail($id);
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found.'
+            ], 404);
+        }
         $project->update([
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
@@ -99,42 +119,51 @@ class ProjectController extends Controller
         $query->where('user_id', $request->user_id);
     }])->find($project->id);
         return response()->json([
-            'project' =>new ProjectResource($projectWithPivot),
+            'data' =>new ProjectResource($projectWithPivot),
             'message' => " Update Project By Id Successfully."
-        ], 200);
+        ]);
     }
 
 
     public function destroy(string $id)
     {
+        $this->authorize('manage_users');
         $Project =Project::find($id);
+        if (!$Project) {
+            return response()->json([
+                'message' => "Project not found."
+            ], 404);
+        }
         $Project->delete($id);
         return response()->json([
-            'Project' =>new ProjectResource($Project),
+            'data' =>new ProjectResource($Project),
             'message' => " Soft Delete Project By Id Successfully."
-        ], 200);
+        ]);
 
     }
     public function showDeleted()
     {
+        $this->authorize('manage_users');
         $Projects=Project::onlyTrashed()->with('users')->get();
         return response()->json([
-            'Project' =>ProjectResource::collection($Projects),
+            'data' =>ProjectResource::collection($Projects),
             'message' => "Show Deleted Project Successfully."
-        ], 200);
+        ]);
     }
 
 
-    public function restore($id)
+    public function restore(string $id)
     {
+        $this->authorize('manage_users');
         $Project=Project::withTrashed()->where('id',$id)->restore();
         return response()->json([
             'message' => " Restore Project By Id Successfully."
-        ], 200);
+        ]);
     }
 
-    public function forceDelete($id)
+    public function forceDelete(string $id)
     {
+        $this->authorize('manage_users');
         $Project=Project::withTrashed()->where('id',$id)->first();
         if ($Project) {
             $Project->getMedia('Projects')->each(function ($media) {
@@ -143,7 +172,7 @@ class ProjectController extends Controller
             $Project->forceDelete();
         return response()->json([
             'message' => " Force Delete Project By Id Successfully."
-        ], 200);
+        ]);
     }
     }
 }

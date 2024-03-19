@@ -12,16 +12,18 @@ class JobController extends Controller
 {
     public function showAll()
     {
+        $this->authorize('manage_users');
         $Jobs = Job::with('user')->get();
         return response()->json([
-            'Jobs' => JobResource::collection($Jobs),
+            'data' => JobResource::collection($Jobs),
             'message' => "Show All Job Successfully."
-        ], 200);
+        ]);
     }
 
 
     public function create(JobRequest $request)
     {
+        $this->authorize('manage_users');
            $Job =Job::create ([
                 'address'  => $request->address,
                 'phoneNumber'  => $request->phoneNumber,
@@ -33,35 +35,53 @@ class JobController extends Controller
             ]);
            $Job->save();
            return response()->json([
-            'Job' =>new JobResource($Job),
+            'data' =>new JobResource($Job),
             'message' => "Job Created Successfully."
-        ], 200);
-
+        ]);
         }
 
 
     public function show(string $id)
     {
+        $this->authorize('manage_users');
         $Jobs = Job::with('user')->find($id);
+        if (!$Jobs) {
+            return response()->json([
+                'message' => "Job not found."
+            ], 404);
+        }
         return response()->json([
-            'Jobs' =>new JobResource($Jobs),
+            'data' =>new JobResource($Jobs),
             'message' => "Show Job By Id Successfully."
-        ], 200);
+        ]);
     }
 
     public function edit(string $id)
     {
+        $this->authorize('manage_users');
         $Jobs = Job::with('user')->find($id);
+        if (!$Jobs) {
+            return response()->json([
+                'message' => "Job not found."
+            ], 404);
+        }
         return response()->json([
-            'Jobs' =>new JobResource($Jobs),
+            'data' =>new JobResource($Jobs),
             'message' => "Edit Job By ID Successfully."
-        ], 200);
+        ]);
 
     }
 
     public function update(JobRequest $request, string $id)
     {
+        $this->authorize('manage_users');
        $Job =Job::findOrFail($id);
+       if (!$Job) {
+        return response()->json([
+            'message' => "Job not found."
+        ], 404);
+    }
+
        $Job->update([
         'address'  => $request->address,
         'phoneNumber'  => $request->phoneNumber,
@@ -74,37 +94,48 @@ class JobController extends Controller
 
        $Job->save();
        return response()->json([
-        'Job' =>new JobResource($Job),
-        'message' => " Update  Best Job By Id Successfully."
-    ], 200);
+        'data' =>new JobResource($Job),
+        'message' => " Update Job By Id Successfully."
+    ]);
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
     $Job =Job::find($id);
+    if (!$Job) {
+        return response()->json([
+            'message' => "Job not found."
+        ], 404);
+    }
+
     $Job->delete($id);
     return response()->json([
-        'Job' =>new JobResource($Job),
+        'data' =>new JobResource($Job),
         'message' => " Soft Delete Job By Id Successfully."
-    ], 200);
+    ]);
 }
+
 public function showDeleted(){
+    $this->authorize('manage_users');
     $Jobs=Job::onlyTrashed()->get();
     return response()->json([
-        'Job' =>JobResource::collection($Jobs),
+        'data' =>JobResource::collection($Jobs),
         'message' => "Show Deleted Job Successfully."
-    ], 200);
+    ]);
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
     $Job=Job::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Job By Id Successfully."
-    ], 200);
+    ]);
 }
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
     $Job=Job::withTrashed()->where('id',$id)->forceDelete();
     return response()->json([
         'message' => " Force Delete Job By Id Successfully."
-    ], 200);
+    ]);
 }
 }

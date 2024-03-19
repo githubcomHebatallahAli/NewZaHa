@@ -15,7 +15,6 @@ class Client extends Model implements HasMedia
         'phoneNumber',
         'projectName',
         'description',
-        // 'imgClient',
         'user_id'
     ];
 
