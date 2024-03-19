@@ -97,6 +97,7 @@ class ProjectController extends Controller
         $project->update([
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
+            'description' => $request->description,
         ]);
         UserProject::updateOrCreate([
             'user_id' => $request->user_id,
