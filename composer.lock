@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25562dbe4934277b08dbb7d945b702c0",
+    "content-hash": "c84f1ec83d7562aa5aee4d30c9db99a8",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -2607,30 +2607,30 @@
         },
         {
             "name": "mailersend/laravel-driver",
-            "version": "v2.3.1",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-laravel-driver.git",
-                "reference": "dec576251169934b5045fdad88dc4cce2e3282d3"
+                "reference": "ddab5f32b49616b2619588585d58c218c886612a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/dec576251169934b5045fdad88dc4cce2e3282d3",
-                "reference": "dec576251169934b5045fdad88dc4cce2e3282d3",
+                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/ddab5f32b49616b2619588585d58c218c886612a",
+                "reference": "ddab5f32b49616b2619588585d58c218c886612a",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/support": "^9.0 || ^10.0",
-                "mailersend/mailersend": "^0.8.0 || ^0.14.0",
+                "illuminate/support": "^9.0 || ^10.0  || ^11.0",
+                "mailersend/mailersend": "^0.8.0 || ^0.23.0",
                 "nyholm/psr7": "^1.5",
-                "php": "^8.0 || ^8.1",
+                "php": ">=8.0",
                 "php-http/guzzle7-adapter": "^1.0",
-                "symfony/mailer": "^6.0"
+                "symfony/mailer": "^6.0 || ^7.0"
             },
             "require-dev": {
-                "orchestra/testbench": "^7.0",
-                "phpunit/phpunit": "^9.0"
+                "orchestra/testbench": "^7.0 || ^9.0",
+                "phpunit/phpunit": "^9.0 || ^10.5"
             },
             "type": "library",
             "extra": {
@@ -2670,9 +2670,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-laravel-driver/issues",
-                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.3.1"
+                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.4.0"
             },
-            "time": "2023-11-16T10:40:47+00:00"
+            "time": "2024-03-26T12:42:41+00:00"
         },
         {
             "name": "mailersend/mailersend",
