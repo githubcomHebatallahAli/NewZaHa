@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
-use App\Models\Comment;
 use App\Models\BestComment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CommentResource;
-use App\Http\Requests\BestCommentRequest;
 use App\Http\Resources\BestCommentResource;
 
 class BestCommentController extends Controller
@@ -43,7 +39,7 @@ class BestCommentController extends Controller
     {
         $this->authorize('manage_users');
         $bestComments = BestComment::with('comment')->find($id);
-        if (!$BestComment) {
+        if (!$bestComments) {
             return response()->json([
                 'message' => "BestComment not found."
             ], 404);
@@ -58,7 +54,7 @@ class BestCommentController extends Controller
     {
         $this->authorize('manage_users');
         $bestComments = BestComment::with('comment')->find($id);
-        if (!$BestComment) {
+        if (!$bestComments) {
             return response()->json([
                 'message' => "BestComment not found."
             ], 404);
@@ -93,12 +89,12 @@ class BestCommentController extends Controller
 public function destroy(string $id){
     $this->authorize('manage_users');
     $BestComment =BestComment::find($id);
-
     if (!$BestComment) {
      return response()->json([
          'message' => "BestComment not found."
      ], 404);
  }
+
     $BestComment->delete($id);
     return response()->json([
         'data' =>new BestCommentResource($BestComment),
@@ -123,7 +119,14 @@ public function restore(string $id){
 }
 public function forceDelete(string $id){
     $this->authorize('manage_users');
-    $BestComment=BestComment::withTrashed()->where('id',$id)->forceDelete();
+    $BestComment=BestComment::withTrashed()->where('id',$id)->first();
+    if (!$BestComment) {
+        return response()->json([
+            'message' => "BestComment not found."
+        ], 404);
+    }
+
+    $BestComment->forceDelete();
     return response()->json([
         'message' => " Force Delete Best Comment By Id Successfully."
     ]);

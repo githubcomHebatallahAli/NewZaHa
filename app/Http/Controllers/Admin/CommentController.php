@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Comment;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
 use App\Http\Resources\CommentResource;
@@ -110,6 +109,7 @@ public function destroy(string $id){
             'message' => "Comment not found."
         ], 404);
     }
+
     $Comment->delete($id);
     return response()->json([
         'data' =>new CommentResource($Comment),
@@ -135,7 +135,14 @@ public function restore(string $id){
 
 public function forceDelete(string $id){
     $this->authorize('manage_users');
-    $Comment=Comment::withTrashed()->where('id',$id)->forceDelete();
+    $Comment=Comment::withTrashed()->where('id',$id)->first();
+    if (!$Comment) {
+        return response()->json([
+            'message' => "Comment not found."
+        ], 404);
+    }
+
+    $Comment->forceDelete();
     return response()->json([
         'message' => " Force Delete Comment By Id Successfully."
     ]);

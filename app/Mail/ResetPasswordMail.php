@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ResetPasswordMail extends Mailable implements ShouldQueue
+class ResetPasswordMail extends Mailable 
 {
     use Queueable, SerializesModels;
     public $user;
@@ -52,5 +52,5 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
         return [];
     }
 
-  
+
 }

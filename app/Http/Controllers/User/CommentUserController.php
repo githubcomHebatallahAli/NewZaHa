@@ -5,17 +5,13 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use App\Models\Comment;
 use App\Mail\NewCommentMail;
-use Illuminate\Http\Request;
-use App\Events\NewCommentEvent;
 use App\Mail\CommentUpdatedMail;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\CommentRequest;
 use App\Notifications\CommentUpdated;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\UserCommentResource;
-use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewCommentNotification;
 
 class CommentUserController extends Controller

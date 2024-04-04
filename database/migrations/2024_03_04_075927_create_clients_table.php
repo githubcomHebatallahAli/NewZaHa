@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('phoneNumber')->nullable();
-            $table->string('projectName')->nullable();
-            $table->text('description')->nullable();
-            // $table->string('photo')->nullable();
+            $table->string('realName');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();

@@ -8,9 +8,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Contracts\Queue\ShouldQueue;
+// use Illuminate\Contracts\Queue\ShouldQueue;
 
-class NewCommentMail extends Mailable implements ShouldQueue
+class NewCommentMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $comment;

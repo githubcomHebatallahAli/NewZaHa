@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\SocialiteController;
-use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
@@ -18,6 +17,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\User\OrderUserController;
+use App\Http\Controllers\User\ClientUserController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\User\CommentUserController;
 use App\Http\Controllers\User\ContactUserController;
@@ -115,7 +115,7 @@ Route::group([
     Route::post('/create/order', [OrderController::class, 'create']);
     Route::get('/show/order/{id}', [OrderController::class, 'show']);
     Route::get('/edit/order/{id}', [OrderController::class, 'edit']);
-    Route::put('/update/order/{id}', [OrderController::class, 'update']);
+    Route::post('/update/order/{id}', [OrderController::class, 'update']);
     Route::delete('/softDelete/order/{id}', [OrderController::class, 'destroy']);
     Route::get('/showDeleted/order', [OrderController::class, 'showDeleted']);
     Route::get('/restore/order/{id}', [OrderController::class, 'restore']);
@@ -238,9 +238,21 @@ Route::group([
     Route::post('/create/order', [OrderUserController::class, 'create']);
     Route::get('/show/order/{id}', [OrderUserController::class, 'show']);
     Route::get('/edit/order/{id}', [OrderUserController::class, 'edit']);
-    Route::put('/update/order/{id}', [OrderUserController::class, 'update']);
+    Route::post('/update/order/{id}', [OrderUserController::class, 'update']);
     Route::delete('/forceDelete/order/{id}', [OrderUserController::class, 'forceDelete']);
+
+    // CLIENT
+    Route::post('/changePassword', [ClientUserController::class, 'changePassword']);
+    Route::post('/create/client', [ClientUserController::class, 'create']);
+    Route::get('/show/client/{id}', [ClientUserController::class, 'show']);
+    Route::get('/edit/client/{id}', [ClientUserController::class, 'edit']);
+    Route::post('/update/client/{id}', [ClientUserController::class, 'update']);
+    Route::post('/updatePhoto/client/{id}', [ClientUserController::class, 'updatePhoto']);
+    Route::delete('/forceDelete/client/{id}', [ClientUserController::class, 'forceDelete']);
 
 
 
 });
+
+
+

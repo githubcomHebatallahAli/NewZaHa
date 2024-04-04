@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Order extends Model
+class Order extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes,InteractsWithMedia;
 
     protected $fillable = [
         'phoneNumber',
@@ -16,14 +18,19 @@ class Order extends Model
         'price',
         'condition',
         'description',
-        'user_id'
+        'client_id'
     ];
 
     const condition = ['Pending','Approved','In Progress','Completed','Cancelled'];
 
 
-    public function user()
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
+
+    public function client()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Client::class);
     }
 }

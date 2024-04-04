@@ -60,13 +60,6 @@ class User extends Authenticatable  implements JWTSubject
     }
 
 
-
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-
     public function contactUs()
     {
         return $this->hasMany(Contact::class);
@@ -97,6 +90,10 @@ class User extends Authenticatable  implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $cast = [
+        'password'=>'hashed'
     ];
 
     public function getJWTIdentifier()

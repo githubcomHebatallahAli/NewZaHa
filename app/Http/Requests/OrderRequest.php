@@ -25,10 +25,12 @@ class OrderRequest extends FormRequest
     {
         return [
             'phoneNumber' => 'required|string',
-            'nameProject'=> 'nullable|string',
+            'nameProject'=> 'required|string',
             'price'=> 'nullable|integer',
             'condition'=> 'nullable|string',
             'description'=> 'nullable|string',
+            'media'=>'nullable',
+            'media.*'=>'url',
         ];
     }
     public function failedValidation(Validator $validator)

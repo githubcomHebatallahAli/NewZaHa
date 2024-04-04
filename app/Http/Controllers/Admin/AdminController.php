@@ -106,6 +106,7 @@ public function destroy(string $id){
             'message' => "Admin not found."
         ], 404);
     }
+
     $admin->delete($id);
     return response()->json([
         'data' =>new AdminResource($admin),
@@ -128,9 +129,16 @@ public function restore(string $id){
         'message' => " Restore Admin By Id Successfully."
     ]);
 }
+
 public function forceDelete(string $id){
     $this->authorize('manage_users');
     $admin=Admin::withTrashed()->where('id',$id)->first();
+    if (!$admin) {
+        return response()->json([
+            'message' => "Admin not found."
+        ], 404);
+    }
+
     if ($admin) {
         $admin->getMedia('Admins')->each(function ($media) {
             $media->delete();

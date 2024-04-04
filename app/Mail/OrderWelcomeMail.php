@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderWelcomeMail extends Mailable implements ShouldQueue
+class OrderWelcomeMail extends Mailable 
 {
     use Queueable, SerializesModels;
     public $email;
@@ -21,9 +21,13 @@ class OrderWelcomeMail extends Mailable implements ShouldQueue
      */
     public function __construct(Order $order)
     {
-        $this->email = $contact->user->email;
-    }
 
+        if ($order->client && $order->client->user) {
+            $this->email = $order->client->user->email;
+        } else {
+            $this->email = 'default@example.com';
+        }
+    }
     /**
      * Get the message envelope.
      */

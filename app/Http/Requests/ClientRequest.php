@@ -24,11 +24,10 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phoneNumber'=>'nullable|string',
-            'projectName'=>'nullable|string',
-            'description'=>'nullable|string',
+            'realName'=>'required|string',
             'media'=>'nullable',
             'media.*'=>'image|mimes:jpg,jpeg,png,gif,svg',
+
         ];
     }
     public function failedValidation(Validator $validator)

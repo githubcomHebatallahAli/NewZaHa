@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Log;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Permission;
@@ -128,7 +129,13 @@ class RolesAndPermissionsController extends Controller
     public function forceDeleteRole($id)
     {
         $this->authorize('manage_users');
-        $Role=Role::withTrashed()->where('id',$id)->first()->forceDelete();
+        $Role=Role::withTrashed()->where('id',$id)->first();
+        if (!$Role) {
+            return response()->json([
+                'message' => "Role not found."
+            ], 404);
+        }
+        $Role->forceDelete();
         return response()->json([
             'message' => " Force Delete Role By Id Successfully."
         ]);
@@ -140,7 +147,7 @@ class RolesAndPermissionsController extends Controller
         $this->authorize('manage_users');
         $Permission= Permission::with('users')->get();
         return response()->json([
-            'Data' => PermissionResource::collection($Permission),
+            'data' => PermissionResource::collection($Permission),
             'message' => "Show All  Permissions Successfully."
         ]);
     }
@@ -152,7 +159,7 @@ class RolesAndPermissionsController extends Controller
             'name'  => $request->name,
         ]);
         return response()->json([
-            'Data' =>new PermissionResource($Permission),
+            'data' =>new PermissionResource($Permission),
             'message' => "Create  Permission Successfully."
         ]);
     }
@@ -246,7 +253,13 @@ class RolesAndPermissionsController extends Controller
     public function forceDeletePermission($id)
     {
         $this->authorize('manage_users');
-        $Permission=Permission::withTrashed()->where('id',$id)->first()->forceDelete();
+        $Permission=Permission::withTrashed()->where('id',$id)->first();
+        if (!$Permission) {
+            return response()->json([
+                'message' => "Permission not found."
+            ], 404);
+        }
+        $Permission->forceDelete();
         return response()->json([
             'message' => " Force Delete Permission By Id Successfully."
         ]);
@@ -261,7 +274,7 @@ class RolesAndPermissionsController extends Controller
         try {
             $role->permissions()->attach($permission);
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            Log::error($e->getMessage());
         }
 
 

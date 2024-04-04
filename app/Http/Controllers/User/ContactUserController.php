@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use App\Models\Contact;
 use App\Mail\NewContactMail;
-use Illuminate\Http\Request;
 use App\Mail\ContactUpdatedMail;
 use App\Mail\ContactWelcomeMail;
 use App\Http\Controllers\Controller;

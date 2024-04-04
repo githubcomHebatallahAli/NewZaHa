@@ -2,38 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
 use App\Models\Order;
-use Illuminate\Http\Request;
+use App\Models\Client;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderResource;
+
 
 class OrderController extends Controller
 {
     public function showAll()
     {
         $this->authorize('manage_users');
-        $users = User::with('orders')->get();
-    $processedUsers = [];
-    foreach ($users as $user) {
-        $phoneNumber = null;
-        if ($user->orders->isNotEmpty()) {
-            $phoneNumber = $user->orders->first()->phoneNumber;
-        }
-        $processedUsers[] = [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'phoneNumber' => $phoneNumber,
-        ];
 
-}    return response()->json([
-        'data' => $processedUsers,
-        'message' => "Show All Users With Orders Successfully."
-    ]);
+$clientsWithOrders = Client::with('orders')->get();
+$clientsArray = $clientsWithOrders->map(function ($client) {
+    return [
+        'id' => $client->id,
+        'realName' => $client->realName,
+        'orders' => $client->orders->map->only([
+            'id', 'phoneNumber', 'nameProject', 'price', 'condition', 'description'
+        ]),
+    ];
+})->toArray();
+
+return response()->json([
+    'data' => $clientsArray,
+    'message' => "Show All Clients with Orders Successfully."
+]);
     }
+
 
 
     public function create(OrderRequest $request)
@@ -45,8 +43,9 @@ class OrderController extends Controller
                 'price' => $request->price,
                 'condition' => $request->condition,
                 'description' => $request->description,
-                'user_id' => $request->user_id,
+                'client_id' => $request->client_id,
             ]);
+            $Order->addMediaFromRequest('url')->toMediaCollection('Orders');
            $Order->save();
            return response()->json([
             'data' =>new OrderResource($Order),
@@ -59,7 +58,7 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $this->authorize('manage_users');
-    $Order = Order::with('user.orders')->find($id);
+    $Order = Order::with('client.orders')->find($id);
     if (!$Order) {
         return response()->json([
             'message' => "Order not found."
@@ -74,7 +73,7 @@ class OrderController extends Controller
     public function edit(string $id)
     {
         $this->authorize('manage_users');
-        $Order = Order::with('user.orders')->find($id);
+        $Order = Order::with('client.orders')->find($id);
         if (!$Order) {
             return response()->json([
                 'message' => "Order not found."
@@ -98,9 +97,17 @@ class OrderController extends Controller
     }
        $Order->update([
         'phoneNumber' => $request->phoneNumber,
-        'message' => $request->message,
-        'user_id' => $request->user_id,
+        'nameProject' => $request->nameProject,
+        'price' => $request->price,
+        'condition' => $request->condition,
+        'description' => $request->description,
+        'client_id' => $request->client_id,
         ]);
+        $Order->clearMediaCollection('Orders');
+
+        if ($request->hasFile('url')) {
+            $Order->addMediaFromRequest('url')->toMediaCollection('Orders');
+        }
 
        $Order->save();
        return response()->json([
@@ -117,6 +124,7 @@ public function destroy(string $id){
             'message' => "Order not found."
         ], 404);
     }
+
     $Order->delete($id);
     return response()->json([
         'data' =>new OrderResource($Order),
@@ -142,9 +150,22 @@ public function restore(string $id){
 }
 public function forceDelete(string $id){
     $this->authorize('manage_users');
-    $Order=Order::withTrashed()->where('id',$id)->forceDelete();
+    $Order=Order::withTrashed()->where('id',$id)->first();
+    if (!$Order) {
+        return response()->json([
+            'message' => "Order not found."
+        ], 404);
+    }
+
+    if ($Order) {
+        $Order->getMedia('Orders')->each(function ($media) {
+            $media->delete();
+        });
+
+        $Order->forceDelete();
     return response()->json([
         'message' => " Force Delete Order By Id Successfully."
     ]);
+}
 }
 }

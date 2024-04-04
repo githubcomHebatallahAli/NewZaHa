@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Job;
+use App\Models\User;
 use App\Mail\NewJobMail;
 use App\Mail\JobUpdatedMail;
 use App\Mail\WelcomeJobMail;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\JobRequest;
 use App\Http\Resources\JobResource;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Notifications\NewJobNotification;
 use App\Notifications\JobUpdatedNotification;
 
@@ -18,7 +20,9 @@ class JobUserController extends Controller
     public function create(JobRequest $request)
     {
         $this->authorize('create', Job::class);
+
            $job =Job::create ([
+                'realName' =>$request->realName,
                 'address'  => $request->address,
                 'phoneNumber'  => $request->phoneNumber,
                 'qualification'  => $request->qualification,
@@ -32,13 +36,17 @@ class JobUserController extends Controller
             foreach ($admins as $admin) {
                 Mail::to($admin->email)->send(new NewJobMail($job));
             }
-            Mail::to($job->user->email)->send(new WelcomeJobMail($job));
+            // Mail::to($job->user->email)->send(new WelcomeJobMail($job));
            $job->save();
            return response()->json([
             'data' =>new JobResource($job),
             'message' => "Job Created Successfully."
         ]);
+
         }
+
+
+
 
 
     public function show(string $id)
@@ -83,6 +91,7 @@ class JobUserController extends Controller
     }
 
        $job->update([
+        'realName' =>$request->realName,
         'address'  => $request->address,
         'phoneNumber'  => $request->phoneNumber,
         'qualification'  => $request->qualification,

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
 use App\Models\UserProject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectResource;
@@ -166,6 +165,11 @@ class ProjectController extends Controller
     {
         $this->authorize('manage_users');
         $Project=Project::withTrashed()->where('id',$id)->first();
+        if (!$Project) {
+            return response()->json([
+                'message' => "Project not found."
+            ], 404);
+        }
         if ($Project) {
             $Project->getMedia('Projects')->each(function ($media) {
                 $media->delete();

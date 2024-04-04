@@ -17,9 +17,10 @@ class OrderUserResource extends JsonResource
         return [
             'id' => $this->id,
             'phoneNumber' => $this->phoneNumber,
-            'user' => new  UserWithoutMailAndPasswordResource($this->user), // Use the new resource class
+            'nameProject'=> $this ->nameProject,
+            // 'user' => new  UserWithoutMailAndPasswordResource($this->user), // Use the new resource class
 
-
+            'client' => new ClientResource($this->client),
         ];
     }
 }

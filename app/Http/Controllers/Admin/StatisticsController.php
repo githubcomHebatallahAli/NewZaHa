@@ -7,7 +7,6 @@ use App\Models\Client;
 use App\Models\Comment;
 use App\Models\Project;
 use App\Models\UserProject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class StatisticsController extends Controller

@@ -24,6 +24,7 @@ class JobRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'realName'=>'required|string',
             'address' => 'required|string',
             'phoneNumber' => 'required|string',
             'qualification' => 'required|string',

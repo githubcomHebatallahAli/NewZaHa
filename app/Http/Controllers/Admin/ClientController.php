@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Client;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
 use App\Http\Resources\ClientResource;
@@ -15,8 +14,9 @@ class ClientController extends Controller
         $this->authorize('manage_users');
          $Clients = Client::with('user')->get();
 
+
             return response()->json([
-            'Client' =>ClientResource::collection($Clients),
+            'data' =>ClientResource::collection($Clients),
             'message' => "Show All Clients Successfully."
         ]);
     }
@@ -25,15 +25,13 @@ class ClientController extends Controller
     {
         $this->authorize('manage_users');
            $Client =Client::create ([
-                'phoneNumber' => $request->phoneNumber,
-                'projectName' => $request->projectName,
-                'description' => $request->description,
+                'realName' => $request->realName,
                 'user_id' => $request->user_id,
             ]);
             $Client->addMediaFromRequest('photo')->toMediaCollection('Clients');
            $Client->save();
            return response()->json([
-            'Client' =>new ClientResource($Client),
+            'data' =>new ClientResource($Client),
             'message' => "Client Created Successfully."
         ]);
         }
@@ -42,14 +40,14 @@ class ClientController extends Controller
     public function show(string $id)
     {
         $this->authorize('manage_users');
-       $Client =Client::with('user')->find($id);
+       $Client =Client::with('order')->find($id);
        if (!$Client) {
         return response()->json([
             'message' => "Client not found."
         ], 404);
     }
        return response()->json([
-        'Client' =>new ClientResource($Client),
+        'data' =>new ClientResource($Client),
         'message' => " Show Client By Id Successfully."
     ]);
     }
@@ -57,14 +55,14 @@ class ClientController extends Controller
     public function edit(string $id)
     {
         $this->authorize('manage_users');
-       $Client =Client::with('user')->find($id);
+       $Client =Client::with('order')->find($id);
        if (!$Client) {
         return response()->json([
             'message' => "Client not found."
         ], 404);
     }
        return response()->json([
-        'Client' =>new ClientResource($Client),
+        'data' =>new ClientResource($Client),
         'message' => " Edit Client By Id Successfully."
     ]);
     }
@@ -79,9 +77,7 @@ class ClientController extends Controller
         ], 404);
     }
        $Client->update([
-        'phoneNumber' => $request->phoneNumber,
-        'projectName' => $request->projectName,
-        'description' => $request->description,
+        'realName' => $request->realName,
         'user_id' => $request->user_id,
         ]);
         $Client->clearMediaCollection('Clients');
@@ -91,7 +87,7 @@ class ClientController extends Controller
 
        $Client->save();
        return response()->json([
-        'Client' =>new ClientResource($Client),
+        'data' =>new ClientResource($Client),
         'message' => " Update Client By Id Successfully."
     ]);
 }
@@ -104,9 +100,10 @@ public function destroy(string $id){
             'message' => "Client not found."
         ], 404);
     }
+
     $Client->delete($id);
     return response()->json([
-        'Client' =>new ClientResource($Client),
+        'data' =>new ClientResource($Client),
         'message' => " Soft Delete Client By Id Successfully."
     ]);
 }
@@ -115,7 +112,7 @@ public function showDeleted(){
     $this->authorize('manage_users');
     $Clients=Client::onlyTrashed()->with('user')->get();
     return response()->json([
-        'Client' =>ClientResource::collection($Clients),
+        'data' =>ClientResource::collection($Clients),
         'message' => "Show Deleted Client Successfully."
     ]);
 }
@@ -131,10 +128,17 @@ public function restore(string $id){
 public function forceDelete(string $id){
     $this->authorize('manage_users');
     $Client=Client::withTrashed()->where('id',$id)->first();
+    if (!$Client) {
+        return response()->json([
+            'message' => "Client not found."
+        ], 404);
+    }
+
     if ($Client) {
         $Client->getMedia('Clients')->each(function ($media) {
             $media->delete();
         });
+
         $Client->forceDelete();
     return response()->json([
         'message' => " Force Delete Client By Id Successfully."

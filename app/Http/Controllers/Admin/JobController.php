@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Job;
-use Illuminate\Http\Request;
 use App\Http\Requests\JobRequest;
 use App\Http\Resources\JobResource;
 use App\Http\Controllers\Controller;
@@ -25,6 +24,7 @@ class JobController extends Controller
     {
         $this->authorize('manage_users');
            $Job =Job::create ([
+                'realName' => $request->realName,
                 'address'  => $request->address,
                 'phoneNumber'  => $request->phoneNumber,
                 'qualification'  => $request->qualification,
@@ -83,6 +83,7 @@ class JobController extends Controller
     }
 
        $Job->update([
+        'realName' => $request->realName,
         'address'  => $request->address,
         'phoneNumber'  => $request->phoneNumber,
         'qualification'  => $request->qualification,
@@ -133,7 +134,13 @@ public function restore(string $id){
 }
 public function forceDelete(string $id){
     $this->authorize('manage_users');
-    $Job=Job::withTrashed()->where('id',$id)->forceDelete();
+    $Job=Job::withTrashed()->where('id',$id)->first();
+    if (!$Job) {
+        return response()->json([
+            'message' => "Job not found."
+        ], 404);
+    }
+    $Job->forceDelete();
     return response()->json([
         'message' => " Force Delete Job By Id Successfully."
     ]);

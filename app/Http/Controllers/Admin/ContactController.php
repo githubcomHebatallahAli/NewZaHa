@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Contact;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Http\Requests\ContactRequest;
 use App\Http\Resources\ContactResource;
 
@@ -119,6 +117,7 @@ public function destroy(string $id){
             'message' => "Contact not found."
         ], 404);
     }
+
     $contact->delete($id);
     return response()->json([
         'data' =>new ContactResource($contact),
@@ -145,7 +144,14 @@ public function restore(string $id){
 
 public function forceDelete(string $id){
     $this->authorize('manage_users');
-    $contact=Contact::withTrashed()->where('id',$id)->forceDelete();
+    $contact=Contact::withTrashed()->where('id',$id)->first();
+    if (!$contact) {
+        return response()->json([
+            'message' => "Contact not found."
+        ], 404);
+    }
+
+    $contact->forceDelete();
     return response()->json([
         'message' => " Force Delete Contact By Id Successfully."
     ]);

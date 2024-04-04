@@ -12,15 +12,17 @@ class Client extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes,InteractsWithMedia;
     protected $fillable = [
-        'phoneNumber',
-        'projectName',
-        'description',
-        'user_id'
+        'realName',
+        'user_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
 

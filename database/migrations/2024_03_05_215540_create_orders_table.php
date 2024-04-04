@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) use ($condition) {
             $table->id();
             $table->string('phoneNumber');
-            $table->string('nameProject')->nullable();
+            $table->string('nameProject');
             $table->integer('price')->nullable();
             $table->enum('condition',$condition)->default($condition[0])->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

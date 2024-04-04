@@ -16,9 +16,7 @@ class ClientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'phoneNumber' => $this->phoneNumber,
-            'projectName' => $this->projectName,
-            'description' => $this->description,
+            'realName' => $this->realName,
             'user' => new UserResource($this->user),
             'media' => MediaResource::collection($this->getMedia('Clients')),
 
