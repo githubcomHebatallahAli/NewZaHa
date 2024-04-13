@@ -34,7 +34,7 @@ class LoginRequest extends FormRequest
             throw new AuthenticationException('Invalid credentials');
         }
     }
-    
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
