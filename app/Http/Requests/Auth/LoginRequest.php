@@ -26,14 +26,14 @@ class LoginRequest extends FormRequest
         ];
     }
 
-    public function authenticate()
-    {
-        // استخدم Auth::attempt() للتحقق من بيانات تسجيل الدخول
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            // إذا لم ينجح التحقق، قم بإرجاع خطأ أو رسالة مناسبة
-            throw new AuthenticationException('Invalid credentials');
-        }
-    }
+    // public function authenticate()
+    // {
+    //     // استخدم Auth::attempt() للتحقق من بيانات تسجيل الدخول
+    //     if (!Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+    //         // إذا لم ينجح التحقق، قم بإرجاع خطأ أو رسالة مناسبة
+    //         throw new AuthenticationException('Invalid credentials');
+    //     }
+    // }
 
     public function failedValidation(Validator $validator)
     {

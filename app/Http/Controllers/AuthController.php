@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
 
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','verify']]);
     }
 
     public function login(LoginRequest $request){
@@ -27,6 +27,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'InvalidData'], 422);
         }
         return $this->createNewToken($token);
+
+
     }
 
     public function register(RegisterRequest $request) {

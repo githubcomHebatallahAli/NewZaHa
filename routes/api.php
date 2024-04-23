@@ -49,7 +49,17 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
+    Route::get('/verify/{token}', [AuthController::class ,'verify']);
 });
+
+Route::get('/unauthorized',function(){
+    return response()->json([
+        "message" => "Unauthorized"
+    ],401);
+})->name('login');
+
+
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'resetPassword'
@@ -57,9 +67,17 @@ Route::group([
     Route::post('/sendEmail', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('forgot.password'); ;
     Route::post('/reset', [ResetPasswordController::class, 'reset']);
 });
-Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] )->name('auth.google');
 
+
+
+
+Route::group([
+    'middleware' => 'api',
+], function () {
+Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] )->name('auth.google');
 Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
+});
+
 
 
 Route::group([
