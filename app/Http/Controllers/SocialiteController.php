@@ -2,76 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\JsonResponse;
+use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
 {
-
-    public function redirectToGoogle()
+    public function redirectToGoogle(): JsonResponse
     {
-        return Socialite::driver('google')->redirect();
+        return response()->json([
+            'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
+        ]);
     }
-    public function handleGoogleCallback()
 
+    public function handleGoogleCallback(): JsonResponse
     {
-
-        // try {
-        //     $user = Socialite::driver('google')->user();
-        //     $finduser = User::where('social_id', $user->id)->first();
-
-        //     if($finduser){
-
-        //         Auth::login($finduser);
-        //         // return redirect()->intended('dashboard');
-        //         return response()->json($finduser);
-        //     }else{
-
-        //         $newUser = User::updateOrCreate(['email' => $user->email],[
-
-        //                 'name' => $user->name,
-
-        //                 'social_id'=> $user->id,
-        //                 'social_type'=> 'google',
-
-        //                 'password' => Hash::make('my-google')
-
-        //             ]);
-        //         Auth::login($newUser);
-        //         // return redirect()->intended('dashboard');
-        //         return response()->json($finduser);
-        //     }
-
-        // } catch (Exception $e) {
-
-        //     dd($e->getMessage());
-
-        // }
-
         try {
-            $user = Socialite::driver('google')->user();
-            $findUser = User::where('social_id', $user->id)->first();
-
-            if ($findUser) {
-                Auth::login($findUser);
-                return response()->json($findUser);
-            } else {
-                $newUser = User::updateOrCreate(['email' => $user->email], [
-                    'name' => $user->name,
-                    'social_id' => $user->id,
-                    'social_type' => 'google',
-                    'password' => Hash::make('my-google')
-                ]);
-                Auth::login($newUser);
-                return response()->json($newUser);
-            }
-        } catch (Exception $e) {
-            dd($e->getMessage());
+            /** @var SocialiteUser $socialiteUser */
+            $socialiteUser = Socialite::driver('google')->stateless()->user();
+        } catch (ClientException $e) {
+            return response()->json(['error' => 'Invalid credentials provided.'], 422);
         }
 
+        /** @var User $user */
+        $user = User::query()
+            ->firstOrCreate(
+                [
+                    'email' => $socialiteUser->getEmail(),
+                ],
+                [
+                    'email_verified_at' => now(),
+                    'name' => $socialiteUser->getName(),
+                    'google_id' => $socialiteUser->getId(),
+                    'avatar' => $socialiteUser->getAvatar(),
+                ]
+            );
+
+        return response()->json([
+            'user' => $user,
+            'access_token' => $user->createToken('google-token')->plainTextToken,
+            'token_type' => 'Bearer',
+        ]);
     }
 }

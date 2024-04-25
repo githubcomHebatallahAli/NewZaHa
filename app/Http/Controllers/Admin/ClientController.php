@@ -40,7 +40,7 @@ class ClientController extends Controller
     public function show(string $id)
     {
         $this->authorize('manage_users');
-       $Client =Client::with('order')->find($id);
+       $Client =Client::with('orders')->find($id);
        if (!$Client) {
         return response()->json([
             'message' => "Client not found."
@@ -55,7 +55,7 @@ class ClientController extends Controller
     public function edit(string $id)
     {
         $this->authorize('manage_users');
-       $Client =Client::with('order')->find($id);
+       $Client =Client::with('orders')->find($id);
        if (!$Client) {
         return response()->json([
             'message' => "Client not found."

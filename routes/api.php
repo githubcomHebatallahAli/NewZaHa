@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\User;
-use App\Models\Admin;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
@@ -52,11 +52,11 @@ Route::group([
     Route::get('/verify/{token}', [AuthController::class ,'verify']);
 });
 
-Route::get('/unauthorized',function(){
-    return response()->json([
-        "message" => "Unauthorized"
-    ],401);
-})->name('login');
+// Route::get('/unauthorized',function(){
+//     return response()->json([
+//         "message" => "Unauthorized"
+//     ],401);
+// })->name('login');
 
 
 
@@ -74,9 +74,11 @@ Route::group([
 Route::group([
     'middleware' => 'api',
 ], function () {
-Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] )->name('auth.google');
+Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] );
 Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
 });
+
+
 
 
 
@@ -84,6 +86,18 @@ Route::group([
     'middleware' => 'admin',
     'prefix' => 'admin'
 ], function () {
+
+        // USER
+        Route::get('/showAll/uesr', [UserController::class, 'showAll']);
+        Route::post('/create/user', [UserController::class, 'create']);
+        Route::get('/show/user/{id}', [UserController::class, 'show']);
+        Route::get('/edit/user/{id}', [UserController::class, 'edit']);
+        Route::Put('/update/user/{id}', [UserController::class, 'update']);
+        Route::delete('/softDelete/user/{id}', [UserController::class, 'destroy']);
+        Route::get('/showDeleted/user', [UserController::class, 'showDeleted']);
+        Route::get('/restore/user/{id}', [UserController::class, 'restore']);
+        Route::delete('/forceDelete/user/{id}', [UserController::class, 'forceDelete']);
+
           // Admin
           Route::get('/showAll/admin', [AdminController::class, 'showAll']);
           Route::post('/create/admin', [AdminController::class, 'create']);
