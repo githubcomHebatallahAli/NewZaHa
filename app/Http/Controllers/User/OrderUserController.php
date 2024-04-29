@@ -21,20 +21,14 @@ class OrderUserController extends Controller
            $order =Order::create ([
                 'phoneNumber' => $request->phoneNumber,
                 'nameProject' => $request->nameProject,
-                'client_id' => $request->client_id,
+                'user_id' => $request->user()->id,
             ]);
             $admins = User::where('isAdmin', 1)->get();
             foreach ($admins as $admin) {
                 $admin->notify(new NewOrderNotification($order));
                 Mail::to($admin->email)->send(new NewOrderMail($order));
-
             }
-
-            $client = $order->client;
-            if ($client) {
-                Mail::to($client->user->email)->send(new OrderWelcomeMail($order));
-            }
-
+                Mail::to($order->user->email)->send(new OrderWelcomeMail($order));
            $order->save();
            return response()->json([
             'data' =>new OrderUserResource($order),
@@ -43,10 +37,10 @@ class OrderUserController extends Controller
 
         }
 
-
+    
     public function show(string $id)
     {
-    $Order = Order::with('client.orders')->find($id);
+    $Order = Order::with('user.orders')->find($id);
     $this->authorize('show', $Order);
     if (!$Order) {
         return response()->json([
@@ -61,7 +55,7 @@ class OrderUserController extends Controller
 
     public function edit(string $id)
     {
-        $Order = Order::with('client.orders')->find($id);
+        $Order = Order::with('user.orders')->find($id);
         $this->authorize('edit', $Order);
         if (!$Order) {
             return response()->json([
@@ -87,7 +81,7 @@ class OrderUserController extends Controller
        $Order->update([
         'phoneNumber' => $request->phoneNumber,
         'nameProject' => $request->nameProject,
-        'client_id' => $request->client_id,
+        'user_id' => $request->user()->id,
         ]);
 
         $admins = User::where('isAdmin', 1)->get();

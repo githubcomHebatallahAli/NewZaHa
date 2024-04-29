@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderWelcomeMail extends Mailable 
+class OrderWelcomeMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $email;
@@ -22,11 +22,7 @@ class OrderWelcomeMail extends Mailable
     public function __construct(Order $order)
     {
 
-        if ($order->client && $order->client->user) {
-            $this->email = $order->client->user->email;
-        } else {
-            $this->email = 'default@example.com';
-        }
+        $this->email = $order->user->email;
     }
     /**
      * Get the message envelope.

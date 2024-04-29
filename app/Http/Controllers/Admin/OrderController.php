@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Order;
-use App\Models\Client;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
@@ -15,20 +15,25 @@ class OrderController extends Controller
     {
         $this->authorize('manage_users');
 
-$clientsWithOrders = Client::with('orders')->get();
-$clientsArray = $clientsWithOrders->map(function ($client) {
+
+$usersWithOrders = User::whereHas('orders')->with('orders')->get();
+
+$usersArray = $usersWithOrders->map(function ($user) {
     return [
-        'id' => $client->id,
-        'realName' => $client->realName,
-        'orders' => $client->orders->map->only([
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'password' => $user->password,
+        'orders' => $user->orders->map->only([
             'id', 'phoneNumber', 'nameProject', 'price', 'condition', 'description'
         ]),
     ];
 })->toArray();
 
+
 return response()->json([
-    'data' => $clientsArray,
-    'message' => "Show All Clients with Orders Successfully."
+    'data' => $usersArray,
+    'message' => "Show All Users with Orders Successfully."
 ]);
     }
 
@@ -43,7 +48,7 @@ return response()->json([
                 'price' => $request->price,
                 'condition' => $request->condition,
                 'description' => $request->description,
-                'client_id' => $request->client_id,
+                'user_id' => $request->user_id,
             ]);
             $Order->addMediaFromRequest('url')->toMediaCollection('Orders');
            $Order->save();
@@ -58,7 +63,7 @@ return response()->json([
     public function show(string $id)
     {
         $this->authorize('manage_users');
-    $Order = Order::with('client.orders')->find($id);
+    $Order = Order::with('user.orders')->find($id);
     if (!$Order) {
         return response()->json([
             'message' => "Order not found."
@@ -73,7 +78,7 @@ return response()->json([
     public function edit(string $id)
     {
         $this->authorize('manage_users');
-        $Order = Order::with('client.orders')->find($id);
+        $Order = Order::with('user.orders')->find($id);
         if (!$Order) {
             return response()->json([
                 'message' => "Order not found."
@@ -101,7 +106,7 @@ return response()->json([
         'price' => $request->price,
         'condition' => $request->condition,
         'description' => $request->description,
-        'client_id' => $request->client_id,
+        'user_id' => $request->user_id,
         ]);
         $Order->clearMediaCollection('Orders');
 

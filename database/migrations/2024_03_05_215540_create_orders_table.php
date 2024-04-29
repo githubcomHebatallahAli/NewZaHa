@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('price')->nullable();
             $table->enum('condition',$condition)->default($condition[0])->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

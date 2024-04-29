@@ -18,19 +18,16 @@ class Order extends Model implements HasMedia
         'price',
         'condition',
         'description',
-        'client_id'
+        'user_id'
     ];
 
     const condition = ['Pending','Approved','In Progress','Completed','Cancelled'];
 
 
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
-
-    public function client()
+    public function user()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(User::class);
     }
+
+
 }

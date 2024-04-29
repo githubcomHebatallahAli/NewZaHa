@@ -35,7 +35,7 @@ class NewOrderNotification extends Notification
         return [
             'order_id' => $this->order->id,
             'phoneNumber' => $this->order->phoneNumber,
-            'client_id' => $this->order->client_id,
+            'user_id' => $this->order->user_id,
 
         ];
     }

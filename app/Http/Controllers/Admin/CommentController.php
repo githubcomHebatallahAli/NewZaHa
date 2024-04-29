@@ -13,7 +13,8 @@ class CommentController extends Controller
     public function showAll()
     {
         $this->authorize('manage_users');
-    $users = User::with('comments')->get();
+    $users = User::whereHas('comments')->with('comments')->get();
+
     $processedUsers = $users->map(function ($user) {
         return [
             'id' => $user->id,

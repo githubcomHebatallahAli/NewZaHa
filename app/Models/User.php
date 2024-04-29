@@ -40,10 +40,10 @@ class User extends Authenticatable  implements JWTSubject
         return $this->hasOne(Admin::class);
     }
 
-    public function client()
-    {
-        return $this->hasOne(Client::class);
-    }
+    // public function client()
+    // {
+    //     return $this->hasOne(Client::class);
+    // }
     public function team()
     {
         return $this->hasOne(Team::class);
@@ -51,6 +51,12 @@ class User extends Authenticatable  implements JWTSubject
     public function job()
     {
         return $this->hasOne(Job::class);
+    }
+
+
+    function orders(){
+
+        return $this->hasMany(Order::class);
     }
 
 
