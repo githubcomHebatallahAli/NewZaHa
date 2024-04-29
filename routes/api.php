@@ -181,16 +181,7 @@ Route::group([
 
 
 
-    // CLIENT
-    Route::get('/showAll/client', [ClientController::class, 'showAll']);
-    Route::post('/create/client', [ClientController::class, 'create']);
-    Route::get('/show/client/{id}', [ClientController::class, 'show']);
-    Route::get('/edit/client/{id}', [ClientController::class, 'edit']);
-    Route::post('/update/client/{id}', [ClientController::class, 'update']);
-    Route::delete('/softDelete/client/{id}', [clientController::class, 'destroy']);
-    Route::get('/showDeleted/client', [ClientController::class, 'showDeleted']);
-    Route::get('/restore/client/{id}', [ClientController::class, 'restore']);
-    Route::delete('/forceDelete/client/{id}', [clientController::class, 'forceDelete']);
+
 
     // PROJECT
     Route::get('/showAll/project', [ProjectController::class, 'showAll']);
@@ -279,17 +270,6 @@ Route::group([
     Route::get('/edit/order/{id}', [OrderUserController::class, 'edit']);
     Route::post('/update/order/{id}', [OrderUserController::class, 'update']);
     Route::delete('/forceDelete/order/{id}', [OrderUserController::class, 'forceDelete']);
-
-    // CLIENT
-    Route::post('/changePassword', [ClientUserController::class, 'changePassword']);
-    Route::post('/create/client', [ClientUserController::class, 'create']);
-    Route::get('/show/client/{id}', [ClientUserController::class, 'show']);
-    Route::get('/edit/client/{id}', [ClientUserController::class, 'edit']);
-    Route::post('/update/client/{id}', [ClientUserController::class, 'update']);
-    Route::post('/updatePhoto/client/{id}', [ClientUserController::class, 'updatePhoto']);
-    Route::delete('/forceDelete/client/{id}', [ClientUserController::class, 'forceDelete']);
-
-
 
 });
 
