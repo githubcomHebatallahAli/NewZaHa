@@ -17,7 +17,10 @@ class OrderUserController extends Controller
 {
     public function showAll()
     {
-        $this->authorize('showAll', Order::class);
+        // $this->authorize('showAll', Order::class);
+     
+        $this->authorize('showAll', auth()->user());
+
 
 
 $userWithOrders = User::whereHas('orders')->with('orders')->get();
