@@ -9,6 +9,7 @@ use App\Mail\OrderWelcomeMail;
 use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\OrderUserResource;
 use App\Notifications\NewOrderNotification;
 use App\Notifications\OrderUpdatedNotification;
@@ -21,6 +22,9 @@ class OrderUserController extends Controller
            $order =Order::create ([
                 'phoneNumber' => $request->phoneNumber,
                 'nameProject' => $request->nameProject,
+                'price' => $request->price,
+                'condition' => $request->condition,
+                'description' => $request->description,
                 'user_id' => $request->user()->id,
             ]);
             $admins = User::where('isAdmin', 1)->get();
@@ -31,13 +35,13 @@ class OrderUserController extends Controller
                 Mail::to($order->user->email)->send(new OrderWelcomeMail($order));
            $order->save();
            return response()->json([
-            'data' =>new OrderUserResource($order),
+            'data' =>new OrderResource($order),
             'message' => "Order Created Successfully."
         ]);
 
         }
 
-    
+
     public function show(string $id)
     {
     $Order = Order::with('user.orders')->find($id);
@@ -48,7 +52,7 @@ class OrderUserController extends Controller
         ], 404);
     }
     return response()->json([
-        'data' =>new OrderUserResource($Order),
+        'data' =>new OrderResource($Order),
         'message' => "Show Order for User Successfully."
     ]);
     }
@@ -63,7 +67,7 @@ class OrderUserController extends Controller
             ], 404);
         }
         return response()->json([
-            'data' =>new OrderUserResource($Order),
+            'data' =>new OrderResource($Order),
             'message' => "Edit Order for User Successfully."
         ]);
 
@@ -81,6 +85,9 @@ class OrderUserController extends Controller
        $Order->update([
         'phoneNumber' => $request->phoneNumber,
         'nameProject' => $request->nameProject,
+        'price' => $request->price,
+        'condition' => $request->condition,
+        'description' => $request->description,
         'user_id' => $request->user()->id,
         ]);
 
@@ -94,7 +101,7 @@ class OrderUserController extends Controller
 
        $Order->save();
        return response()->json([
-        'data' =>new  OrderUserResource($Order),
+        'data' =>new  OrderResource($Order),
         'message' => " Update Order By Id Successfully."
     ]);
 }
