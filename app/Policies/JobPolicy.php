@@ -17,18 +17,18 @@ class JobPolicy
 
     public function show(User $user, Job $job): bool
     {
-        return true;
+        return $user->isAdmin == 1 || $user->id === $job->user_id;
     }
 
     public function edit(User $user, Job $job): bool
     {
-        return $user->id === $job->user_id;
+        return $user->isAdmin == 1 || $user->id === $job->user_id;
     }
 
 
     public function update(User $user, Job $job): bool
     {
-        return $user->id === $job->user_id;
+        return $user->isAdmin == 1 || $user->id === $job->user_id;
     }
 
 

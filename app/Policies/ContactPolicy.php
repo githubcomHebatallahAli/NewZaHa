@@ -19,18 +19,18 @@ class ContactPolicy
 
         public function show(User $user, Contact $contact): bool
         {
-            return true;
+            return $user->isAdmin == 1 || $user->id === $contact->user_id;
         }
 
         public function edit(User $user, Contact $contact): bool
         {
-            return $user->id === $contact->user_id;
+            return $user->isAdmin == 1 || $user->id === $contact->user_id;
         }
 
 
         public function update(User $user, Contact $contact): bool
         {
-            return $user->id === $contact->user_id;
+            return $user->isAdmin == 1 || $user->id === $contact->user_id;
         }
 
 

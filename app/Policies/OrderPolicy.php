@@ -18,18 +18,19 @@ class OrderPolicy
 
     public function show(User $user, Order $order): bool
     {
-        return true;
+        return $user->isAdmin == 1 || $user->id === $order->user_id;
     }
 
     public function edit(User $user, Order $order): bool
     {
-        return $user->id === $order->user_id;
+        // return $user->id === $order->user_id;
+        return $user->isAdmin == 1 || $user->id === $order->user_id;
     }
 
 
     public function update(User $user, Order $order): bool
     {
-        return $user->id === $order->user_id;
+        return $user->isAdmin == 1 || $user->id === $order->user_id;
     }
 
 

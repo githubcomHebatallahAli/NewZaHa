@@ -24,18 +24,18 @@ class CommentPolicy
 
     public function show(User $user, Comment $comment): bool
     {
-        return true;
+        return $user->isAdmin == 1 || $user->id === $comment->user_id;
     }
 
     public function edit(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id;
+        return $user->isAdmin == 1 || $user->id === $comment->user_id;
     }
 
 
     public function update(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id;
+        return $user->isAdmin == 1 || $user->id === $comment->user_id;
     }
 
 
