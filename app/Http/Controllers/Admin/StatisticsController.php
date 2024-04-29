@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Team;
+use App\Models\User;
 use App\Models\Client;
 use App\Models\Comment;
 use App\Models\Project;
@@ -15,13 +16,13 @@ class StatisticsController extends Controller
     {
         $this->authorize('manage_users');
         $projectsCount = Project::count();
-        $clientsCount = Client::count();
+        $usersCount = User::count();
         $commentsCount = Comment::count();
         $teamsCount = Team::count();
         $salesCount = UserProject::sum('numberSales');
         $statistics = [
             'Projects_count' => $projectsCount,
-            'Clients_count' => $clientsCount,
+            'Users_count' => $usersCount,
             'Comments_count' => $commentsCount,
             'Teams_count' => $teamsCount,
             'NumberSales_count' => $salesCount,
