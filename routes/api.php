@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\SocialiteController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\User\JobUserController;
 use App\Http\Controllers\Admin\CommentController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\User\CommentUserController;
 use App\Http\Controllers\User\ContactUserController;
 use App\Http\Controllers\Admin\BestCommentController;
+use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\RolesAndPermissionsController;
 
 
@@ -78,8 +80,21 @@ Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] );
 Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
 });
 
-
-
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'admin'
+], function () {
+//    TEAM
+   Route::get('/showAll/team', [TeamController::class, 'showAll']);
+   Route::post('/create/team', [TeamController::class, 'create']);
+   Route::get('/show/team/{id}', [TeamController::class, 'show']);
+   Route::get('/edit/team/{id}', [TeamController::class, 'edit']);
+   Route::post('/update/team/{id}', [TeamController::class, 'update']);
+   Route::delete('/softDelete/team/{id}', [TeamController::class, 'destroy']);
+   Route::get('/showDeleted/team', [TeamController::class, 'showDeleted']);
+   Route::get('/restore/team/{id}', [TeamController::class, 'restore']);
+   Route::delete('/forceDelete/team/{id}', [TeamController::class, 'forceDelete']);
+});
 
 
 Route::group([
@@ -87,27 +102,27 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
 
-        // USER
-        Route::get('/showAll/uesr', [UserController::class, 'showAll']);
-        Route::post('/create/user', [UserController::class, 'create']);
-        Route::get('/show/user/{id}', [UserController::class, 'show']);
-        Route::get('/edit/user/{id}', [UserController::class, 'edit']);
-        Route::Put('/update/user/{id}', [UserController::class, 'update']);
-        Route::delete('/softDelete/user/{id}', [UserController::class, 'destroy']);
-        Route::get('/showDeleted/user', [UserController::class, 'showDeleted']);
-        Route::get('/restore/user/{id}', [UserController::class, 'restore']);
-        Route::delete('/forceDelete/user/{id}', [UserController::class, 'forceDelete']);
+    // USER
+    Route::get('/showAll/uesr', [UserController::class, 'showAll']);
+    Route::post('/create/user', [UserController::class, 'create']);
+    Route::get('/show/user/{id}', [UserController::class, 'show']);
+    Route::get('/edit/user/{id}', [UserController::class, 'edit']);
+    Route::Put('/update/user/{id}', [UserController::class, 'update']);
+    Route::delete('/softDelete/user/{id}', [UserController::class, 'destroy']);
+    Route::get('/showDeleted/user', [UserController::class, 'showDeleted']);
+    Route::get('/restore/user/{id}', [UserController::class, 'restore']);
+    Route::delete('/forceDelete/user/{id}', [UserController::class, 'forceDelete']);
 
-          // Admin
-          Route::get('/showAll/admin', [AdminController::class, 'showAll']);
-          Route::post('/create/admin', [AdminController::class, 'create']);
-          Route::get('/show/admin/{id}', [AdminController::class, 'show']);
-          Route::get('/edit/admin/{id}', [AdminController::class, 'edit']);
-          Route::post('/update/admin/{id}', [AdminController::class, 'update']);
-          Route::delete('/softDelete/admin/{id}', [AdminController::class, 'destroy']);
-          Route::get('/showDeleted/admin', [AdminController::class, 'showDeleted']);
-          Route::get('/restore/admin/{id}', [AdminController::class, 'restore']);
-          Route::delete('/forceDelete/admin/{id}', [AdminController::class, 'forceDelete']);
+    // Admin
+    Route::get('/showAll/admin', [AdminController::class, 'showAll']);
+    Route::post('/create/admin', [AdminController::class, 'create']);
+    Route::get('/show/admin/{id}', [AdminController::class, 'show']);
+    Route::get('/edit/admin/{id}', [AdminController::class, 'edit']);
+    Route::post('/update/admin/{id}', [AdminController::class, 'update']);
+    Route::delete('/softDelete/admin/{id}', [AdminController::class, 'destroy']);
+    Route::get('/showDeleted/admin', [AdminController::class, 'showDeleted']);
+    Route::get('/restore/admin/{id}', [AdminController::class, 'restore']);
+    Route::delete('/forceDelete/admin/{id}', [AdminController::class, 'forceDelete']);
 
     // CONTACT
     Route::get('/showAll/contact', [ContactController::class, 'showAll']);
@@ -164,16 +179,7 @@ Route::group([
     Route::get('/restore/job/{id}', [JobController::class, 'restore']);
     Route::delete('/forceDelete/job/{id}', [JobController::class, 'forceDelete']);
 
-    // TEAM
-    Route::get('/showAll/team', [TeamController::class, 'showAll']);
-    Route::post('/create/team', [TeamController::class, 'create']);
-    Route::get('/show/team/{id}', [TeamController::class, 'show']);
-    Route::get('/edit/team/{id}', [TeamController::class, 'edit']);
-    Route::post('/update/team/{id}', [TeamController::class, 'update']);
-    Route::delete('/softDelete/team/{id}', [TeamController::class, 'destroy']);
-    Route::get('/showDeleted/team', [TeamController::class, 'showDeleted']);
-    Route::get('/restore/team/{id}', [TeamController::class, 'restore']);
-    Route::delete('/forceDelete/team/{id}', [TeamController::class, 'forceDelete']);
+
 
     // CLIENT
     Route::get('/showAll/client', [ClientController::class, 'showAll']);
@@ -197,41 +203,42 @@ Route::group([
     Route::get('/restore/project/{id}', [ProjectController::class, 'restore']);
     Route::delete('/forceDelete/project/{id}', [ProjectController::class, 'forceDelete']);
 
-    //ROLE&PERMISSION
-    Route::get('/showAll/roles', [RolesAndPermissionsController::class, 'showAllRoles']);
-    Route::post('/create/role', [RolesAndPermissionsController::class, 'createRole']);
-    Route::get('/show/role/{id}', [RolesAndPermissionsController::class, 'showRole']);
-    Route::get('/edit/role/{id}', [RolesAndPermissionsController::class, 'editRole']);
-    Route::put('/update/role/{id}', [RolesAndPermissionsController::class, 'updateRole']);
-    Route::delete('/softDelete/role/{id}', [RolesAndPermissionsController::class, 'deleteRole']);
-    Route::get('/showDeleted/role/{id}', [RolesAndPermissionsController::class, 'showDeletedRole']);
-    Route::get('/restore/role/{id}', [RolesAndPermissionsController::class, 'restoreRole']);
-    Route::delete('/forceDelete/role/{id}', [RolesAndPermissionsController::class, 'forceDeleteRole']);
-    Route::get('/showAll/permissions', [RolesAndPermissionsController::class, 'showAllPermissions']);
-    Route::post('/create/permission', [RolesAndPermissionsController::class, 'createPermission']);
-    Route::get('/show/permission/{id}', [RolesAndPermissionsController::class, 'showPermission']);
-    Route::get('/edit/permission/{id}', [RolesAndPermissionsController::class, 'editPermission']);
-    Route::put('/update/permission/{id}', [RolesAndPermissionsController::class, 'updatePermission']);
-    Route::delete('/softDelete/permission/{id}', [RolesAndPermissionsController::class, 'deletePermission']);
-    Route::get('/showDeleted/permission/{id}', [RolesAndPermissionsController::class, 'showDeletedPermission']);
-    Route::get('/restore/permission/{id}', [RolesAndPermissionsController::class, 'restorePermission']);
-    Route::delete('/forceDelete/permission/{id}', [RolesAndPermissionsController::class, 'forceDeletePermission']);
+    //ROLES
+    Route::get('/showAll/roles', [RolesController::class, 'showAllRoles']);
+    Route::post('/create/role', [RolesController::class, 'createRole']);
+    Route::get('/show/role/{id}', [RolesController::class, 'showRole']);
+    Route::get('/edit/role/{id}', [RolesController::class, 'editRole']);
+    Route::put('/update/role/{id}', [RolesController::class, 'updateRole']);
+    Route::delete('/softDelete/role/{id}', [RolesController::class, 'deleteRole']);
+    Route::get('/showDeleted/role/{id}', [RolesController::class, 'showDeletedRole']);
+    Route::get('/restore/role/{id}', [RolesController::class, 'restoreRole']);
+    Route::delete('/forceDelete/role/{id}', [RolesController::class, 'forceDeleteRole']);
 
+    // PERMISSIONS
+    Route::get('/showAll/permissions', [PermissionsController::class, 'showAllPermissions']);
+    Route::post('/create/permission', [PermissionsController::class, 'createPermission']);
+    Route::get('/show/permission/{id}', [PermissionsController::class, 'showPermission']);
+    Route::get('/edit/permission/{id}', [PermissionsController::class, 'editPermission']);
+    Route::put('/update/permission/{id}', [PermissionsController::class, 'updatePermission']);
+    Route::delete('/softDelete/permission/{id}', [PermissionsController::class, 'deletePermission']);
+    Route::get('/showDeleted/permission/{id}', [PermissionsController::class, 'showDeletedPermission']);
+    Route::get('/restore/permission/{id}', [PermissionsController::class, 'restorePermission']);
+    Route::delete('/forceDelete/permission/{id}', [PermissionsController::class, 'forceDeletePermission']);
+
+    // ROLES&PERMISSIONS
     Route::post('/assign/role/{role}/to/permissions', [RolesAndPermissionsController::class, 'assignRoleToPermissions']);
     Route::delete('/revoke/role/{roleId}/from/permissions', [RolesAndPermissionsController::class, 'revokeRoleFromPermissions']);
     Route::delete('/revoke/role/{roleId}/from/permission/{permissionId}', [RolesAndPermissionsController::class, 'revokeRoleFromPermission']);
-
-
     Route::get('/showAll/rolesWithPermissions', [RolesAndPermissionsController::class, 'showAllRolesWithPermissions']);
-
+    // USER ROLES
     Route::post('/assign/role/{roleId}/to/user/{userId}', [RolesAndPermissionsController::class, 'assignRoleToUser']);
     Route::delete('/revoke/role/{roleId}/from/user/{userId}', [RolesAndPermissionsController::class, 'revokeRoleFromUser']);
+    Route::get('/showAll/usersWithRoles', [RolesAndPermissionsController::class, 'showAllRolesWithUsers']);
 
+    // USER PERMISSIONS
     Route::post('/assign/permissions/to/user/{user}', [RolesAndPermissionsController::class, 'assignPermissionsToUser']);
     Route::delete('/revoke/permission/{permissionId}/from/user/{userId}', [RolesAndPermissionsController::class, 'revokePermissionFromUser']);
     Route::delete('/revoke/user/{userId}/from/permissions', [RolesAndPermissionsController::class, 'revokeUserFromPermissions']);
-
-    Route::get('/showAll/usersWithRoles', [RolesAndPermissionsController::class, 'showAllRolesWithUsers']);
     Route::get('/showAll/usersWithPermissions', [RolesAndPermissionsController::class, 'showAllPermissionsWithUsers']);
 
     // STATISTICS

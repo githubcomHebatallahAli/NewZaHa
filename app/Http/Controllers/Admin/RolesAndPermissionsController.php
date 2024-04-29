@@ -16,254 +16,254 @@ use App\Http\Resources\PermissionResource;
 
 class RolesAndPermissionsController extends Controller
 {
-    public function showAllRoles()
-    {
-        $this->authorize('manage_users');
-        $Roles= Role::with('users')->get();
-        return response()->json([
-            'data' =>RoleResource::collection($Roles),
-            'message' => "Show All Roles Successfully."
-        ]);
-    }
+    // public function showAllRoles()
+    // {
+    //     $this->authorize('manage_users');
+    //     $Roles= Role::with('users')->get();
+    //     return response()->json([
+    //         'data' =>RoleResource::collection($Roles),
+    //         'message' => "Show All Roles Successfully."
+    //     ]);
+    // }
 
-    public function createRole(RoleRequest $request)
-    {
-        $this->authorize('manage_users');
-        $Role =Role::create ([
-            'name'  => $request->name,
-        ]);
-        return response()->json([
-            'data' =>new RoleResource($Role),
-            'message' => "Create Role Successfully."
-        ]);
-    }
-
-
-    public function showRole(string $id)
-    {
-        $this->authorize('manage_users');
-        $Role =Role::with('users')->find($id);
-        if (!$Role) {
-            return response()->json([
-                'message' => "Role not found."
-            ], 404);
-        }
-        return response()->json([
-         'data' =>new RoleResource($Role),
-         'message' => " Show Role By Id Successfully."
-     ]);
-    }
-
-    public function editRole(string $id)
-    {
-        $this->authorize('manage_users');
-        $Role =Role::with('users')->find($id);
-        if (!$Role) {
-            return response()->json([
-                'message' => "Role not found."
-            ], 404);
-        }
-        return response()->json([
-         'data' =>new RoleResource($Role),
-         'message' => " Edit Role By Id Successfully."
-     ]);
-    }
+    // public function createRole(RoleRequest $request)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Role =Role::create ([
+    //         'name'  => $request->name,
+    //     ]);
+    //     return response()->json([
+    //         'data' =>new RoleResource($Role),
+    //         'message' => "Create Role Successfully."
+    //     ]);
+    // }
 
 
-    public function updateRole(RoleRequest $request, string $id)
-    {
-        $this->authorize('manage_users');
-        $Role =Role::findOrFail($id);
-        if (!$Role) {
-            return response()->json([
-                'message' => "Role not found."
-            ], 404);
-        }
-        $Role->update([
-         'name'  => $request->name,
-        ]);
-        return response()->json([
-            'data' =>new RoleResource($Role),
-            'message' => " Update Role By Id Successfully."
-        ]);
-    }
+    // public function showRole(string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Role =Role::with('users')->find($id);
+    //     if (!$Role) {
+    //         return response()->json([
+    //             'message' => "Role not found."
+    //         ], 404);
+    //     }
+    //     return response()->json([
+    //      'data' =>new RoleResource($Role),
+    //      'message' => " Show Role By Id Successfully."
+    //  ]);
+    // }
+
+    // public function editRole(string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Role =Role::with('users')->find($id);
+    //     if (!$Role) {
+    //         return response()->json([
+    //             'message' => "Role not found."
+    //         ], 404);
+    //     }
+    //     return response()->json([
+    //      'data' =>new RoleResource($Role),
+    //      'message' => " Edit Role By Id Successfully."
+    //  ]);
+    // }
 
 
-    public function deleteRole(string $id)
-    {
-        $this->authorize('manage_users');
-        $Role =Role::find($id);
-        if (!$Role) {
-            return response()->json([
-                'message' => "Role not found."
-            ], 404);
-        }
-        $Role->delete($id);
-        return response()->json([
-            'data' =>new RoleResource($Role),
-            'message' => " Delete Role By Id Successfully."
-        ]);
-
-    }
-
-    public function showDeletedRole()
-    {
-        $this->authorize('manage_users');
-        $Roles=Role::onlyTrashed()->with('users')->get();
-        return response()->json([
-            'data' =>RoleResource::collection($Roles),
-            'message' => "Show Deleted Role Successfully."
-        ]);
-    }
+    // public function updateRole(RoleRequest $request, string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Role =Role::findOrFail($id);
+    //     if (!$Role) {
+    //         return response()->json([
+    //             'message' => "Role not found."
+    //         ], 404);
+    //     }
+    //     $Role->update([
+    //      'name'  => $request->name,
+    //     ]);
+    //     return response()->json([
+    //         'data' =>new RoleResource($Role),
+    //         'message' => " Update Role By Id Successfully."
+    //     ]);
+    // }
 
 
-    public function restoreRole($id)
-    {
-        $this->authorize('manage_users');
-        $Role=Role::withTrashed()->where('id',$id)->restore();
-        return response()->json([
-            'message' => " Restore Role By Id Successfully."
-        ]);
-    }
+    // public function deleteRole(string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Role =Role::find($id);
+    //     if (!$Role) {
+    //         return response()->json([
+    //             'message' => "Role not found."
+    //         ], 404);
+    //     }
+    //     $Role->delete($id);
+    //     return response()->json([
+    //         'data' =>new RoleResource($Role),
+    //         'message' => " Delete Role By Id Successfully."
+    //     ]);
 
-    public function forceDeleteRole($id)
-    {
-        $this->authorize('manage_users');
-        $Role=Role::withTrashed()->where('id',$id)->first();
-        if (!$Role) {
-            return response()->json([
-                'message' => "Role not found."
-            ], 404);
-        }
-        $Role->forceDelete();
-        return response()->json([
-            'message' => " Force Delete Role By Id Successfully."
-        ]);
-    }
+    // }
 
-
-    public function showAllPermissions()
-    {
-        $this->authorize('manage_users');
-        $Permission= Permission::with('users')->get();
-        return response()->json([
-            'data' => PermissionResource::collection($Permission),
-            'message' => "Show All  Permissions Successfully."
-        ]);
-    }
-
-    public function createPermission(Request $request)
-    {
-        $this->authorize('manage_users');
-        $Permission = Permission::create ([
-            'name'  => $request->name,
-        ]);
-        return response()->json([
-            'data' =>new PermissionResource($Permission),
-            'message' => "Create  Permission Successfully."
-        ]);
-    }
+    // public function showDeletedRole()
+    // {
+    //     $this->authorize('manage_users');
+    //     $Roles=Role::onlyTrashed()->with('users')->get();
+    //     return response()->json([
+    //         'data' =>RoleResource::collection($Roles),
+    //         'message' => "Show Deleted Role Successfully."
+    //     ]);
+    // }
 
 
-    public function showPermission(string $id)
-    {
-        $this->authorize('manage_users');
-        $Permission = Permission::with('users')->find($id);
-        if (!$Permission) {
-            return response()->json([
-                'message' => "Permission not found."
-            ], 404);
-        }
-        return response()->json([
-         'data' =>new PermissionResource($Permission),
-         'message' => " Show  Permission By Id Successfully."
-     ]);
-    }
+    // public function restoreRole($id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Role=Role::withTrashed()->where('id',$id)->restore();
+    //     return response()->json([
+    //         'message' => " Restore Role By Id Successfully."
+    //     ]);
+    // }
 
-    public function editPermission(string $id)
-    {
-        $this->authorize('manage_users');
-        $Permission = Permission::with('users')->find($id);
-        if (!$Permission) {
-            return response()->json([
-                'message' => "Permission not found."
-            ], 404);
-        }
-        return response()->json([
-         'Data' =>new PermissionResource($Permission),
-         'message' => " Edit  Permission By Id Successfully."
-     ]);
-    }
+    // public function forceDeleteRole($id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Role=Role::withTrashed()->where('id',$id)->first();
+    //     if (!$Role) {
+    //         return response()->json([
+    //             'message' => "Role not found."
+    //         ], 404);
+    //     }
+    //     $Role->forceDelete();
+    //     return response()->json([
+    //         'message' => " Force Delete Role By Id Successfully."
+    //     ]);
+    // }
 
 
-    public function updatePermission(Request $request, string $id)
-    {
-        $this->authorize('manage_users');
-        $Permission = Permission::findOrFail($id);
-        if (!$Permission) {
-            return response()->json([
-                'message' => "Permission not found."
-            ], 404);
-        }
-        $Permission->update([
-         'name'  => $request->name,
-        ]);
-        return response()->json([
-            'data' =>new  PermissionResource($Permission),
-            'message' => " Update  Permission By Id Successfully."
-        ]);
-    }
+    // public function showAllPermissions()
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission= Permission::with('users')->get();
+    //     return response()->json([
+    //         'data' => PermissionResource::collection($Permission),
+    //         'message' => "Show All  Permissions Successfully."
+    //     ]);
+    // }
+
+    // public function createPermission(Request $request)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission = Permission::create ([
+    //         'name'  => $request->name,
+    //     ]);
+    //     return response()->json([
+    //         'data' =>new PermissionResource($Permission),
+    //         'message' => "Create  Permission Successfully."
+    //     ]);
+    // }
 
 
-    public function deletePermission(string $id)
-    {
-        $this->authorize('manage_users');
-        $Permission = Permission::find($id);
-        if (!$Permission) {
-            return response()->json([
-                'message' => "Permission not found."
-            ], 404);
-        }
-        $Permission->delete($id);
-        return response()->json([
-            'data' =>new  PermissionResource($Permission),
-            'message' => "Soft Delete Permission By Id Successfully."
-        ]);
-    }
+    // public function showPermission(string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission = Permission::with('users')->find($id);
+    //     if (!$Permission) {
+    //         return response()->json([
+    //             'message' => "Permission not found."
+    //         ], 404);
+    //     }
+    //     return response()->json([
+    //      'data' =>new PermissionResource($Permission),
+    //      'message' => " Show  Permission By Id Successfully."
+    //  ]);
+    // }
 
-    public function showDeletedPermission()
-    {
-        $Permissions=Permission::onlyTrashed()->with('users')->get();
-        return response()->json([
-            'data' =>PermissionResource::collection($Permissions),
-            'message' => "Show Deleted Permission Successfully."
-        ]);
-    }
+    // public function editPermission(string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission = Permission::with('users')->find($id);
+    //     if (!$Permission) {
+    //         return response()->json([
+    //             'message' => "Permission not found."
+    //         ], 404);
+    //     }
+    //     return response()->json([
+    //      'Data' =>new PermissionResource($Permission),
+    //      'message' => " Edit  Permission By Id Successfully."
+    //  ]);
+    // }
 
 
-    public function restorePermission($id)
-    {
-        $this->authorize('manage_users');
-        $Permission=Permission::withTrashed()->where('id',$id)->restore();
-        return response()->json([
-            'message' => " Restore Permission By Id Successfully."
-        ]);
-    }
+    // public function updatePermission(Request $request, string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission = Permission::findOrFail($id);
+    //     if (!$Permission) {
+    //         return response()->json([
+    //             'message' => "Permission not found."
+    //         ], 404);
+    //     }
+    //     $Permission->update([
+    //      'name'  => $request->name,
+    //     ]);
+    //     return response()->json([
+    //         'data' =>new  PermissionResource($Permission),
+    //         'message' => " Update  Permission By Id Successfully."
+    //     ]);
+    // }
 
-    public function forceDeletePermission($id)
-    {
-        $this->authorize('manage_users');
-        $Permission=Permission::withTrashed()->where('id',$id)->first();
-        if (!$Permission) {
-            return response()->json([
-                'message' => "Permission not found."
-            ], 404);
-        }
-        $Permission->forceDelete();
-        return response()->json([
-            'message' => " Force Delete Permission By Id Successfully."
-        ]);
-    }
+
+    // public function deletePermission(string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission = Permission::find($id);
+    //     if (!$Permission) {
+    //         return response()->json([
+    //             'message' => "Permission not found."
+    //         ], 404);
+    //     }
+    //     $Permission->delete($id);
+    //     return response()->json([
+    //         'data' =>new  PermissionResource($Permission),
+    //         'message' => "Soft Delete Permission By Id Successfully."
+    //     ]);
+    // }
+
+    // public function showDeletedPermission()
+    // {
+    //     $Permissions=Permission::onlyTrashed()->with('users')->get();
+    //     return response()->json([
+    //         'data' =>PermissionResource::collection($Permissions),
+    //         'message' => "Show Deleted Permission Successfully."
+    //     ]);
+    // }
+
+
+    // public function restorePermission($id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission=Permission::withTrashed()->where('id',$id)->restore();
+    //     return response()->json([
+    //         'message' => " Restore Permission By Id Successfully."
+    //     ]);
+    // }
+
+    // public function forceDeletePermission($id)
+    // {
+    //     $this->authorize('manage_users');
+    //     $Permission=Permission::withTrashed()->where('id',$id)->first();
+    //     if (!$Permission) {
+    //         return response()->json([
+    //             'message' => "Permission not found."
+    //         ], 404);
+    //     }
+    //     $Permission->forceDelete();
+    //     return response()->json([
+    //         'message' => " Force Delete Permission By Id Successfully."
+    //     ]);
+    // }
 
 
 

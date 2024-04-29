@@ -11,7 +11,6 @@ class TeamController extends Controller
 {
     public function showAll()
     {
-        $this->authorize('manage_users');
          $Teams = Team::with('user')->get();
 
             return response()->json([
@@ -22,7 +21,7 @@ class TeamController extends Controller
 
     public function create(TeamRequest $request)
     {
-        $this->authorize('manage_users');
+
            $Team =Team::create ([
                 'job' => $request->job,
                 'skills' => $request->skills,
@@ -44,7 +43,7 @@ class TeamController extends Controller
 
     public function show(string $id)
     {
-        $this->authorize('manage_users');
+
        $Team =Team::with('user')->find($id);
        if (!$Team) {
         return response()->json([
@@ -60,7 +59,7 @@ class TeamController extends Controller
 
     public function edit(string $id)
     {
-        $this->authorize('manage_users');
+
        $Team =Team::with('user')->find($id);
        if (!$Team) {
         return response()->json([
@@ -76,7 +75,7 @@ class TeamController extends Controller
 
     public function update(TeamRequest $request, string $id)
     {
-        $this->authorize('manage_users');
+
        $Team =Team::findOrFail($id);
        if (!$Team) {
         return response()->json([
@@ -107,7 +106,7 @@ class TeamController extends Controller
 }
 
 public function destroy(string $id){
-    $this->authorize('manage_users');
+
     $Team =Team::find($id);
     if (!$Team) {
         return response()->json([
@@ -121,7 +120,7 @@ public function destroy(string $id){
     ]);
 }
 public function showDeleted(){
-    $this->authorize('manage_users');
+
     $Teams=Team::onlyTrashed()->with('user')->get();
     return response()->json([
         'data' =>TeamResource::collection($Teams),
@@ -130,7 +129,7 @@ public function showDeleted(){
 }
 
 public function restore(string $id){
-    $this->authorize('manage_users');
+
     $Team=Team::withTrashed()->where('id',$id)->restore();
     return response()->json([
         'message' => " Restore Team By Id Successfully."
@@ -138,7 +137,7 @@ public function restore(string $id){
 }
 
 public function forceDelete(string $id){
-    $this->authorize('manage_users');
+
     $Team=Team::withTrashed()->where('id',$id)->first();
     if (!$Team) {
         return response()->json([

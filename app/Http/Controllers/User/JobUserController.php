@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Mail\NewJobMail;
 use App\Mail\JobUpdatedMail;
 use App\Mail\WelcomeJobMail;
-use Illuminate\Http\Request;
 use App\Http\Requests\JobRequest;
 use App\Http\Resources\JobResource;
 use App\Http\Controllers\Controller;
