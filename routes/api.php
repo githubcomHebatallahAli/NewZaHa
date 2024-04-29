@@ -265,6 +265,7 @@ Route::group([
     Route::delete('/forceDelete/job/{id}', [JobUserController::class, 'forceDelete']);
 
     // ORDER
+    Route::get('/showAll/order', [OrderUserController::class, 'showAll']);
     Route::post('/create/order', [OrderUserController::class, 'create']);
     Route::get('/show/order/{id}', [OrderUserController::class, 'show']);
     Route::get('/edit/order/{id}', [OrderUserController::class, 'edit']);

@@ -10,12 +10,37 @@ use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderResource;
-use App\Http\Resources\OrderUserResource;
 use App\Notifications\NewOrderNotification;
 use App\Notifications\OrderUpdatedNotification;
 
 class OrderUserController extends Controller
 {
+    public function showAll()
+    {
+        $this->authorize('showAll', Order::class);
+
+
+$userWithOrders = User::whereHas('orders')->with('orders')->get();
+
+$usersArray = $userWithOrders->map(function ($user) {
+    return [
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'password' => $user->password,
+        'orders' => $user->orders->map->only([
+            'id', 'phoneNumber', 'nameProject', 'price', 'condition', 'description'
+        ]),
+    ];
+})->toArray();
+
+
+return response()->json([
+    'data' => $usersArray,
+    'message' => "Show User with Orders Successfully."
+]);
+    }
+
     public function create(OrderRequest $request)
     {
         $this->authorize('create', Order::class);

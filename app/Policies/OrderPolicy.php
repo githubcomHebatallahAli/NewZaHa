@@ -10,6 +10,12 @@ class OrderPolicy
 
 {
     use HandlesAuthorization;
+
+    public function showAll(User $user, Order $order): bool
+    {
+        return $user->isAdmin == 1 || $user->id === $order->user_id;
+    }
+
     public function create(User $user): bool
     {
         return true;
