@@ -160,10 +160,10 @@ public function showAll()
         $admins = User::where('isAdmin', 1)->get();
         foreach ($admins as $admin) {
             $admin->notify(new OrderUpdatedNotification($Order));
-            Mail::to($admin->email)->send(new NewOrderMail($Order));
+            // Mail::to($admin->email)->send(new NewOrderMail($Order));
 
         }
-        Mail::to($Order->user->email)->send(new OrderWelcomeMail($Order));
+        // Mail::to($Order->user->email)->send(new OrderWelcomeMail($Order));
 
        $Order->save();
        return response()->json([
