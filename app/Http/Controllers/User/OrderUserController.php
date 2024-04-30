@@ -10,39 +10,48 @@ use App\Http\Requests\OrderRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderResource;
+use Illuminate\Support\Facades\Storage;
 use App\Notifications\NewOrderNotification;
 use App\Notifications\OrderUpdatedNotification;
 
 class OrderUserController extends Controller
 {
-    public function showAll()
-    {
-        // $this->authorize('showAll', Order::class);
-     
-        $this->authorize('showAll', auth()->user());
 
 
+public function showAll()
+{
+    $user = auth()->user();
+    $userWithOrders = User::where('id', $user->id)->with(['orders', 'orders.media' => function ($query) {
+        $query->select('model_id', 'file_name')->where('collection_name', 'Orders');
+    }])->first();
 
-$userWithOrders = User::whereHas('orders')->with('orders')->get();
+    return response()->json([
+        'data' => [
+            'id' => $userWithOrders->id,
+            'name' => $userWithOrders->name,
+            'email' => $userWithOrders->email,
+            'password' => $userWithOrders->password,
+            'orders' => $userWithOrders->orders->map(function ($order) {
+                $media = $order->media->first();
+                $mediaUrl = $media ? url(Storage::url($media->file_name)) : null;
 
-$usersArray = $userWithOrders->map(function ($user) {
-    return [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'password' => $user->password,
-        'orders' => $user->orders->map->only([
-            'id', 'phoneNumber', 'nameProject', 'price', 'condition', 'description'
-        ]),
-    ];
-})->toArray();
+                return [
+                    'id' => $order->id,
+                    'phoneNumber' => $order->phoneNumber,
+                    'nameProject' => $order->nameProject,
+                    'price' => $order->price,
+                    'condition' => $order->condition,
+                    'description' => $order->description,
+                    'media' => [
+                        ['url' => $mediaUrl],
+                    ],
+                ];
+            }),
+        ],
+        'message' => "Show User with Orders Successfully."
+    ]);
+}
 
-
-return response()->json([
-    'data' => $usersArray,
-    'message' => "Show User with Orders Successfully."
-]);
-    }
 
     public function create(OrderRequest $request)
     {
@@ -55,12 +64,16 @@ return response()->json([
                 'description' => $request->description,
                 'user_id' => $request->user()->id,
             ]);
+            if ($request->hasFile('file')) {
+                $order->addMediaFromRequest('file')->toMediaCollection('Orders');
+            }
+
             $admins = User::where('isAdmin', 1)->get();
             foreach ($admins as $admin) {
                 $admin->notify(new NewOrderNotification($order));
-                Mail::to($admin->email)->send(new NewOrderMail($order));
+                // Mail::to($admin->email)->send(new NewOrderMail($order));
             }
-                Mail::to($order->user->email)->send(new OrderWelcomeMail($order));
+                // Mail::to($order->user->email)->send(new OrderWelcomeMail($order));
            $order->save();
            return response()->json([
             'data' =>new OrderResource($order),
@@ -84,6 +97,26 @@ return response()->json([
         'message' => "Show Order for User Successfully."
     ]);
     }
+
+//     public function show(string $id)
+// {
+//     $user = User::find($id);
+//         // Authorize the user
+//     // $this->authorize('show', $user);
+//     if (!$user) {
+//         return response()->json([
+//             'message' => "User not found."
+//         ], 404);
+//     }
+
+//     $orders = $user->orders;
+
+//     return response()->json([
+//         'data' => OrderResource::collection($orders),
+//         'message' => "Show Orders for User Successfully."
+//     ]);
+// }
+
 
     public function edit(string $id)
     {
@@ -118,6 +151,11 @@ return response()->json([
         'description' => $request->description,
         'user_id' => $request->user()->id,
         ]);
+        $Order->clearMediaCollection('Orders');
+
+        if ($request->hasFile('file')) {
+            $Order->addMediaFromRequest('file')->toMediaCollection('Orders');
+        }
 
         $admins = User::where('isAdmin', 1)->get();
         foreach ($admins as $admin) {
@@ -142,9 +180,15 @@ public function forceDelete(string $id){
         ], 404);
     }
     $this->authorize('forceDelete', $order);
+    if ($order) {
+        $order->getMedia('Orders')->each(function ($media) {
+            $media->delete();
+        });
+
     $order->forceDelete();
     return response()->json([
         'message' => " Force Delete order By Id Successfully."
     ]);
+}
 }
 }

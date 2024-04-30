@@ -31,7 +31,7 @@ class TeamRequest extends FormRequest
             'phoneNumber' => 'nullable|string',
             'qualification' => 'nullable|string',
             'media'=>'nullable',
-            'media.*'=>'image|mimes:jpg,jpeg,png,gif,svg',
+            'media.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
         ];
     }
     public function failedValidation(Validator $validator)

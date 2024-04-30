@@ -39,8 +39,15 @@ class ProjectController extends Controller
     ]);
     $project->users()->sync([$request->user_id]);
 
-    $project->addMediaFromRequest('imgProject')->toMediaCollection('Projects');
+
+    if ($request->hasFile('imgProject')) {
+        foreach ($request->file('imgProject') as $mediaFile) {
+            $project->addMedia($mediaFile)->toMediaCollection('Projects');
+        }
+    }
+    if ($request->hasFile('url')) {
     $project->addMediaFromRequest('url')->toMediaCollection('Projects');
+    }
 
     $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
         $query->where('user_id', $request->user_id);
@@ -110,8 +117,10 @@ class ProjectController extends Controller
         $project->users()->sync([$request->user_id]);
         $project->clearMediaCollection('Projects');
         if ($request->hasFile('imgProject')) {
-        $project->addMediaFromRequest('imgProject')->toMediaCollection('Projects');
-    }
+            foreach ($request->file('imgProject') as $mediaFile) {
+                $project->addMedia($mediaFile)->toMediaCollection('Projects');
+            }
+        }
     if ($request->hasFile('url')) {
         $project->addMediaFromRequest('url')->toMediaCollection('Projects');
     }

@@ -30,7 +30,7 @@ class OrderRequest extends FormRequest
             'condition'=> 'nullable|string',
             'description'=> 'nullable|string',
             'media'=>'nullable',
-            'media.*'=>'url',
+            'media.*'=>'nullable|url',
         ];
     }
     public function failedValidation(Validator $validator)

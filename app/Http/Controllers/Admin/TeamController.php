@@ -31,15 +31,19 @@ class TeamController extends Controller
                 'qualification' => $request->qualification,
                 'user_id' => $request->user_id,
             ]);
+            if ($request->hasFile('photo')) {
             $Team->addMediaFromRequest('photo')->toMediaCollection('Teams');
+            }
+            if ($request->hasFile('photo')) {
             $Team->addMediaFromRequest('imgIDCard')->toMediaCollection('Teams');
+            }
            $Team->save();
            return response()->json([
             'data' =>new TeamResource($Team),
             'message' => "Team Created Successfully."
         ]);
         }
-
+    
 
     public function show(string $id)
     {

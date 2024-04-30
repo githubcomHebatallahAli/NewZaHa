@@ -11,33 +11,64 @@ use App\Http\Resources\OrderResource;
 
 class OrderController extends Controller
 {
-    public function showAll()
-    {
-        $this->authorize('manage_users');
+//     public function showAll()
+//     {
+//         $this->authorize('manage_users');
+// $usersWithOrders = User::whereHas('orders')->with('orders')->get();
+// $usersArray = $usersWithOrders->map(function ($user) {
+//     return [
+//         'id' => $user->id,
+//         'name' => $user->name,
+//         'email' => $user->email,
+//         'password' => $user->password,
+//         'orders' => $user->orders->map->only([
+//             'id', 'phoneNumber', 'nameProject', 'price', 'condition', 'description',
+//         ]),
+//     ];
+// })->toArray();
 
+// return response()->json([
+//     'data' => $usersArray,
+//     'message' => "Show All Users with Orders Successfully."
+// ]);
+//     }
 
-$usersWithOrders = User::whereHas('orders')->with('orders')->get();
+public function showAll()
+{
+    $this->authorize('manage_users');
 
-$usersArray = $usersWithOrders->map(function ($user) {
-    return [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'password' => $user->password,
-        'orders' => $user->orders->map->only([
-            'id', 'phoneNumber', 'nameProject', 'price', 'condition', 'description'
-        ]),
-    ];
-})->toArray();
+    $usersWithOrders = User::whereHas('orders')->with('orders.media')->get();
 
+    $usersArray = $usersWithOrders->map(function ($user) {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => $user->password,
+            'orders' => $user->orders->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'phoneNumber' => $order->phoneNumber,
+                    'nameProject' => $order->nameProject,
+                    'price' => $order->price,
+                    'condition' => $order->condition,
+                    'description' => $order->description,
+                    'media' => $order->getMedia('Orders')->map(function ($media) {
+                        return [
+                            'id' => $media->id,
+                            'url' => $media->getUrl(),
+                        ];
+                    }),
+                ];
+            }),
+        ];
+    })->toArray();
 
-return response()->json([
-    'data' => $usersArray,
-    'message' => "Show All Users with Orders Successfully."
-]);
-    }
-
-
+    return response()->json([
+        'data' => $usersArray,
+        'message' => "Show All Users with Orders and Media Successfully."
+    ]);
+}
 
     public function create(OrderRequest $request)
     {
@@ -50,7 +81,9 @@ return response()->json([
                 'description' => $request->description,
                 'user_id' => $request->user_id,
             ]);
-            $Order->addMediaFromRequest('url')->toMediaCollection('Orders');
+            if ($request->hasFile('file')) {
+                $Order->addMediaFromRequest('file')->toMediaCollection('Orders');
+            }
            $Order->save();
            return response()->json([
             'data' =>new OrderResource($Order),
@@ -110,8 +143,8 @@ return response()->json([
         ]);
         $Order->clearMediaCollection('Orders');
 
-        if ($request->hasFile('url')) {
-            $Order->addMediaFromRequest('url')->toMediaCollection('Orders');
+        if ($request->hasFile('file')) {
+            $Order->addMediaFromRequest('file')->toMediaCollection('Orders');
         }
 
        $Order->save();

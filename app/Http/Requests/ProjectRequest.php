@@ -32,8 +32,8 @@ class ProjectRequest extends FormRequest
             'endingDate' => 'nullable|date|after:startingDate',
             'nameOfTeam' => 'nullable|string',
             'media'=>'nullable|array',
-            'media.*'=>'image|mimes:jpg,jpeg,png,gif,svg',
-            'media.*'=>'url',
+            'media.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
+            'media.*'=>'url|nullable',
         ];
     }
     public function failedValidation(Validator $validator)
