@@ -21,8 +21,8 @@ class OrderUserController extends Controller
 
 public function showAll()
 {
-    $user = auth()->user();
-    $userWithOrders = User::where('id', $user->id)->with(['orders', 'orders.media' => function ($query) {
+    $this->authorize('showAll', Order::class);
+    $userWithOrders = User::with(['orders', 'orders.media' => function ($query) {
         $query->select('model_id', 'file_name')->where('collection_name', 'Orders');
     }])->first();
 
