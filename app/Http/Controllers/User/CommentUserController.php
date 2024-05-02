@@ -38,10 +38,10 @@ class CommentUserController extends Controller
 
             $comment->user->notify(new NewCommentNotification($comment));
 
-            // $admins = User::where('isAdmin', 1)->get();
-            // foreach ($admins as $admin) {
-            //     Mail::to($admin->email)->send(new NewCommentMail($comment));
-            // }
+            $admins = User::where('isAdmin', 1)->get();
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new NewCommentMail($comment));
+            }
 
             return response()->json([
                 'data' => new CommentResource($comment),
@@ -100,10 +100,10 @@ class CommentUserController extends Controller
     $comment->user->notify(new CommentUpdated($comment));
 
 
-    // $admins = User::where('isAdmin', 1)->get();
-    // foreach ($admins as $admin) {
-    //     Mail::to($admin->email)->send(new CommentUpdatedMail($comment));
-    // }
+    $admins = User::where('isAdmin', 1)->get();
+    foreach ($admins as $admin) {
+        Mail::to($admin->email)->send(new CommentUpdatedMail($comment));
+    }
 
     return response()->json([
         'data' => new UserCommentResource($comment),

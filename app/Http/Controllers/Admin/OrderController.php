@@ -11,27 +11,6 @@ use App\Http\Resources\OrderResource;
 
 class OrderController extends Controller
 {
-//     public function showAll()
-//     {
-//         $this->authorize('manage_users');
-// $usersWithOrders = User::whereHas('orders')->with('orders')->get();
-// $usersArray = $usersWithOrders->map(function ($user) {
-//     return [
-//         'id' => $user->id,
-//         'name' => $user->name,
-//         'email' => $user->email,
-//         'password' => $user->password,
-//         'orders' => $user->orders->map->only([
-//             'id', 'phoneNumber', 'nameProject', 'price', 'condition', 'description',
-//         ]),
-//     ];
-// })->toArray();
-
-// return response()->json([
-//     'data' => $usersArray,
-//     'message' => "Show All Users with Orders Successfully."
-// ]);
-//     }
 
 public function showAll()
 {
@@ -53,6 +32,8 @@ public function showAll()
                     'price' => $order->price,
                     'condition' => $order->condition,
                     'description' => $order->description,
+                    'startingDate' => $order->startingDate,
+                    'endingDate' => $order->endingDate,
                     'media' => $order->getMedia('Orders')->map(function ($media) {
                         return [
                             'id' => $media->id,
@@ -79,6 +60,8 @@ public function showAll()
                 'price' => $request->price,
                 'condition' => $request->condition,
                 'description' => $request->description,
+                'startingDate' => $request->startingDate,
+                'endingDate' => $request->endingDate,
                 'user_id' => $request->user_id,
             ]);
             if ($request->hasFile('file')) {
@@ -139,6 +122,8 @@ public function showAll()
         'price' => $request->price,
         'condition' => $request->condition,
         'description' => $request->description,
+        'startingDate' => $request->startingDate,
+        'endingDate' => $request->endingDate,
         'user_id' => $request->user_id,
         ]);
         $Order->clearMediaCollection('Orders');

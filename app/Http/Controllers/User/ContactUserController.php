@@ -29,10 +29,10 @@ class ContactUserController extends Controller
             $contact->user->notify(new NewContactNotification($contact));
 
             $admins = User::where('isAdmin', 1)->get();
-            // foreach ($admins as $admin) {
-            //     Mail::to($admin->email)->send(new NewContactMail($contact));
-            // }
-            // Mail::to($contact->user->email)->send(new ContactWelcomeMail($contact));
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new NewContactMail($contact));
+            }
+            Mail::to($contact->user->email)->send(new ContactWelcomeMail($contact));
 
            $contact->save();
            return response()->json([
@@ -89,10 +89,10 @@ class ContactUserController extends Controller
         $contact->user->notify(new ContactUpdatedNotification($contact));
 
         $admins = User::where('isAdmin', 1)->get();
-        // foreach ($admins as $admin) {
-        //     Mail::to($admin->email)->send(new ContactUpdatedMail($contact));
-        // }
-        // Mail::to($contact->user->email)->send(new ContactWelcomeMail($contact));
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new ContactUpdatedMail($contact));
+        }
+        Mail::to($contact->user->email)->send(new ContactWelcomeMail($contact));
        $contact->save();
        return response()->json([
         'data' =>new ContactResource($contact),

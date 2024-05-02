@@ -21,6 +21,8 @@ class OrderResource extends JsonResource
             'price'=> $this ->price,
             'condition'=> $this ->condition,
             'description'=> $this ->description,
+            'startingDate' => $this->startingDate,
+            'endingDate' => $this->endingDate,
             'user' => new UserResource($this->user),
             'media' => MediaResource::collection($this->getMedia('Orders')),
         ];

@@ -29,6 +29,8 @@ class OrderRequest extends FormRequest
             'price'=> 'nullable|integer',
             'condition'=> 'nullable|string',
             'description'=> 'nullable|string',
+            'startingDate' => 'nullable|date',
+            'endingDate' => 'nullable|date|after:startingDate',
             'media'=>'nullable',
             'media.*'=>'nullable|url',
         ];

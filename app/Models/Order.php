@@ -18,6 +18,8 @@ class Order extends Model implements HasMedia
         'price',
         'condition',
         'description',
+        'startingDate',
+        'endingDate',
         'user_id'
     ];
 

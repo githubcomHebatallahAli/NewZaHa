@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\OrderResource;
 use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Response;
 use App\Notifications\NewOrderNotification;
 use App\Notifications\OrderUpdatedNotification;
 
@@ -42,6 +43,8 @@ public function showAll()
                     'price' => $order->price,
                     'condition' => $order->condition,
                     'description' => $order->description,
+                    'startingDate' => $order->startingDate,
+                    'endingDate' => $order->endingDate,
                     'media' => [
                         ['url' => $mediaUrl],
                     ],
@@ -62,6 +65,8 @@ public function showAll()
                 'price' => $request->price,
                 'condition' => $request->condition,
                 'description' => $request->description,
+                'startingDate' => $request->startingDate,
+                'endingDate' => $request->endingDate,
                 'user_id' => $request->user()->id,
             ]);
             if ($request->hasFile('file')) {
@@ -71,9 +76,9 @@ public function showAll()
             $admins = User::where('isAdmin', 1)->get();
             foreach ($admins as $admin) {
                 $admin->notify(new NewOrderNotification($order));
-                // Mail::to($admin->email)->send(new NewOrderMail($order));
+                Mail::to($admin->email)->send(new NewOrderMail($order));
             }
-                // Mail::to($order->user->email)->send(new OrderWelcomeMail($order));
+                Mail::to($order->user->email)->send(new OrderWelcomeMail($order));
            $order->save();
            return response()->json([
             'data' =>new OrderResource($order),
@@ -81,7 +86,6 @@ public function showAll()
         ]);
 
         }
-
 
     public function show(string $id)
     {
@@ -97,26 +101,6 @@ public function showAll()
         'message' => "Show Order for User Successfully."
     ]);
     }
-
-//     public function show(string $id)
-// {
-//     $user = User::find($id);
-//         // Authorize the user
-//     // $this->authorize('show', $user);
-//     if (!$user) {
-//         return response()->json([
-//             'message' => "User not found."
-//         ], 404);
-//     }
-
-//     $orders = $user->orders;
-
-//     return response()->json([
-//         'data' => OrderResource::collection($orders),
-//         'message' => "Show Orders for User Successfully."
-//     ]);
-// }
-
 
     public function edit(string $id)
     {
@@ -149,6 +133,8 @@ public function showAll()
         'price' => $request->price,
         'condition' => $request->condition,
         'description' => $request->description,
+        'startingDate' => $request->startingDate,
+        'endingDate' => $request->endingDate,
         'user_id' => $request->user()->id,
         ]);
         $Order->clearMediaCollection('Orders');
@@ -160,10 +146,9 @@ public function showAll()
         $admins = User::where('isAdmin', 1)->get();
         foreach ($admins as $admin) {
             $admin->notify(new OrderUpdatedNotification($Order));
-            // Mail::to($admin->email)->send(new NewOrderMail($Order));
-
+            Mail::to($admin->email)->send(new NewOrderMail($Order));
         }
-        // Mail::to($Order->user->email)->send(new OrderWelcomeMail($Order));
+        Mail::to($Order->user->email)->send(new OrderWelcomeMail($Order));
 
        $Order->save();
        return response()->json([
