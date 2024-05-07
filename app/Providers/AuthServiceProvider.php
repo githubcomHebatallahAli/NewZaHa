@@ -4,13 +4,13 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use App\Models\Job;
+use App\Models\User;
 use App\Models\Order;
-use App\Models\Client;
 use App\Models\Comment;
 use App\Models\Contact;
 use App\Policies\JobPolicy;
+use App\Policies\UserPolicy;
 use App\Policies\OrderPolicy;
-use App\Policies\ClientPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\ContactPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         Contact::class => ContactPolicy::class,
         Job::class => JobPolicy::class,
         Order::class => OrderPolicy::class,
-        Client::class => ClientPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**

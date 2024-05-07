@@ -86,14 +86,8 @@ Route::group([
 ], function () {
 //    TEAM
    Route::get('/showAll/team', [TeamController::class, 'showAll']);
-   Route::post('/create/team', [TeamController::class, 'create']);
-   Route::get('/show/team/{id}', [TeamController::class, 'show']);
-   Route::get('/edit/team/{id}', [TeamController::class, 'edit']);
-   Route::post('/update/team/{id}', [TeamController::class, 'update']);
-   Route::delete('/softDelete/team/{id}', [TeamController::class, 'destroy']);
-   Route::get('/showDeleted/team', [TeamController::class, 'showDeleted']);
-   Route::get('/restore/team/{id}', [TeamController::class, 'restore']);
-   Route::delete('/forceDelete/team/{id}', [TeamController::class, 'forceDelete']);
+   Route::get('/showAll/bestComment', [BestCommentController::class, 'showAll']);
+
 });
 
 
@@ -147,7 +141,7 @@ Route::group([
     Route::delete('/forceDelete/comment/{id}', [CommentController::class, 'forceDelete']);
 
     //BestComment
-    Route::get('/showAll/bestComment', [BestCommentController::class, 'showAll']);
+
     Route::post('/create/bestComment', [BestCommentController::class, 'create']);
     Route::get('/show/bestComment/{id}', [BestCommentController::class, 'show']);
     Route::get('/edit/bestComment/{id}', [BestCommentController::class, 'edit']);
@@ -179,7 +173,15 @@ Route::group([
     Route::get('/restore/job/{id}', [JobController::class, 'restore']);
     Route::delete('/forceDelete/job/{id}', [JobController::class, 'forceDelete']);
 
-
+    // TEAM
+    Route::post('/create/team', [TeamController::class, 'create']);
+    Route::get('/show/team/{id}', [TeamController::class, 'show']);
+    Route::get('/edit/team/{id}', [TeamController::class, 'edit']);
+    Route::post('/update/team/{id}', [TeamController::class, 'update']);
+    Route::delete('/softDelete/team/{id}', [TeamController::class, 'destroy']);
+    Route::get('/showDeleted/team', [TeamController::class, 'showDeleted']);
+    Route::get('/restore/team/{id}', [TeamController::class, 'restore']);
+    Route::delete('/forceDelete/team/{id}', [TeamController::class, 'forceDelete']);
 
 
 
@@ -265,7 +267,7 @@ Route::group([
     Route::delete('/forceDelete/job/{id}', [JobUserController::class, 'forceDelete']);
 
     // ORDER
-    Route::get('/showAll/order', [OrderUserController::class, 'showAll']);
+    Route::get('/showAll/order/{id}', [OrderUserController::class, 'showAll']);
     Route::post('/create/order', [OrderUserController::class, 'create']);
     Route::get('/show/order/{id}', [OrderUserController::class, 'show']);
     Route::get('/edit/order/{id}', [OrderUserController::class, 'edit']);
