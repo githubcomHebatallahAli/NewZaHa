@@ -10,10 +10,10 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class CommentPolicy
 {
     use HandlesAuthorization;
-    public function showAll(User $user): bool
-    {
-        return true;
-    }
+    // public function showAll(User $user): bool
+    // {
+    //     return true;
+    // }
 
 
     public function create(User $user): bool

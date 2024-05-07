@@ -16,18 +16,6 @@ use App\Notifications\NewCommentNotification;
 
 class CommentUserController extends Controller
 {
-    public function showAll()
-    {
-        $this->authorize('showAll', Comment::class);
-        $comment= Comment::with('user')->get();
-    return response()->json([
-        'data' => UserCommentResource::collection( $comment),
-        'message' => "Show All Users With Comments Successfully."
-    ]);
-    }
-
-
-
     public function create(CommentRequest $request)
     {
                $this->authorize('create', Comment::class);

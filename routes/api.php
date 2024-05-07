@@ -245,7 +245,6 @@ Route::group([
     'prefix' => 'auth'
 ], function () {
     // COMMENT
-    Route::get('/showAll/comment', [CommentUserController::class, 'showAll']);
     Route::post('/create/comment', [CommentUserController::class, 'create']);
     Route::get('/show/comment/{id}', [CommentUserController::class, 'show']);
     Route::get('/edit/comment/{id}', [CommentUserController::class, 'edit']);

@@ -13,20 +13,28 @@ class CommentController extends Controller
     public function showAll()
     {
         $this->authorize('manage_users');
-    $users = User::whereHas('comments')->with('comments')->get();
 
-    $processedUsers = $users->map(function ($user) {
-        return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'user_comments' => $user->comments->pluck('comment')->toArray(),
-        ];
-    });
-    return response()->json([
-        'data' => $processedUsers,
-        'message' => "Show All Users With Comments Successfully."
-    ]);
+        $usersWithComments = User::whereHas('comments')->get();
+
+        $usersArray = $usersWithComments->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => $user->password,
+                'comments' => $user->comments->map(function ($comment) {
+                    return [
+                        'id' => $comment->id,
+                        'comment' => $comment->comment,
+                            ];
+                        }),
+                    ];
+        })->toArray();
+
+        return response()->json([
+            'data' => $usersArray,
+            'message' => "Show All Users with Comments Successfully."
+        ]);
     }
 
 
