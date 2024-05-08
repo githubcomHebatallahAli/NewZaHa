@@ -10,31 +10,6 @@ use App\Http\Resources\ContactResource;
 
 class ContactController extends Controller
 {
-//     public function showAll()
-//     {
-//         $this->authorize('manage_users');
-//         $users = User::with('contactUs')->get();
-//     $processedUsers = [];
-//     foreach ($users as $user) {
-//         $phoneNumber = null;
-//         $userMessages = [];
-//         if ($user->contactUs->isNotEmpty()) {
-//             $phoneNumber = $user->contactUs->first()->phoneNumber;
-//             $userMessages = $user->contactUs->pluck('message')->toArray();
-//         }
-//         $processedUsers[] = [
-//             'id' => $user->id,
-//             'name' => $user->name,
-//             'email' => $user->email,
-//             'phoneNumber' => $phoneNumber,
-//             'user_messages' => $userMessages,
-//         ];
-
-// }    return response()->json([
-//         'data' => $processedUsers,
-//         'message' => "Show All Users With Messages Successfully."
-//     ]);
-//     }
 
     public function showAll()
     {

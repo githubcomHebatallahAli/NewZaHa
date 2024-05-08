@@ -19,6 +19,7 @@ class ProjectResource extends JsonResource
             'nameProject' => $this->nameProject,
             'skills'=> $this ->skills,
             'description'=> $this ->description,
+            'urlProject'=> $this->urlProject,
                         'users' => $this->users->map(function ($user) {
                     return [
                         'name' => $user->name,
@@ -31,25 +32,7 @@ class ProjectResource extends JsonResource
     }
 }
 
-        //     return [
-        //         'id' => $this->id,
-        //         'nameProject' => $this->nameProject,
-        //         'skills' => $this->skills,
-        //         'description' => $this->description,
-        //         'users' => $this->users->map(function ($user) {
-        //             return [
-        //                 'name' => $user->name,
-        //                 'email' => $user->email,
-        //                 'pivot' => $user->pivot->toArray(),
-        //             ];
-        //         }),
-        //         'media' => $this->getMedia('Projects')->map(function ($mediaItem) {
-        //             return [
-        //                 'url' => $mediaItem->getUrl(),
-        //             ];
-        //         }),
-        //     ];
-        // }
+
 
 
 

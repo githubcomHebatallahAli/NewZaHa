@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nameProject')->nullable();
             $table->text('skills')->nullable();
             $table->text('description')->nullable();
+            $table->string('urlProject')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

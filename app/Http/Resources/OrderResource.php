@@ -23,8 +23,8 @@ class OrderResource extends JsonResource
             'description'=> $this ->description,
             'startingDate' => $this->startingDate,
             'endingDate' => $this->endingDate,
+            'urlProject' => $this->urlProject,
             'user' => new UserResource($this->user),
-            'media' => MediaResource::collection($this->getMedia('Orders')),
         ];
     }
 }

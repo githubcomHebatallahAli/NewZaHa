@@ -16,7 +16,7 @@ class ProjectController extends Controller
         $projects= Project::with('users')->get();
         return response()->json([
             'data' =>ProjectResource::collection($projects),
-            'message' => "Show All Projects Successfully."
+            'message' => "Show All Users With Projects Successfully."
         ]);
     }
 
@@ -27,6 +27,7 @@ class ProjectController extends Controller
         'nameProject' => $request->nameProject,
         'skills' => $request->skills,
         'description' => $request->description,
+        'urlProject'=> $request->urlProject
     ]);
     $userProject = UserProject::create([
         'user_id' => $request->user_id,
@@ -45,9 +46,7 @@ class ProjectController extends Controller
             $project->addMedia($mediaFile)->toMediaCollection('Projects');
         }
     }
-    if ($request->hasFile('url')) {
-    $project->addMediaFromRequest('url')->toMediaCollection('Projects');
-    }
+
 
     $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
         $query->where('user_id', $request->user_id);
@@ -104,6 +103,7 @@ class ProjectController extends Controller
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
             'description' => $request->description,
+            'urlProject'=> $request->urlProject
         ]);
         UserProject::updateOrCreate([
             'user_id' => $request->user_id,
@@ -121,9 +121,7 @@ class ProjectController extends Controller
                 $project->addMedia($mediaFile)->toMediaCollection('Projects');
             }
         }
-    if ($request->hasFile('url')) {
-        $project->addMediaFromRequest('url')->toMediaCollection('Projects');
-    }
+
     $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
         $query->where('user_id', $request->user_id);
     }])->find($project->id);

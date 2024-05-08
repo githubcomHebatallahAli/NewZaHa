@@ -26,6 +26,7 @@ class ProjectRequest extends FormRequest
             'nameProject'=> 'nullable|string',
             'skills'=> 'nullable|string',
             'description'=> 'nullable|string',
+            'urlProject'=> 'nullable|string',
             'numberSales' => 'nullable|integer',
             'price' => 'nullable|integer',
             'startingDate' => 'nullable|date',
@@ -33,7 +34,7 @@ class ProjectRequest extends FormRequest
             'nameOfTeam' => 'nullable|string',
             'media'=>'nullable|array',
             'media.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
-            'media.*'=>'url|nullable',
+
         ];
     }
     public function failedValidation(Validator $validator)

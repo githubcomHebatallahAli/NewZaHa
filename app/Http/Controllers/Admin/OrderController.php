@@ -16,7 +16,7 @@ public function showAll()
 {
     $this->authorize('manage_users');
 
-    $usersWithOrders = User::whereHas('orders')->with('orders.media')->get();
+    $usersWithOrders = User::whereHas('orders')->get();
 
     $usersArray = $usersWithOrders->map(function ($user) {
         return [
@@ -34,20 +34,15 @@ public function showAll()
                     'description' => $order->description,
                     'startingDate' => $order->startingDate,
                     'endingDate' => $order->endingDate,
-                    'media' => $order->getMedia('Orders')->map(function ($media) {
-                        return [
-                            'id' => $media->id,
-                            'url' => $media->getUrl(),
-                        ];
+                    'urlProject' =>$order->urlProject
+                ];
                     }),
                 ];
-            }),
-        ];
     })->toArray();
 
     return response()->json([
         'data' => $usersArray,
-        'message' => "Show All Users with Orders and Media Successfully."
+        'message' => "Show All Users with Orders Successfully."
     ]);
 }
 
@@ -63,16 +58,14 @@ public function showAll()
                 'startingDate' => $request->startingDate,
                 'endingDate' => $request->endingDate,
                 'user_id' => $request->user_id,
+                'urlProject'=>$request->urlProject
             ]);
-            if ($request->hasFile('file')) {
-                $Order->addMediaFromRequest('file')->toMediaCollection('Orders');
-            }
+
            $Order->save();
            return response()->json([
             'data' =>new OrderResource($Order),
             'message' => "Order Created Successfully."
         ]);
-
         }
 
 
@@ -125,12 +118,8 @@ public function showAll()
         'startingDate' => $request->startingDate,
         'endingDate' => $request->endingDate,
         'user_id' => $request->user_id,
+        'urlProject'=>$request->urlProject
         ]);
-        $Order->clearMediaCollection('Orders');
-
-        if ($request->hasFile('file')) {
-            $Order->addMediaFromRequest('file')->toMediaCollection('Orders');
-        }
 
        $Order->save();
        return response()->json([
@@ -180,15 +169,10 @@ public function forceDelete(string $id){
         ], 404);
     }
 
-    if ($Order) {
-        $Order->getMedia('Orders')->each(function ($media) {
-            $media->delete();
-        });
-
         $Order->forceDelete();
     return response()->json([
         'message' => " Force Delete Order By Id Successfully."
     ]);
 }
 }
-}
+

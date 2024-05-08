@@ -20,7 +20,8 @@ class Order extends Model implements HasMedia
         'description',
         'startingDate',
         'endingDate',
-        'user_id'
+        'user_id',
+        'urlProject'
     ];
 
     const condition = ['Pending','Approved','In Progress','Completed','Cancelled'];

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('startingDate')->nullable();
             $table->date('endingDate')->nullable();
+            $table->string('urlProject')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
