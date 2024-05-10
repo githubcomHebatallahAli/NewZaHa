@@ -24,12 +24,16 @@ class TeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job'=> 'nullable|string',
+
+            'name'=> 'required|string',
+            'job'=> 'required|string',
             "skills" => 'nullable|string',
             "numProject" => 'nullable|string',
             "address" => 'nullable|string',
             'phoneNumber' => 'nullable|string',
             'qualification' => 'nullable|string',
+            'dateOfJoin' => 'nullable|date',
+            'salary' => 'nullable|integer',
             'media'=>'nullable',
             'media.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
         ];

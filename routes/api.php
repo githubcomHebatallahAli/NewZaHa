@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\User\TeamUserController;
 use App\Http\Controllers\User\OrderUserController;
 use App\Http\Controllers\User\ClientUserController;
 use App\Http\Controllers\Admin\StatisticsController;
@@ -24,6 +25,8 @@ use App\Http\Controllers\User\CommentUserController;
 use App\Http\Controllers\User\ContactUserController;
 use App\Http\Controllers\Admin\BestCommentController;
 use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\User\BestCommentUserController;
 use App\Http\Controllers\Admin\RolesAndPermissionsController;
 
 
@@ -70,9 +73,6 @@ Route::group([
     Route::post('/reset', [ResetPasswordController::class, 'reset']);
 });
 
-
-
-
 Route::group([
     'middleware' => 'api',
 ], function () {
@@ -81,12 +81,13 @@ Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallb
 });
 
 Route::group([
-    'middleware' => 'api',
-    'prefix' => 'admin'
+ 
+    'prefix' => 'user'
 ], function () {
 //    TEAM
-   Route::get('/showAll/team', [TeamController::class, 'showAll']);
-   Route::get('/showAll/bestComment', [BestCommentController::class, 'showAll']);
+   Route::get('/showAll/team', [TeamUserController::class, 'showAll']);
+//    BestCOMMENT
+   Route::get('/showAll/bestComment', [BestCommentUserController::class, 'showAll']);
 
 });
 
@@ -174,6 +175,7 @@ Route::group([
     Route::delete('/forceDelete/job/{id}', [JobController::class, 'forceDelete']);
 
     // TEAM
+    Route::get('/showAll/team', [TeamController::class, 'showAll']);
     Route::post('/create/team', [TeamController::class, 'create']);
     Route::get('/show/team/{id}', [TeamController::class, 'show']);
     Route::get('/edit/team/{id}', [TeamController::class, 'edit']);
@@ -236,6 +238,14 @@ Route::group([
 
     // STATISTICS
     Route::get('showAll/statistics', [StatisticsController::class, 'showStatistics']);
+
+
+    // NOTIFICATION
+    Route::get('showAll/notifications', [NotificationController::class, 'showAll']);
+    Route::get('unread/notifications', [NotificationController::class, 'unread']);
+    Route::post('markReadAll/notifications', [NotificationController::class, 'markReadAll']);
+    Route::delete('deleteAll/notifications', [NotificationController::class, 'deleteAll']);
+    Route::delete('delete/notification/{id}', [NotificationController::class, 'delete']);
 
 
 });

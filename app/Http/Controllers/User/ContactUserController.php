@@ -26,10 +26,9 @@ class ContactUserController extends Controller
                 'user_id' => $request->user()->id,
             ]);
 
-            $contact->user->notify(new NewContactNotification($contact));
-
             $admins = User::where('isAdmin', 1)->get();
             foreach ($admins as $admin) {
+                $admin->notify(new NewContactNotification($contact));
                 Mail::to($admin->email)->send(new NewContactMail($contact));
             }
             Mail::to($contact->user->email)->send(new ContactWelcomeMail($contact));
@@ -86,10 +85,10 @@ class ContactUserController extends Controller
         'message' => $request->message,
         'user_id' => $request->user()->id,
         ]);
-        $contact->user->notify(new ContactUpdatedNotification($contact));
 
         $admins = User::where('isAdmin', 1)->get();
         foreach ($admins as $admin) {
+            $admin->notify(new ContactUpdatedNotification($contact));
             Mail::to($admin->email)->send(new ContactUpdatedMail($contact));
         }
         Mail::to($contact->user->email)->send(new ContactWelcomeMail($contact));

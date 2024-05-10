@@ -24,10 +24,9 @@ class CommentUserController extends Controller
                 'user_id' => $request->user()->id,
             ]);
 
-            $comment->user->notify(new NewCommentNotification($comment));
-
             $admins = User::where('isAdmin', 1)->get();
             foreach ($admins as $admin) {
+                $admin->notify(new NewCommentNotification($comment));
                 Mail::to($admin->email)->send(new NewCommentMail($comment));
             }
 
@@ -85,11 +84,10 @@ class CommentUserController extends Controller
         'comment' => $request->comment,
         'user_id' => $request->user()->id,
     ]);
-    $comment->user->notify(new CommentUpdated($comment));
-
 
     $admins = User::where('isAdmin', 1)->get();
     foreach ($admins as $admin) {
+        $admin->notify(new CommentUpdated($comment));
         Mail::to($admin->email)->send(new CommentUpdatedMail($comment));
     }
 

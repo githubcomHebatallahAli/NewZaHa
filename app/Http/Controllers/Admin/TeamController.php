@@ -10,7 +10,7 @@ use App\Http\Resources\TeamResource;
 class TeamController extends Controller
 {
     public function showAll()
-    {
+    {  $this->authorize('manage_users');
          $Teams = Team::with('user')->get();
 
             return response()->json([
@@ -21,15 +21,19 @@ class TeamController extends Controller
 
     public function create(TeamRequest $request)
     {
+        $this->authorize('manage_users');
 
            $Team =Team::create ([
+                'name' => $request->name,
                 'job' => $request->job,
                 'skills' => $request->skills,
                 'numProject' => $request->numProject,
                 'address' => $request->address,
                 'phoneNumber' => $request->phoneNumber,
                 'qualification' => $request->qualification,
-                'user_id' => $request->user_id,
+                'dateOfJoin' => $request->dateOfJoin,
+                'salary' => $request->salary,
+                'user_id' => $request->user_id
             ]);
             if ($request->hasFile('photo')) {
             $Team->addMediaFromRequest('photo')->toMediaCollection('Teams');
@@ -43,11 +47,11 @@ class TeamController extends Controller
             'message' => "Team Created Successfully."
         ]);
         }
-    
+
 
     public function show(string $id)
     {
-
+        $this->authorize('manage_users');
        $Team =Team::with('user')->find($id);
        if (!$Team) {
         return response()->json([
@@ -63,7 +67,7 @@ class TeamController extends Controller
 
     public function edit(string $id)
     {
-
+        $this->authorize('manage_users');
        $Team =Team::with('user')->find($id);
        if (!$Team) {
         return response()->json([
@@ -79,7 +83,7 @@ class TeamController extends Controller
 
     public function update(TeamRequest $request, string $id)
     {
-
+        $this->authorize('manage_users');
        $Team =Team::findOrFail($id);
        if (!$Team) {
         return response()->json([
@@ -87,12 +91,15 @@ class TeamController extends Controller
         ], 404);
     }
        $Team->update([
+        'name' =>$request->name,
         'job' => $request->job,
         'skills' => $request->skills,
         'numProject' => $request->numProject,
         'address' => $request->address,
         'phoneNumber' => $request->phoneNumber,
         'qualification' => $request->qualification,
+        'dateOfJoin' => $request->dateOfJoin,
+        'salary' => $request->salary,
         'user_id' => $request->user_id,
         ]);
         $Team->clearMediaCollection('Teams');
@@ -110,6 +117,7 @@ class TeamController extends Controller
 }
 
 public function destroy(string $id){
+    $this->authorize('manage_users');
 
     $Team =Team::find($id);
     if (!$Team) {
@@ -124,6 +132,7 @@ public function destroy(string $id){
     ]);
 }
 public function showDeleted(){
+    $this->authorize('manage_users');
 
     $Teams=Team::onlyTrashed()->with('user')->get();
     return response()->json([
@@ -133,6 +142,7 @@ public function showDeleted(){
 }
 
 public function restore(string $id){
+    $this->authorize('manage_users');
 
     $Team=Team::withTrashed()->where('id',$id)->restore();
     return response()->json([
@@ -141,6 +151,7 @@ public function restore(string $id){
 }
 
 public function forceDelete(string $id){
+    $this->authorize('manage_users');
 
     $Team=Team::withTrashed()->where('id',$id)->first();
     if (!$Team) {

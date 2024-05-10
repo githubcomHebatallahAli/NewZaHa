@@ -16,9 +16,11 @@ class ResetPasswordController extends Controller
 
         if ($status === Password::RESET_LINK_SENT) {
         if($status){
-         return response()->json(['message' => __($status)], 200);
+         return response()->json
+         (['message' => __($status)], 200);
         }else {
-         return response()->json(['error' => __($status)], 400);
+         return response()->json
+         (['error' => __($status)], 400);
      }
 
     }
@@ -27,7 +29,8 @@ class ResetPasswordController extends Controller
 
      public function reset(ResetPasswordRequest $request){
         $status = Password::reset(
-            $request->only('email', 'password', 'confirm_password', 'token'),
+            $request->only
+            ('email', 'password', 'confirm_password', 'token'),
             function ($user, $password) {
                 $user->forceFill([
                     'password' => bcrypt($password)

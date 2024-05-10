@@ -11,10 +11,6 @@ class OrderPolicy
 {
     use HandlesAuthorization;
 
-    // public function showAll(User $user): bool
-    // {
-    //     return $user->isAdmin == 1 || $user->id ;
-    // }
     public function showAll(User $user, User $requestedUser)
     {
 
@@ -24,13 +20,6 @@ class OrderPolicy
         return $user->id === $requestedUser->id;
     }
 
-
-
-
-    // public function showAll(User $user)
-    // {
-    //     return $user->isAdmin();
-    // }
 
 
     public function create(User $user): bool

@@ -33,6 +33,7 @@ class JobUserController extends Controller
             $job->user->notify(new NewJobNotification($job));
             $admins = User::where('isAdmin', 1)->get();
             foreach ($admins as $admin) {
+                $admin->notify(new NewJobNotification($job));
                 Mail::to($admin->email)->send(new NewJobMail($job));
             }
             Mail::to($job->user->email)->send(new WelcomeJobMail($job));
@@ -43,9 +44,6 @@ class JobUserController extends Controller
         ]);
 
         }
-
-
-
 
 
     public function show(string $id)
@@ -102,6 +100,7 @@ class JobUserController extends Controller
         $job->user->notify(new JobUpdatedNotification($job));
         $admins = User::where('isAdmin', 1)->get();
         foreach ($admins as $admin) {
+            $admin->notify(new JobUpdatedNotification($job));
             Mail::to($admin->email)->send(new JobUpdatedMail($job));
         }
         Mail::to($job->user->email)->send(new WelcomeJobMail($job));

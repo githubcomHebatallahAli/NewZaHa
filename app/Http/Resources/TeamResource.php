@@ -16,15 +16,17 @@ class TeamResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'job'=> $this ->job,
             'skills'=> $this ->skills,
             'numProject'=> $this ->numProject,
             'address' => $this->address,
             'phoneNumber' => $this->phoneNumber,
             'qualification'=> $this ->qualification,
+            'dateOfJoin' => $this -> dateOfJoin,
+            'salary' => $this -> salary,
             'user' => new UserResource($this->user),
             'media' => MediaResource::collection($this->getMedia('Teams')),
-
         ];
     }
 }
