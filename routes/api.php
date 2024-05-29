@@ -77,11 +77,11 @@ Route::group([
     'middleware' => 'api',
 ], function () {
 Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] );
-Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
+Route::post('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
 });
 
 Route::group([
- 
+
     'prefix' => 'user'
 ], function () {
 //    TEAM
@@ -142,7 +142,7 @@ Route::group([
     Route::delete('/forceDelete/comment/{id}', [CommentController::class, 'forceDelete']);
 
     //BestComment
-
+    Route::get('/showAll/bestComment', [BestCommentUserController::class, 'showAll']);
     Route::post('/create/bestComment', [BestCommentController::class, 'create']);
     Route::get('/show/bestComment/{id}', [BestCommentController::class, 'show']);
     Route::get('/edit/bestComment/{id}', [BestCommentController::class, 'edit']);
