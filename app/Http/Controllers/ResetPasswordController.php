@@ -29,11 +29,11 @@ class ResetPasswordController extends Controller
     $status = Password::sendResetLink($request->only('email'));
 
     if ($status === Password::RESET_LINK_SENT) {
-        $redirectUrl = 'https://zaha-script.vercel.app';
+
 
         return response()->json([
             'message' => __($status),
-            'redirect_url' => $redirectUrl
+          
         ], 200);
     } else {
         return response()->json([
