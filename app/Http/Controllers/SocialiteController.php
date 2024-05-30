@@ -12,12 +12,12 @@ use Laravel\Socialite\Contracts\User as SocialiteUser;
 
 class SocialiteController extends Controller
 {
-    // public function redirectToGoogle(): JsonResponse
-    // {
-    //     return response()->json([
-    //         'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
-    //     ]);
-    // }
+    public function redirectToGoogle(): JsonResponse
+    {
+        return response()->json([
+            'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
+        ]);
+    }
 
     // public function handleGoogleCallback(): JsonResponse
     // {
@@ -81,13 +81,6 @@ class SocialiteController extends Controller
         // ]);
 
 
-
-
-
-        public function redirectToGoogle()
-        {
-            return Socialite::driver('google')->stateless()->redirect();
-        }
 
         public function handleGoogleCallback(): JsonResponse
         {

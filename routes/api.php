@@ -77,7 +77,7 @@ Route::group([
     'middleware' => 'api',
 ], function () {
 Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] );
-Route::post('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
+Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
 });
 
 Route::group([

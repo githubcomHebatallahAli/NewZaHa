@@ -36,17 +36,18 @@ class ResetPasswordController extends Controller
                 'password' => bcrypt($request->password),
             ])->save();
 
+            $redirectUrl = 'https://zaha-script.vercel.app';
 
             return response()->json([
-                'message' => __('Password has been reset successfully.')
+                'message' => __('Password has been reset successfully.'),
+                'redirect_url' => $redirectUrl
             ]);
         } else {
-
             return response()->json([
-                'message' => __('User not found.')]
-                , 404);
-        }
+                'message' => __('User not found.')
+            ], 404);
+        }}
     }
 
-}
+
 
