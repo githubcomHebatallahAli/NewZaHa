@@ -27,40 +27,40 @@ class ResetPasswordController extends Controller
 
 }
 
-    //  public function reset(ResetPasswordRequest $request){
-    //     $status = Password::reset(
-    //         $request->only
-    //         ('email', 'password', 'confirm_password', 'token'),
-    //         function ($user, $password) {
-    //             $user->forceFill([
-    //                 'password' => bcrypt($password)
-    //             ])->save();
-    //         }
-    //     );
-    //      return response()->json(['message' => __($status)]);
+     public function reset(ResetPasswordRequest $request){
+        $status = Password::reset(
+            $request->only
+            ('email', 'password', 'confirm_password'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password)
+                ])->save();
+            }
+        );
+         return response()->json(['message' => __($status)]);
 
-    //  }
+     }
 
-    public function resetWithoutToken(ResetPasswordRequest $request){
-        $user = User::where('email', $request->email)->first();
+    // public function reset(ResetPasswordRequest $request){
+    //     $user = User::where('email', $request->email)->first();
 
-        if ($user) {
+    //     if ($user) {
 
-            $user->forceFill([
-                'password' => bcrypt($request->password),
-            ])->save();
+    //         $user->forceFill([
+    //             'password' => bcrypt($request->password),
+    //         ])->save();
 
 
-            return response()->json([
-                'message' => __('Password has been reset successfully.')
-            ]);
-        } else {
+    //         return response()->json([
+    //             'message' => __('Password has been reset successfully.')
+    //         ]);
+    //     } else {
 
-            return response()->json([
-                'message' => __('User not found.')]
-                , 404);
-        }
-    }
+    //         return response()->json([
+    //             'message' => __('User not found.')]
+    //             , 404);
+    //     }
+    // }
 
 }
 
