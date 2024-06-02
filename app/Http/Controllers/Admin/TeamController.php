@@ -10,7 +10,8 @@ use App\Http\Resources\TeamResource;
 class TeamController extends Controller
 {
     public function showAll()
-    {  $this->authorize('manage_users');
+    {
+          $this->authorize('manage_users');
          $Teams = Team::with('user')->get();
 
             return response()->json([
@@ -52,7 +53,8 @@ class TeamController extends Controller
     public function show(string $id)
     {
         $this->authorize('manage_users');
-       $Team =Team::with('user')->find($id)->getMedia('Teams');
+       $Team =Team::with('user')->find($id)
+       ->getFirstMedia('Teams')->getUrl();
 
        if (!$Team) {
         return response()->json([
