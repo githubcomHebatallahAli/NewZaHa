@@ -26,7 +26,12 @@ class TeamResource extends JsonResource
             'dateOfJoin' => $this -> dateOfJoin,
             'salary' => $this -> salary,
             'user' => new UserResource($this->user),
-            'media' => MediaResource::collection($this->getMedia('Teams')),
+            // 'media' => MediaResource::collection($this->getMedia('Teams')),
+            'media' => MediaResource::collection($this->getMedia('Teams')->map(function ($media) {
+                return [
+                    'url' => $media->getFullUrl(),
+                ];
+            })),
 
         ];
     }
