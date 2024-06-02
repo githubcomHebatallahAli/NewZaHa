@@ -52,7 +52,7 @@ class TeamController extends Controller
     public function show(string $id)
     {
         $this->authorize('manage_users');
-       $Team =Team::with('user')->find($id)->getMedia('Teams')->getUrl();
+       $Team =Team::with('user')->find($id)->getMedia('Teams');
 
        if (!$Team) {
         return response()->json([
