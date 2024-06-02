@@ -27,6 +27,7 @@ class TeamResource extends JsonResource
             'salary' => $this -> salary,
             'user' => new UserResource($this->user),
             'media' => MediaResource::collection($this->getMedia('Teams')),
+
         ];
     }
 }
