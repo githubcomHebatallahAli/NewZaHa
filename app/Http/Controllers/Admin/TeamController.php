@@ -49,21 +49,48 @@ class TeamController extends Controller
         }
 
 
+    // public function show(string $id)
+    // {
+    //     $this->authorize('manage_users');
+    //    $Team =Team::with('user')->find($id)->getMedia('Teams')->getUrl();
+
+    //    if (!$Team) {
+    //     return response()->json([
+    //         'message' => "Job not found."
+    //     ], 404);
+    // }
+    //    return response()->json([
+    //     'data' =>new TeamResource($Team),
+    //     'message' => " Show Team By Id Successfully."
+    // ]);
+
+    // }
     public function show(string $id)
-    {
-        $this->authorize('manage_users');
-       $Team =Team::with('user')->find($id)->getMedia('Teams')->getUrl();
-       if (!$Team) {
+{
+    $this->authorize('manage_users');
+
+    $team = Team::with('user')->find($id);
+
+    if (!$team) {
         return response()->json([
-            'message' => "Job not found."
+            'message' => "Team not found."
         ], 404);
     }
-       return response()->json([
-        'data' =>new TeamResource($Team),
-        'message' => " Show Team By Id Successfully."
-    ]);
 
-    }
+    // Retrieve URLs of media associated with the team
+    $mediaUrls = $team->getMedia('Teams')->map(function ($media) {
+        return $media->getUrl();
+    });
+
+    return response()->json([
+        'data' => [
+            'team' => new TeamResource($team),
+            'media_urls' => $mediaUrls,
+        ],
+        'message' => "Show Team By Id Successfully."
+    ]);
+}
+
 
     public function edit(string $id)
     {
