@@ -27,11 +27,11 @@ class TeamResource extends JsonResource
             'salary' => $this -> salary,
             'user' => new UserResource($this->user),
             // 'media' => MediaResource::collection($this->getMedia('Teams')),
-            
+
 
             'media' => MediaResource::collection($this->getMedia('Teams')->map(function ($media) {
                 return [
-                    'url' => $media->getUrl(),
+                    'url' => $media->getFullUrl(),
                 ];
             })),
 
