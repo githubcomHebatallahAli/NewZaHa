@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\User\JobUserController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProjectController;
@@ -81,7 +82,15 @@ Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallb
 });
 
 Route::group([
+    'middleware' => 'api',
+    'prefix' => 'email'
+], function () {
 
+Route::get('verify/{id}', [VerificationController::class,'verify'])->name('verification.verify'); // Make sure to keep this as your route name
+Route::get('resend', [VerificationController::class,'resend'])->name('verification.resend');
+});
+
+Route::group([
     'prefix' => 'user'
 ], function () {
 //    TEAM
