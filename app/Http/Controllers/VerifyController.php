@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\VerifiesEmails;
+// use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use App\Http\Resources\UserResource;
@@ -21,7 +21,7 @@ class VerifyController extends Controller
     |
     */
 
-    use VerifiesEmails;
+    // use VerifiesEmails;
 
     /**
      * Where to redirect users after verification.
