@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace App\Mail;
 
@@ -52,4 +52,4 @@ class VerificationMail extends Mailable
     {
         return [];
     }
-}
+} -->

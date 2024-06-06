@@ -11,21 +11,22 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Admin\ClientController;
+
 use App\Http\Controllers\User\JobUserController;
-use App\Http\Controllers\VerificationController;
+// use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\User\TeamUserController;
 use App\Http\Controllers\User\OrderUserController;
-use App\Http\Controllers\User\ClientUserController;
+
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\User\CommentUserController;
 use App\Http\Controllers\User\ContactUserController;
 use App\Http\Controllers\Admin\BestCommentController;
 use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\User\BestCommentUserController;
 use App\Http\Controllers\Admin\RolesAndPermissionsController;
@@ -86,8 +87,9 @@ Route::group([
     'prefix' => 'email'
 ], function () {
 
-Route::get('verify/{id}', [VerificationController::class,'verify'])->name('verification.verify'); // Make sure to keep this as your route name
-Route::get('resend', [VerificationController::class,'resend'])->name('verification.resend');
+Route::post('verify/{id}', [VerificationController::class,'verify'])->name('verification.verify'); // Make sure to keep this as your route name
+Route::post('resend', [VerificationController::class,'resend'])->name('verification.resend');
+Route::post('show/verify', [VerificationController::class,'show'])->name('verification.notice');
 });
 
 Route::group([

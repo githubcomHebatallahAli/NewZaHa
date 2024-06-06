@@ -6,11 +6,12 @@ use App\Models\User;
 use App\Models\Comment;
 use App\Policies\CommentPolicy;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-  
+
     /**
      * Register any application services.
      */
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('manage_users', function(User $user) {
             return $user->isAdmin == 1;
         });
+        Schema::defaultStringLength(191);
 
     }
 }
