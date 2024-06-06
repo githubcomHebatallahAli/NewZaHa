@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\Auth\VerifyController;
+use App\Http\Controllers\VerifyController;
 use App\Http\Controllers\User\JobUserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
