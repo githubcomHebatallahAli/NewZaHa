@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 // use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Verified;
+use App\Notifications\VerifyEmail;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Auth\Events\Verified;
 
 class VerifyController extends Controller
 {
@@ -83,6 +85,23 @@ class VerifyController extends Controller
 //        return back()->with('resent', true);
     }
 
+    // public function sendVerificationEmail(Request $request)
+    // {
+    //     // Retrieve the user ID from the request parameters or form data
+    //     $id = $request->input('user_id');
+
+    //     // Find the user by ID
+    //     $user = User::find($id);
+
+    //     // Check if the user exists before sending the notification
+    //     if ($user) {
+    //         $user->notify(new VerifyEmail);
+    //         return response()->json(['message' => 'Verification email sent'], 200);
+    //     } else {
+    //         return response()->json(['error' => 'User not found'], 404);
+    //     }
+    // }
+
 
     /**
      * Create a new controller instance.
@@ -92,7 +111,7 @@ class VerifyController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('signed')->only('verify');
+        // $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
 }
