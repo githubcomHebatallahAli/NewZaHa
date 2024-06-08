@@ -7,7 +7,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-// use Otp;
 
 class EmailVerificationNotification extends Notification
 {
@@ -46,7 +45,7 @@ class EmailVerificationNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $otp = $this->otp->generate($notifiable->email,6,60);
+        $otp = $this->otp->generate($notifiable->email,'numeric',6,60);
         return (new MailMessage)
         ->mailer('smtp')
         ->subject($this->subject)
