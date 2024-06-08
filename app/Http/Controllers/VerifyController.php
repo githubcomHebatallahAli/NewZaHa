@@ -85,22 +85,7 @@ class VerifyController extends Controller
 //        return back()->with('resent', true);
     }
 
-    // public function sendVerificationEmail(Request $request)
-    // {
-    //     // Retrieve the user ID from the request parameters or form data
-    //     $id = $request->input('user_id');
 
-    //     // Find the user by ID
-    //     $user = User::find($id);
-
-    //     // Check if the user exists before sending the notification
-    //     if ($user) {
-    //         $user->notify(new VerifyEmail);
-    //         return response()->json(['message' => 'Verification email sent'], 200);
-    //     } else {
-    //         return response()->json(['error' => 'User not found'], 404);
-    //     }
-    // }
 
 
     /**
@@ -111,7 +96,7 @@ class VerifyController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('signed')->only('verify');
+        $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
 }

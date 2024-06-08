@@ -5,6 +5,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\Auth\RegisterResource;
+use App\Notifications\EmailVerificationNotification;
 
 
 class AuthController extends Controller
@@ -40,9 +41,9 @@ class AuthController extends Controller
                     $validator->validated(),
                     ['password' => bcrypt($request->password)]
                 ));
-                // $user->sendEmailVerificationNotification();
+                $user->notify(new EmailVerificationNotification());
         return response()->json([
-            'message' => 'User successfully registered',
+            'message' => 'Registration successful! Please check your email for verification.',
             'user' =>new RegisterResource($user)
         ], 201);
     }
