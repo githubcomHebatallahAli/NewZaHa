@@ -17,12 +17,25 @@ public function __construct(){
     $this->otp = new Otp;
 }
 
-public function resend(Request $request)
+public function resend(Request $request, $id)
 {
-    $request->user()->notify(new EmailVerificationNotification());
-    $success['success'] =true;
-    return response()->json($success,200);
+
+    $user = User::find($id);
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+    if ($user->hasVerifiedEmail()) {
+        return response()->json(['message' => 'Email already verified'], 400);
+    }
+    $user->sendEmailVerificationNotification();
+
+
+    return response()->json([
+    'message' => "The email resend again."
+]);
 }
+
+
 
 public function verify(EmailVerificationRequest $request)
 {
@@ -32,8 +45,9 @@ public function verify(EmailVerificationRequest $request)
     }
     $user = User::where('email',$request->email)->first();
     $user->update(['email_verified_at' => now()]);
-    $success['success'] =true;
-    return response()->json($success,200);
+    return response()->json([
+        'message' => "The email verified successfully."
+    ]);
 }
 
 }

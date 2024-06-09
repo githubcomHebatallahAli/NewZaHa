@@ -2,13 +2,13 @@
 
 namespace App\Notifications;
 
-use Ichtrojan\Otp\Otp;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+use Ichtrojan\Otp\Otp;
 
-class EmailVerificationNotification extends Notification
+class ResetPasswordNotification extends Notification
 {
     use Queueable;
     public $message;
@@ -22,12 +22,11 @@ class EmailVerificationNotification extends Notification
      */
     public function __construct()
     {
-        $this ->message = 'Use the below code for verifacation process';
-        $this ->subject = 'Verification Needed';
+        $this ->message = 'Use the below code for resetting your password';
+        $this ->subject = 'Reset Password';
         $this ->fromEmail = "support@zaha-script.net";
         $this ->mailer ='smtp';
         $this ->otp = new Otp;
-
     }
 
     /**
@@ -54,6 +53,5 @@ class EmailVerificationNotification extends Notification
         ->line('code: '.$otp->token);
     }
 
-    
 
 }

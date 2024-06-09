@@ -63,10 +63,10 @@ Route::group([
 
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'resetPassword'
+    'prefix' => 'password'
 ], function () {
-    Route::post('/sendEmail', [ResetPasswordController::class, 'sendResetLinkEmail'])->name('forgot.password'); ;
-    Route::post('/reset', [ResetPasswordController::class, 'reset']);
+    Route::post('/forgot', [ResetPasswordController::class, 'forgotPassword']) ;
+    Route::post('/reset', [ResetPasswordController::class, 'resetPassword']);
 });
 
 Route::group([
@@ -82,7 +82,7 @@ Route::group([
 ], function () {
 
 Route::post('verify/{id}', [EmailVerificationController::class,'verify']);
-Route::get('resend', [EmailVerificationController::class,'resend']);
+Route::get('resend/{id}', [EmailVerificationController::class,'resend']);
 
 });
 

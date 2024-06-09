@@ -26,7 +26,7 @@ class EmailVerificationRequest extends FormRequest
     {
         return [
             'email' => ['required','email','exists:users'],
-            'otp' =>['requirde','max:6']
+            'otp' =>['required','max:6']
         ];
     }
 

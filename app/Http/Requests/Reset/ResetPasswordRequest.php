@@ -24,11 +24,12 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required|string|min:6|confirmed',
+            'email' => ['required','email','exists:users'],
+            'otp' =>['required','max:6'],
+            'password' =>['required','min:6']
         ];
-
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
