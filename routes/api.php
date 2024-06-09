@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\RolesController;
-use App\Http\Controllers\VerifyController;
 use App\Http\Controllers\User\JobUserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
@@ -26,6 +25,7 @@ use App\Http\Controllers\User\ContactUserController;
 use App\Http\Controllers\Admin\BestCommentController;
 
 use App\Http\Controllers\Admin\PermissionsController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\User\BestCommentUserController;
 use App\Http\Controllers\Admin\RolesAndPermissionsController;
@@ -55,14 +55,9 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
-    Route::get('/verify/{token}', [AuthController::class ,'verify']);
+
 });
 
-// Route::get('/unauthorized',function(){
-//     return response()->json([
-//         "message" => "Unauthorized"
-//     ],401);
-// })->name('login');
 
 
 
@@ -86,9 +81,9 @@ Route::group([
     'prefix' => 'email'
 ], function () {
 
-Route::post('verify/{id}', [VerifyController::class,'verify'])->name('verification.verify'); // Make sure to keep this as your route name
-Route::post('resend', [VerifyController::class,'resend'])->name('verification.resend');
-Route::post('show/verify', [VerifyController::class,'show'])->name('verification.notice');
+Route::post('verify/{id}', [EmailVerificationController::class,'verify']);
+Route::get('resend', [EmailVerificationController::class,'resend']);
+
 });
 
 Route::group([
