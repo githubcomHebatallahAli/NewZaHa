@@ -52,6 +52,7 @@ return [
         'file' => [
             'driver' => 'file',
             'path' => storage_path('framework/cache/data'),
+            // 'path' => base_path('public_html/public/storage/framework/cache/data'),
             'lock_path' => storage_path('framework/cache/data'),
         ],
 
