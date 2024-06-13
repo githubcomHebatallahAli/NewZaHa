@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
@@ -19,94 +21,67 @@ class SocialiteController extends Controller
         ]);
     }
 
-    // public function handleGoogleCallback(): JsonResponse
-    // {
 
-    //     try {
-    //         /** @var SocialiteUser $socialiteUser */
-    //         $socialiteUser = Socialite::driver('google')->stateless()->user();
-    //     } catch (\Exception $e) {
-    //         Log::error('خطأ في استرجاع بيانات Google: ' . $e->getMessage());
-    //         return response()->json(['error' => 'تم تقديم بيانات اعتماد غير صحيحة.'], 422);
-    //     }
-
-    //     /** @var User $user */
-    //     $user = User::updateOrCreate(
-    //         [
-    //             'email' => $socialiteUser->getEmail(),
-    //         ],
-    //         [
-    //             'email_verified_at' => now(),
-    //             'name' => $socialiteUser->getName(),
-    //             'google_id' => $socialiteUser->getId(),
-    //             'avatar' => $socialiteUser->getAvatar(),
-    //         ]
-    //     );
-
-    //     // إنشاء رمز JWT
-    //     $token = JWTAuth::fromUser($user);
-
-    //     return response()->json([
-    //         'user' => $user,
-    //         'access_token' => $token,
-    //         'token_type' => 'Bearer',
-    //     ]);
-
-
+    public function handleGoogleCallback(Request $request)
+    {
         // try {
-        //     /** @var SocialiteUser $socialiteUser */
-        //     $socialiteUser = Socialite::driver('google')->stateless()->user();
-        // } catch (ClientException $e) {
-        //     return response()->json(['error' => 'Invalid credentials provided.'], 422);
+        //     $user = Socialite::driver('google')->stateless()->user();
+
+        //     // منطق التعامل مع المستخدم المصادق عليه، على سبيل المثال، العثور على أو إنشاء مستخدم في قاعدة بياناتك
+
+        //     return response()->json([
+        //         'user' => $user,
+        //         'access_token' => $user->token,
+        //     ]);
+        // } catch (Exception $e) {
+        //     return response()->json(['error' => 'Authentication failed'], 401);
         // }
 
-        // /** @var User $user */
-        // $user = User::query()
-        //     ->firstOrCreate(
-        //         [
-        //             'email' => $socialiteUser->getEmail(),
-        //         ],
-        //         [
-        //             'email_verified_at' => now(),
-        //             'name' => $socialiteUser->getName(),
-        //             'google_id' => $socialiteUser->getId(),
-        //             'avatar' => $socialiteUser->getAvatar(),
-        //         ]
-        //     );
 
-        // return response()->json([
-        //     'user' => $user,
-        //     'access_token' => $user->createToken('google-token')->plainTextToken,
-        //     'token_type' => 'Bearer',
-        // ]);
+            // try {
+            //         $socialiteUser = Socialite::driver('google')->stateless()->user();
+            //     } catch (\Exception $e) {
+            //         return response()->json(['error' => 'Invalid credentials provided.'], 422);
+            //     }
+
+            //     $user = User::updateOrCreate(
+            //         ['email' => $socialiteUser->getEmail()],
+            //         [
+            //             'email_verified_at' => now(),
+            //             'name' => $socialiteUser->getName(),
+            //             'google_id' => $socialiteUser->getId(),
+            //             'avatar' => $socialiteUser->getAvatar(),
+            //         ]
+            //     );
+
+            //     $token = JWTAuth::fromUser($user);
+
+            //     return response()->json([
+            //         'user' => $user,
+            //         'access_token' => $token,
+            //         'token_type' => 'Bearer',
+            //     ]);
 
 
-
-        public function handleGoogleCallback(): JsonResponse
-        {
-            try {
-                $socialiteUser = Socialite::driver('google')->stateless()->user();
-            } catch (\Exception $e) {
-                return response()->json(['error' => 'Invalid credentials provided.'], 422);
+      try {
+            // التحقق مما إذا كان الطلب يحتوي على المعلمة 'code'
+            if (!$request->has('code')) {
+                throw new Exception('المعلمة المطلوبة مفقودة: code');
             }
 
-            $user = User::updateOrCreate(
-                ['email' => $socialiteUser->getEmail()],
-                [
-                    'email_verified_at' => now(),
-                    'name' => $socialiteUser->getName(),
-                    'google_id' => $socialiteUser->getId(),
-                    'avatar' => $socialiteUser->getAvatar(),
-                ]
-            );
+            // استرجاع الكود من الطلب
+            $code = $request->input('code');
 
-            $token = JWTAuth::fromUser($user);
-
+            // يمكنك الآن إعادة الكود كاستجابة JSON ليتمكن الجزء الأمامي من استخدامه
             return response()->json([
-                'user' => $user,
-                'access_token' => $token,
-                'token_type' => 'Bearer',
+                'code' => $code,
             ]);
+        } catch (Exception $e) {
+            // تسجيل الخطأ لأغراض التصحيح
+            \Log::error('خطأ في استدعاء Google OAuth: ' . $e->getMessage());
+
+            return response()->json(['error' => 'فشل التحقق: ' . $e->getMessage()], 401);
+        }
         }
     }
 

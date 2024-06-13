@@ -18,12 +18,13 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\User\TeamUserController;
 
+use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\User\OrderUserController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\User\CommentUserController;
 use App\Http\Controllers\User\ContactUserController;
-use App\Http\Controllers\Admin\BestCommentController;
 
+use App\Http\Controllers\Admin\BestCommentController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\Admin\NotificationController;
@@ -65,7 +66,7 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'password'
 ], function () {
-    Route::post('/forgot', [ResetPasswordController::class, 'forgotPassword']) ;
+    Route::post('/forgot', [ForgetPasswordController::class, 'forgotPassword']) ;
     Route::post('/reset', [ResetPasswordController::class, 'resetPassword']);
 });
 
