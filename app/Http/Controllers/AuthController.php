@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
 
     public function __construct() {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','verify']]);
     }
 
     public function login(LoginRequest $request){
@@ -24,6 +24,11 @@ class AuthController extends Controller
         }
         if (! $token = auth()->guard('api')->attempt($validator->validated())) {
             return response()->json(['message' => 'InvalidData'], 422);
+        }
+        $user = auth()->guard('api')->user();
+
+        if (is_null($user->email_verified_at)) {
+            return response()->json(['message' => 'Email not verified'], 403);
         }
         return $this->createNewToken($token);
 

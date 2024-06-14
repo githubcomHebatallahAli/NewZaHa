@@ -78,7 +78,7 @@ Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallb
 });
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'api','verified',
     'prefix' => 'email'
 ], function () {
 
