@@ -70,12 +70,12 @@ Route::group([
     Route::post('/reset', [ResetPasswordController::class, 'resetPassword']);
 });
 
-// Route::group([
-//     'middleware' => 'api',
-// ], function () {
+Route::group([
+    'middleware' => 'api',
+], function () {
 Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] );
 Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
-// });
+});
 
 Route::group([
     'middleware' => 'api','verified',
