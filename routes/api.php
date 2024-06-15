@@ -83,7 +83,7 @@ Route::group([
 ], function () {
 
 Route::post('verify', [EmailVerificationController::class,'verify']);
-Route::get('resend/{id}', [EmailVerificationController::class,'resend']);
+Route::get('resend', [EmailVerificationController::class,'resend']);
 
 });
 
