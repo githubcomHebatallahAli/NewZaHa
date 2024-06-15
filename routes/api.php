@@ -82,7 +82,7 @@ Route::group([
     'prefix' => 'email'
 ], function () {
 
-Route::post('verify/{id}', [EmailVerificationController::class,'verify']);
+Route::post('verify', [EmailVerificationController::class,'verify']);
 Route::get('resend/{id}', [EmailVerificationController::class,'resend']);
 
 });
