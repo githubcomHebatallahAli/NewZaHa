@@ -27,7 +27,7 @@ public function resend(Request $request, $id)
     if ($user->hasVerifiedEmail()) {
         return response()->json(['message' => 'Email already verified'], 400);
     }
-    $user->sendEmailVerificationNotification();
+    $user->notify(new EmailVerificationNotification());
 
 
     return response()->json([
