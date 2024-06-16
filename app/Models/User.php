@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-    class User extends Authenticatable  implements JWTSubject 
+    class User extends Authenticatable  implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -23,6 +23,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
         'name',
         'email',
         'password',
+        'email_verified_at',
         'social_id',
         'social_type'
     ];
