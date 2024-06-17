@@ -30,14 +30,14 @@ class SocialiteController extends Controller
             $user = Socialite::driver('google')->stateless()->user();
 
             // البحث عن المستخدم في قاعدة البيانات بواسطة المعرف الاجتماعي
-            $finduser = User::where('social_id', $user->id)->first();
+            $findUser = User::where('social_id', $user->id)->first();
 
-            if ($finduser) {
+            if ($findUser) {
                 // إذا تم العثور على المستخدم، تسجيل دخوله
-                Auth::login($finduser);
+                Auth::login($findUser);
 
-                // إعادة توجيه المستخدم إلى صفحة لوحة التحكم
-                return redirect('/dashboard');
+                // إعادة توجيه المستخدم إلى الواجهة الأمامية بعد تسجيل الدخول
+                return redirect('https://zaha-script.vercel.app');
             } else {
                 // إذا لم يتم العثور على المستخدم، إنشاء حساب جديد
                 $newUser = User::create([
@@ -45,20 +45,21 @@ class SocialiteController extends Controller
                     'email' => $user->email,
                     'social_id' => $user->id,
                     'social_type' => 'google',  // تسجيل الدخول بواسطة Google
-                    'password' => bcrypt('my-google'),  // كلمة مرور مبدئية
+                    // لا توجد حاجة لكلمة مرور لأنها لن تُستخدم لتسجيل الدخول
                 ]);
 
                 Auth::login($newUser);
 
-                return redirect('/dashboard');
+                // إعادة توجيه المستخدم إلى الواجهة الأمامية بعد تسجيل الدخول
+                return redirect('https://zaha-script.vercel.app');
             }
-
         } catch (Exception $e) {
-            // التعامل مع الخطأ وعرض رسالة مفيدة
+            // التعامل مع الخطأ وعرض رسالة مفيدة للمستخدم
             Log::error('Error during Google callback: '.$e->getMessage());
-            return redirect('/login')->with('error', 'There was an error logging you in with Google.');
+            return redirect('https://zaha-script.vercel.app/user/login')->with('error', 'حدث خطأ أثناء تسجيل الدخول باستخدام Google.');
         }
     }
+
 }
 
 
