@@ -27,7 +27,7 @@ class SocialiteController extends Controller
     {
         try {
             // الحصول على بيانات المستخدم من Google
-            $user = Socialite::driver('google')->user();
+            $user = Socialite::driver('google')->stateless()->user();
 
             // البحث عن المستخدم في قاعدة البيانات بواسطة المعرف الاجتماعي
             $finduser = User::where('social_id', $user->id)->first();
@@ -54,8 +54,11 @@ class SocialiteController extends Controller
             }
 
         } catch (Exception $e) {
-            dd($e->getMessage());
+            // التعامل مع الخطأ وعرض رسالة مفيدة
+            Log::error('Error during Google callback: '.$e->getMessage());
+            return redirect('/login')->with('error', 'There was an error logging you in with Google.');
         }
     }
 }
+
 
