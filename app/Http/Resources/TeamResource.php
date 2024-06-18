@@ -25,6 +25,9 @@ class TeamResource extends JsonResource
             'qualification'=> $this ->qualification,
             'dateOfJoin' => $this -> dateOfJoin,
             'salary' => $this -> salary,
+            'photo' => $this -> photo,
+            'imgIDCard' => $this -> imgIDCard,
+
             'user' => new UserResource($this->user),
             // 'media' => MediaResource::collection($this->getMedia('Teams')),
 
