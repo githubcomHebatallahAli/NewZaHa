@@ -17,9 +17,11 @@ class SocialiteController extends Controller
 {
 public function redirectToGoogle()
     {
-        return response()->json([
-            'url' => Socialite::driver('google')->redirect()->getTargetUrl(),
-        ]);
+        // return response()->json([
+            // 'url' => Socialite::driver('google')->redirect()->getTargetUrl(),
+            return Socialite::driver('google')->redirect();
+
+        // ]);
     }
 
     public function handleGoogleCallback()
@@ -27,7 +29,7 @@ public function redirectToGoogle()
         try {
 
             $user = Socialite::driver('google')->user();
- 
+
             $findUser = User::where('social_id', $user->id)->first();
 
             if ($findUser) {
@@ -43,6 +45,7 @@ public function redirectToGoogle()
                     'email' => $user->email,
                     'social_id' => $user->id,
                     'social_type' => 'google',
+
 
                 ]);
 

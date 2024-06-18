@@ -6,6 +6,7 @@ use App\Models\Team;
 use App\Http\Requests\TeamRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TeamResource;
+use Illuminate\Support\Facades\Storage;
 
 class TeamController extends Controller
 {
@@ -109,12 +110,22 @@ class TeamController extends Controller
         'salary' => $request->salary,
         'user_id' => $request->user_id,
         ]);
-        $Team->clearMediaCollection('Teams');
         if ($request->hasFile('photo')) {
-            $Team->addMedia($request->file('photo'))->toMediaCollection('Teams');
+            if ($Team->photo && Storage::disk('public')->exists($Team->photo)) {
+                Storage::disk('public')->delete($Team->photo);
+            }
+
+                $photoPath = $request->file('photo')->store(Team::storageFolder);
+                $Team->photo = $photoPath;
+
         }
+
         if ($request->hasFile('imgIDCard')) {
-            $Team->addMedia($request->file('imgIDCard'))->toMediaCollection('Teams');
+            if ($Team->imgIDCard && Storage::disk('public')->exists($Team->imgIDCard)) {
+                Storage::disk('public')->delete($Team->imgIDCard);
+            }
+            $imgIDCardPath = $request->file('imgIDCard')->store(Team::storageFolder);
+            $Team->imgIDCard = $imgIDCardPath;
         }
        $Team->save();
        return response()->json([
@@ -163,17 +174,17 @@ public function forceDelete(string $id){
     $Team=Team::withTrashed()->where('id',$id)->first();
     if (!$Team) {
         return response()->json([
-            'message' => "Job not found."
+            'message' => "Team not found."
         ], 404);
     }
-    if ($Team) {
-        $Team->getMedia('Teams')->each(function ($media) {
-            $media->delete();
-        });
+    // if ($Team) {
+    //     $Team->getMedia('Teams')->each(function ($media) {
+    //         $media->delete();
+    //     });
         $Team->forceDelete();
     return response()->json([
         'message' => " Force Delete Team By Id Successfully."
     ]);
 }
 }
-}
+
