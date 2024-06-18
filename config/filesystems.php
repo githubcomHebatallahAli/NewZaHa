@@ -37,18 +37,19 @@ return [
         ],
         'media' => [
             'driver' => 'local',
-            'root'   => public_path('media'),
-            // 'root'   => base_path('public/media'),
+            // 'root'   => public_path('media'),
+            'root'   => base_path('public/media'),
             'url'    => env('APP_URL').'/media',
             'visibility' => 'public',
         ],
 
-        'public' => [
+      'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => public_path(),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+        ],
         ],
 
         's3' => [

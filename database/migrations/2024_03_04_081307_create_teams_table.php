@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('qualification')->nullable();
             $table->date('dateOfJoin')->nullable();
             $table->decimal('salary')->nullable();
-            // $table->string('photo')->nullable();
-            // $table->string('imgIDCard')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('imgIDCard')->nullable();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
