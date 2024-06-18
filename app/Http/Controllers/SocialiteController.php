@@ -15,42 +15,40 @@ use Laravel\Socialite\Contracts\User as SocialiteUser;
 
 class SocialiteController extends Controller
 {
-    public function redirectToGoogle()
+public function redirectToGoogle()
     {
         return response()->json([
-            'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
+            'url' => Socialite::driver('google')->redirect()->getTargetUrl(),
         ]);
-        // return Socialite::driver('google')->redirect();
     }
 
     public function handleGoogleCallback(Request $request)
     {
         try {
             // الحصول على بيانات المستخدم من Google
-            $user = Socialite::driver('google')->stateless()->user();
+            $user = Socialite::driver('google')->user();
 
-            // البحث عن المستخدم في قاعدة البيانات بواسطة المعرف الاجتماعي
+            // البحث عن المستخدم في قاعدة البيانات حيث يكون معرّف الاجتماعي هو نفس المعرّف الذي وفرته Google
             $findUser = User::where('social_id', $user->id)->first();
 
             if ($findUser) {
-                // إذا تم العثور على المستخدم، تسجيل دخوله
+                // تسجيل دخول المستخدم
                 Auth::login($findUser);
 
-                // إعادة توجيه المستخدم إلى الواجهة الأمامية بعد تسجيل الدخول
+                // إعادة توجيه المستخدم إلى صفحة لوحة التحكم
                 return redirect('https://zaha-script.vercel.app');
             } else {
-                // إذا لم يتم العثور على المستخدم، إنشاء حساب جديد
+                // إنشاء بيانات المستخدم باستخدام بيانات حسابه على Google
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'social_id' => $user->id,
-                    'social_type' => 'google',  // تسجيل الدخول بواسطة Google
-                    // لا توجد حاجة لكلمة مرور لأنها لن تُستخدم لتسجيل الدخول
+                    'social_type' => 'google',
+                    'password' => bcrypt('my-google'),
                 ]);
 
                 Auth::login($newUser);
 
-                // إعادة توجيه المستخدم إلى الواجهة الأمامية بعد تسجيل الدخول
                 return redirect('https://zaha-script.vercel.app');
             }
         } catch (Exception $e) {
@@ -59,7 +57,8 @@ class SocialiteController extends Controller
             return redirect('https://zaha-script.vercel.app/user/login')->with('error', 'حدث خطأ أثناء تسجيل الدخول باستخدام Google.');
         }
     }
-
 }
+
+
 
 
