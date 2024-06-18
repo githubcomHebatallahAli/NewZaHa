@@ -89,50 +89,51 @@ class TeamController extends Controller
     }
 
 
-    public function update(TeamRequest $request, string $id)
-    {
-        $this->authorize('manage_users');
-       $Team =Team::findOrFail($id);
-       if (!$Team) {
-        return response()->json([
-            'message' => "Job not found."
-        ], 404);
-    }
-       $Team->update([
-        'name' =>$request->name,
-        'job' => $request->job,
-        'skills' => $request->skills,
-        'numProject' => $request->numProject,
-        'address' => $request->address,
-        'phoneNumber' => $request->phoneNumber,
-        'qualification' => $request->qualification,
-        'dateOfJoin' => $request->dateOfJoin,
-        'salary' => $request->salary,
-        'user_id' => $request->user_id,
-        ]);
-        if ($request->hasFile('photo')) {
-            if ($Team->photo && Storage::disk('public')->exists($Team->photo)) {
-                Storage::disk('public')->delete($Team->photo);
-            }
+//     public function update(TeamRequest $request, string $id)
+//     {
+//         $this->authorize('manage_users');
+//        $Team =Team::findOrFail($id);
+//        if (!$Team) {
+//         return response()->json([
+//             'message' => "Job not found."
+//         ], 404);
+//     }
+//        $Team->update([
+//         'name' =>$request->name,
+//         'job' => $request->job,
+//         'skills' => $request->skills,
+//         'numProject' => $request->numProject,
+//         'address' => $request->address,
+//         'phoneNumber' => $request->phoneNumber,
+//         'qualification' => $request->qualification,
+//         'dateOfJoin' => $request->dateOfJoin,
+//         'salary' => $request->salary,
+//         'user_id' => $request->user_id,
+//         ]);
+//         if ($request->hasFile('photo')) {
+//             if ($Team->photo && Storage::disk('public')->exists($Team->photo)) {
+//                 Storage::disk('public')->delete($Team->photo);
+//             }
 
-                $photoPath = $request->file('photo')->store(Team::storageFolder);
-                $Team->photo = $photoPath;
+//                 $photoPath = $request->file('photo')->store(Team::storageFolder);
+//                 $Team->photo = $photoPath;
 
-        }
+//         }
 
-        if ($request->hasFile('imgIDCard')) {
-            if ($Team->imgIDCard && Storage::disk('public')->exists($Team->imgIDCard)) {
-                Storage::disk('public')->delete($Team->imgIDCard);
-            }
-            $imgIDCardPath = $request->file('imgIDCard')->store(Team::storageFolder);
-            $Team->imgIDCard = $imgIDCardPath;
-        }
-       $Team->save();
-       return response()->json([
-        'data' =>new TeamResource($Team),
-        'message' => " Update Team By Id Successfully."
-    ]);
-}
+//         if ($request->hasFile('imgIDCard')) {
+//             if ($Team->imgIDCard && Storage::disk('public')->exists($Team->imgIDCard)) {
+//                 Storage::disk('public')->delete($Team->imgIDCard);
+//             }
+//             $imgIDCardPath = $request->file('imgIDCard')->store(Team::storageFolder);
+//             $Team->imgIDCard = $imgIDCardPath;
+//         }
+//        $Team->save();
+//        return response()->json([
+//         'data' =>new TeamResource($Team),
+//         'message' => " Update Team By Id Successfully."
+//     ]);
+
+// }
 
 public function destroy(string $id){
     $this->authorize('manage_users');
