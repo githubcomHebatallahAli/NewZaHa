@@ -11,6 +11,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Team extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes,InteractsWithMedia;
+    // const storageFolder= 'Teams';
     protected $fillable = [
         'name',
         'job',
@@ -21,6 +22,8 @@ class Team extends Model implements HasMedia
         'qualification',
         'dateOfJoin',
         'salary',
+        // 'photo',
+        // 'imgIDCard',
         'user_id'
     ];
 
