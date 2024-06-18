@@ -22,7 +22,7 @@ public function redirectToGoogle()
         ]);
     }
 
-    public function handleGoogleCallback(Request $request)
+    public function handleGoogleCallback()
     {
         try {
             // الحصول على بيانات المستخدم من Google
@@ -35,28 +35,33 @@ public function redirectToGoogle()
                 // تسجيل دخول المستخدم
                 Auth::login($findUser);
 
-                // إعادة توجيه المستخدم إلى صفحة لوحة التحكم
+                // إعادة توجيه المستخدم إلى لوحة التحكم أو الصفحة الرئيسية
                 return redirect('https://zaha-script.vercel.app');
             } else {
-                // إنشاء بيانات المستخدم باستخدام بيانات حسابه على Google
+                // إنشاء بيانات المستخدم باستخدام معلومات حساب Google
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'social_id' => $user->id,
                     'social_type' => 'google',
-                    'password' => bcrypt('my-google'),
+                    // يُنصح باستخدام طريقة أكثر أمانًا لإنشاء كلمة المرور
+                    // 'password' => bcrypt('my-google'),
                 ]);
 
                 Auth::login($newUser);
 
+                // إعادة توجيه المستخدم إلى لوحة التحكم أو الصفحة الرئيسية
                 return redirect('https://zaha-script.vercel.app');
             }
         } catch (Exception $e) {
-            // التعامل مع الخطأ وعرض رسالة مفيدة للمستخدم
+            // التعامل مع الخطأ وتسجيله
             Log::error('Error during Google callback: '.$e->getMessage());
+
+            // إعادة توجيه المستخدم إلى صفحة تسجيل الدخول مع رسالة خطأ
             return redirect('https://zaha-script.vercel.app/user/login')->with('error', 'حدث خطأ أثناء تسجيل الدخول باستخدام Google.');
         }
     }
+
 }
 
 
