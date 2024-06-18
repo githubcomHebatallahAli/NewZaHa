@@ -34,7 +34,7 @@ return [
     'google' => [
         'client_id' => '366845784342-u08n7ks2e4avmr33qou3n4208m8mkd36.apps.googleusercontent.com',
         'client_secret' => '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',
-        'redirect' => 'https://zaha-script.net/api/auth/google/callback',
+        'redirect' => 'https://zaha-script.vercel.app/api/auth/google/callback',
     ],
 
 ];
