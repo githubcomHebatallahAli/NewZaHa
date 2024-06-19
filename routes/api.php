@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\JobController;
-use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -70,12 +69,7 @@ Route::group([
     Route::post('/reset', [ResetPasswordController::class, 'resetPassword']);
 });
 
-// Route::group([
-//     'middleware' => 'api',
-// ], function () {
-// Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] );
-// Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
-// });
+
 
 Route::group([
     'middleware' => 'api','verified',
