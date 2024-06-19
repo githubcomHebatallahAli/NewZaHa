@@ -114,7 +114,7 @@ class TeamController extends Controller
             if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
                 \Storage::disk('public')->delete($Team->photo);
             }
-            $photoPath = $request->file('photo')->store('teams', 'public');
+            $photoPath = $request->file('photo')->store('Teams', 'public');
             $Team->photo = $photoPath;
         } elseif ($request->has('photo') && $request->photo === null) {
             if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
@@ -128,7 +128,7 @@ class TeamController extends Controller
             if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
                 \Storage::disk('public')->delete($Team->imgIDCard);
             }
-            $imgIDCardPath = $request->file('imgIDCard')->store('teams', 'public');
+            $imgIDCardPath = $request->file('imgIDCard')->store('Teams', 'public');
             $Team->imgIDCard = $imgIDCardPath;
         } elseif ($request->has('imgIDCard') && $request->imgIDCard === null) {
             if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
