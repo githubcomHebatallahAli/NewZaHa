@@ -110,33 +110,32 @@ class TeamController extends Controller
         'salary' => $request->salary,
         'user_id' => $request->user_id,
         ]);
-  // Handle the photo update
-  if ($request->hasFile('photo')) {
-    if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
-        \Storage::disk('public')->delete($Team->photo);
-    }
-    $photoPath = $request->file('photo')->store('teams', 'public');
-    $Team->photo = $photoPath;
-} elseif ($request->has('photo') && $request->photo === null) {
-    if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
-        \Storage::disk('public')->delete($Team->photo);
-    }
-    $Team->photo = null;
-}
+        if ($request->hasFile('photo')) {
+            if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
+                \Storage::disk('public')->delete($Team->photo);
+            }
+            $photoPath = $request->file('photo')->store('teams', 'public');
+            $Team->photo = $photoPath;
+        } elseif ($request->has('photo') && $request->photo === null) {
+            if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
+                \Storage::disk('public')->delete($Team->photo);
+            }
+            $Team->photo = null;
+        }
 
-// Handle the imgIDCard update
-if ($request->hasFile('imgIDCard')) {
-    if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
-        \Storage::disk('public')->delete($Team->imgIDCard);
-    }
-    $imgIDCardPath = $request->file('imgIDCard')->store('teams', 'public');
-    $Team->imgIDCard = $imgIDCardPath;
-} elseif ($request->has('imgIDCard') && $request->imgIDCard === null) {
-    if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
-        \Storage::disk('public')->delete($Team->imgIDCard);
-    }
-    $Team->imgIDCard = null;
-}
+        // Handle the imgIDCard update
+        if ($request->hasFile('imgIDCard')) {
+            if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
+                \Storage::disk('public')->delete($Team->imgIDCard);
+            }
+            $imgIDCardPath = $request->file('imgIDCard')->store('teams', 'public');
+            $Team->imgIDCard = $imgIDCardPath;
+        } elseif ($request->has('imgIDCard') && $request->imgIDCard === null) {
+            if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
+                \Storage::disk('public')->delete($Team->imgIDCard);
+            }
+            $Team->imgIDCard = null;
+        }
        $Team->save();
        return response()->json([
         'data' =>new TeamResource($Team),
