@@ -111,28 +111,28 @@ class TeamController extends Controller
         'user_id' => $request->user_id,
         ]);
         if ($request->hasFile('photo')) {
-            if ($Team->photo && \Storage::disk('public')->exists("Teams/{$Team->photo}")) {
-                \Storage::disk('public')->delete("Teams/{$Team->photo}");
+            if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
+                \Storage::disk('public')->delete($Team->photo);
             }
             $photoPath = $request->file('photo')->store('Teams', 'public');
             $Team->photo = $photoPath;
         } elseif ($request->has('photo') && $request->photo === null) {
-            if ($Team->photo && \Storage::disk('public')->exists("Teams/{$Team->photo}")) {
-                \Storage::disk('public')->delete("Teams/{$Team->photo}");
+            if ($Team->photo && \Storage::disk('public')->exists($Team->photo)) {
+                \Storage::disk('public')->delete($Team->photo);
             }
             $Team->photo = null;
         }
 
-       
+        // Handle the imgIDCard update
         if ($request->hasFile('imgIDCard')) {
-            if ($Team->imgIDCard && \Storage::disk('public')->exists("Teams/{$Team->imgIDCard}")) {
-                \Storage::disk('public')->delete("Teams/{$Team->imgIDCard}");
+            if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
+                \Storage::disk('public')->delete($Team->imgIDCard);
             }
             $imgIDCardPath = $request->file('imgIDCard')->store('Teams', 'public');
             $Team->imgIDCard = $imgIDCardPath;
         } elseif ($request->has('imgIDCard') && $request->imgIDCard === null) {
-            if ($Team->imgIDCard && \Storage::disk('public')->exists("Teams/{$Team->imgIDCard}")) {
-                \Storage::disk('public')->delete("Teams/{$Team->imgIDCard}");
+            if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
+                \Storage::disk('public')->delete($Team->imgIDCard);
             }
             $Team->imgIDCard = null;
         }
