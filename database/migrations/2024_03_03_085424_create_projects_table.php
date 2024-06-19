@@ -17,7 +17,9 @@ return new class extends Migration
             $table->text('skills')->nullable();
             $table->text('description')->nullable();
             $table->string('urlProject')->nullable();
-            $table->softDeletes();
+            $table->date('startingDate')->nullable();
+            $table->date('endingDate')->nullable();
+            $table->text('nameOfTeam')->nullable();
             $table->timestamps();
         });
     }

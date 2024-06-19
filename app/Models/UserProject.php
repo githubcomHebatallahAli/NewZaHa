@@ -13,9 +13,6 @@ class UserProject extends Model
         'project_id',
         'numberSales',
         'price',
-        'startingDate',
-        'endingDate',
-        'nameOfTeam'
     ];
 
 }

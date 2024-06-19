@@ -187,10 +187,7 @@ public function forceDelete(string $id){
             'message' => "Team not found."
         ], 404);
     }
-    // if ($Team) {
-    //     $Team->getMedia('Teams')->each(function ($media) {
-    //         $media->delete();
-    //     });
+
         $Team->forceDelete();
     return response()->json([
         'message' => " Force Delete Team By Id Successfully."

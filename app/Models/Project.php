@@ -10,19 +10,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Project extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes,InteractsWithMedia;
-
+    use HasFactory,SoftDeletes,InteractsWithMedia;
     protected $fillable = [
         'nameProject',
         'skills',
         'description',
-        'urlProject'
+        'urlProject',
+        'startingDate',
+        'endingDate',
+        'nameOfTeam'
     ];
 
     public function users()
     {
-        return $this->belongsToMany(User::class,'user_projects')->withPivot('numberSales', 'price',
-        'startingDate', 'endingDate','nameOfTeam');
+        return $this->belongsToMany(User::class,'user_projects')->withPivot('numberSales','price');
+
     }
 }
 

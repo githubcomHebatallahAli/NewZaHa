@@ -17,9 +17,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
             $table->integer('price')->nullable();
             $table->integer('numberSales')->nullable();
-            $table->date('startingDate')->nullable();
-            $table->date('endingDate')->nullable();
-            $table->text('nameOfTeam')->nullable();
+
             $table->timestamps();
         });
     }

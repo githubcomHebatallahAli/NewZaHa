@@ -70,8 +70,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
     public function projects()
     {
-        return $this->belongsToMany(User::class,'user_projects')->withPivot('numberSales', 'price',
-        'startingDate', 'endingDate','nameOfTeam');
+        return $this->belongsToMany(User::class,'user_projects')->withPivot('numberSales','price');
+
     }
 
     public function roles()
