@@ -15,10 +15,12 @@ class AdminResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-        "id" => $this ->id,
-        'job'=>$this ->job,
-        'user'=> new UserResource($this->user),
-        'media' => MediaResource::collection($this->getMedia('Admins')),
+            "id" => $this ->id,
+            "name"=>$this ->name,
+            "email"=>$this ->email,
+            "password"=>$this ->password,
+            "is_admin"=>$this ->is_admin,
+
         ];
     }
 }

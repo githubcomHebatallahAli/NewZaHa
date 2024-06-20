@@ -24,9 +24,12 @@ class AdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job'=> 'required|string',
-            'media'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
-       
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'password' => 'required|string|confirmed|min:6',
+            'is_admin' => 'required|integer',
+
+
         ];
     }
     public function failedValidation(Validator $validator)
