@@ -32,8 +32,7 @@ class ProjectRequest extends FormRequest
             'startingDate' => 'nullable|date',
             'endingDate' => 'nullable|date|after:startingDate',
             'nameOfTeam' => 'nullable|string',
-            'media'=>'nullable|array',
-            'media.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
+            'imgProject.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
 
         ];
     }

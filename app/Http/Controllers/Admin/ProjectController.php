@@ -7,6 +7,7 @@ use App\Models\UserProject;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectResource;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -23,40 +24,46 @@ class ProjectController extends Controller
     public function create(ProjectRequest $request)
     {
         $this->authorize('manage_users');
-    $project = Project::create([
-        'nameProject' => $request->nameProject,
-        'skills' => $request->skills,
-        'description' => $request->description,
-        'urlProject'=> $request->urlProject
-    ]);
-    $userProject = UserProject::create([
-        'user_id' => $request->user_id,
-        'project_id' => $project->id,
-        'numberSales' => $request->numberSales,
-        'price' => $request->price,
-        'startingDate' => $request->startingDate,
-        'endingDate' => $request->endingDate,
-        'nameOfTeam' => $request->nameOfTeam,
-    ]);
-    $project->users()->sync([$request->user_id]);
 
+        $project = Project::create([
+            'nameProject' => $request->nameProject,
+            'skills' => $request->skills,
+            'description' => $request->description,
+        ]);
 
-    if ($request->hasFile('imgProject')) {
-        foreach ($request->file('imgProject') as $mediaFile) {
-            $project->addMedia($mediaFile)->toMediaCollection('Projects');
+        $userProject = UserProject::create([
+            'user_id' => $request->user_id,
+            'project_id' => $project->id,
+            'numberSales' => $request->numberSales,
+            'price' => $request->price,
+            'urlProject' => $request->urlProject,
+            'startingDate' => $request->startingDate,
+            'endingDate' => $request->endingDate,
+            'nameOfTeam' => $request->nameOfTeam,
+        ]);
+
+        if ($request->hasFile('imgProject')) {
+            $imgProjectPaths = [];
+            foreach ($request->file('imgProject') as $imgProject) {
+                $imgProjectPath = $imgProject->store(UserProject::storageFolder);
+                $imgProjectPaths[] = $imgProjectPath;
+            }
+            $userProject->imgProject = json_encode($imgProjectPaths);
+            $userProject->save();
         }
+
+        $project->users()->sync([$request->user_id]);
+
+        $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
+            $query->where('user_id', $request->user_id);
+        }])->find($project->id);
+
+        return response()->json([
+            'data' => new ProjectResource($projectWithPivot),
+            'message' => "Create Project Successfully."
+        ]);
     }
 
-
-    $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
-        $query->where('user_id', $request->user_id);
-    }])->find($project->id);
-    return response()->json([
-        'data' =>new ProjectResource($projectWithPivot),
-        'message' => "Create Project Successfully."
-    ]);
-
-}
 
     public function show(string $id)
     {
@@ -99,37 +106,72 @@ class ProjectController extends Controller
                 'message' => 'Project not found.'
             ], 404);
         }
+
         $project->update([
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
             'description' => $request->description,
-            'urlProject'=> $request->urlProject
         ]);
-        UserProject::updateOrCreate([
-            'user_id' => $request->user_id,
-            'project_id' => $project->id,
+
+        $userProject = UserProject::where('project_id', $project->id)
+                                  ->where('user_id', $request->user_id)
+                                  ->firstOrFail();
+
+        $userProject->update([
             'numberSales' => $request->numberSales,
             'price' => $request->price,
+            'urlProject' => $request->urlProject,
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
             'nameOfTeam' => $request->nameOfTeam,
         ]);
-        $project->users()->sync([$request->user_id]);
-        $project->clearMediaCollection('Projects');
-        if ($request->hasFile('imgProject')) {
-            foreach ($request->file('imgProject') as $mediaFile) {
-                $project->addMedia($mediaFile)->toMediaCollection('Projects');
+// التحقق من وجود صور جديدة
+if ($request->hasFile('imgProject')) {
+    // حذف الصور القديمة إذا كانت موجودة
+    if ($userProject->imgProject) {
+        $oldImgProjects = json_decode($userProject->imgProject, true);
+        foreach ($oldImgProjects as $oldImgProject) {
+            if (\Storage::disk('public')->exists($oldImgProject)) {
+                \Storage::disk('public')->delete($oldImgProject);
             }
         }
+    }
+
+    // رفع الصور الجديدة
+    $imgProjectPaths = [];
+    foreach ($request->file('imgProject') as $imgProject) {
+        $imgProjectPath = $imgProject->store(UserProject::storageFolder, 'public');
+        $imgProjectPaths[] = $imgProjectPath;
+    }
+    $userProject->imgProject = json_encode($imgProjectPaths);
+
+} elseif ($request->has('imgProject') && $request->imgProjects === null) {
+    // حذف الصور القديمة إذا تم تعيين الحقل imgProjects إلى null
+    if ($userProject->imgProject) {
+        $oldImgProjects = json_decode($userProject->imgProject, true);
+        foreach ($oldImgProjects as $oldImgProject) {
+            if (\Storage::disk('public')->exists($oldImgProject)) {
+                \Storage::disk('public')->delete($oldImgProject);
+            }
+        }
+        $userProject->imgProject = null;
+    }
+}
+
+$userProject->save();
+
+    $project->users()->sync([$request->user_id]);
 
     $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
         $query->where('user_id', $request->user_id);
     }])->find($project->id);
-        return response()->json([
-            'data' =>new ProjectResource($projectWithPivot),
-            'message' => " Update Project By Id Successfully."
-        ]);
+
+    return response()->json([
+        'data' => new ProjectResource($projectWithPivot),
+        'message' => "Update Project Successfully."
+    ]);
     }
+
 
 
     public function destroy(string $id)
@@ -177,14 +219,10 @@ class ProjectController extends Controller
                 'message' => "Project not found."
             ], 404);
         }
-        if ($Project) {
-            $Project->getMedia('Projects')->each(function ($media) {
-                $media->delete();
-            });
             $Project->forceDelete();
         return response()->json([
             'message' => " Force Delete Project By Id Successfully."
         ]);
     }
     }
-}
+

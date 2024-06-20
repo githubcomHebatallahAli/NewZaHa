@@ -15,15 +15,14 @@ class Project extends Model implements HasMedia
         'nameProject',
         'skills',
         'description',
-        'urlProject',
-        'startingDate',
-        'endingDate',
-        'nameOfTeam'
+
     ];
 
     public function users()
     {
-        return $this->belongsToMany(User::class,'user_projects')->withPivot('numberSales','price');
+        return $this->belongsToMany(User::class,'user_projects')
+        ->withPivot('numberSales','price','urlProject',
+        'imgProject','startingDate','endingDate','nameOfTeam');
 
     }
 }
