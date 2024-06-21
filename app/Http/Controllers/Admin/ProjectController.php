@@ -48,15 +48,6 @@ class ProjectController extends Controller
              $project->save();
         }
 
-
-        // $userIdsWithPrices = [];
-        // foreach ($request->user_ids as $userId => $price) {
-        //     $userIdsWithPrices[$userId] = ['price' => $price];
-        // }
-        // $project->users()->attach($userIdsWithPrices);
-
-        // $projectWithUsers = Project::with('users')->find($project->id);
-
         return response()->json([
             'data' => new ProjectResource($project),
             'message' => "Create Project Successfully."
@@ -75,7 +66,6 @@ class ProjectController extends Controller
             ], 404);
         }
 
-        // التحقق من أن user_ids موجودة ومصفوفة
         if ($request->has('user_ids') && is_array($request->user_ids)) {
             $userIdsWithPrices = [];
             foreach ($request->user_ids as $user) {
@@ -131,17 +121,14 @@ class ProjectController extends Controller
     {
         $this->authorize('manage_users');
 
-        // البحث عن المشروع بناءً على الرقم المعرف
         $project = Project::findOrFail($id);
 
-        // التأكد مما إذا كان المشروع موجودًا
         if (!$project) {
             return response()->json([
                 'message' => 'Project not found.'
             ], 404);
         }
 
-        // تحديث بيانات المشروع باستخدام البيانات المرسلة في الطلب
         $project->update([
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
@@ -153,11 +140,8 @@ class ProjectController extends Controller
             'endingDate' => $request->endingDate,
             'team' => $request->team,
         ]);
-
-        // التعامل مع الصور المرفقة إذا كان هناك
         if ($request->hasFile('imgProject')) {
 
-            // حذف الصور القديمة إذا كانت موجودة
             if ($project->imgProject) {
                 $oldImgProjects = json_decode($project->imgProject, true);
                 foreach ($oldImgProjects as $oldImgProject) {
@@ -167,7 +151,6 @@ class ProjectController extends Controller
                 }
             }
 
-            // رفع الصور الجديدة وتخزين مساراتها
             $imgProjectPaths = [];
             foreach ($request->file('imgProject') as $imgProject) {
                 $imgProjectPath = $imgProject->store(Project::storageFolder, 'public');
@@ -176,7 +159,7 @@ class ProjectController extends Controller
             $project->imgProject = json_encode($imgProjectPaths);
 
         } elseif ($request->has('imgProject') && $request->imgProject === null) {
-            // حالة إذا تم حذف الصورة
+
             if ($project->imgProject) {
                 $oldImgProjects = json_decode($project->imgProject, true);
                 foreach ($oldImgProjects as $oldImgProject) {
@@ -187,16 +170,43 @@ class ProjectController extends Controller
                 $project->imgProject = null;
             }
         }
-
-        // حفظ التغييرات
         $project->save();
-
-        // إعداد الاستجابة بنجاح التحديث
         return response()->json([
             'data' => new ProjectResource($project),
             'message' => "Update Project Successfully."
         ]);
     }
+
+    public function updateUsersInProject(Request $request, $id)
+{
+    $this->authorize('manage_users');
+
+    $project = Project::find($id);
+
+    if (!$project) {
+        return response()->json([
+            'message' => 'Project not found'
+        ], 404);
+    }
+
+    if ($request->has('user_ids') && is_array($request->user_ids)) {
+        $userIdsWithPrices = [];
+        foreach ($request->user_ids as $user) {
+            $userIdsWithPrices[$user['user_id']] = ['price' => $user['price']];
+        }
+        $project->users()->sync($userIdsWithPrices);
+    } else {
+        return response()->json(['message' => 'Invalid user_ids format'], 400);
+    }
+
+    $projectWithUsers = Project::with('users')->find($project->id);
+
+    return response()->json([
+        'data' => new ProjectResource($projectWithUsers),
+        'message' => "Users updated in Project Successfully."
+    ]);
+}
+
 
 
     public function destroy(string $id)
