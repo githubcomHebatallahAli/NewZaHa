@@ -11,19 +11,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Project extends Model implements HasMedia
 {
     use HasFactory,SoftDeletes,InteractsWithMedia;
+    const storageFolder= 'Projects';
     protected $fillable = [
         'nameProject',
         'skills',
         'description',
+        'numberOfSales',
+        'urlProject',
+        'imgProject',
+        'startingDate',
+        'endingDate',
+        'team',
+        'saleType'
 
+    ];
+
+    const saleType = [
+        'single selling',
+        'multi selling'
     ];
 
     public function users()
     {
         return $this->belongsToMany(User::class,'user_projects')
-        ->withPivot('numberSales','price','urlProject',
-        'imgProject','startingDate','endingDate','nameOfTeam');
-
+        ->withPivot('price');
     }
 }
 

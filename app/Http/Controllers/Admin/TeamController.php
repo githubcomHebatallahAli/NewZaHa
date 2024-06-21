@@ -123,7 +123,7 @@ class TeamController extends Controller
             $Team->photo = null;
         }
 
-        // Handle the imgIDCard update
+  
         if ($request->hasFile('imgIDCard')) {
             if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
                 \Storage::disk('public')->delete($Team->imgIDCard);

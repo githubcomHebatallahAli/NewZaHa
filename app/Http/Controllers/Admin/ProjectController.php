@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
 use App\Models\UserProject;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectResource;
@@ -29,40 +30,70 @@ class ProjectController extends Controller
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
             'description' => $request->description,
-        ]);
-
-        $userProject = UserProject::create([
-            'user_id' => $request->user_id,
-            'project_id' => $project->id,
-            'numberSales' => $request->numberSales,
-            'price' => $request->price,
+            'numberOfSales' => $request->numberOfSales,
+            'saleType'=> $request->saleType,
             'urlProject' => $request->urlProject,
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
-            'nameOfTeam' => $request->nameOfTeam,
-        ]);
+            'team' => $request->team,
 
+        ]);
         if ($request->hasFile('imgProject')) {
             $imgProjectPaths = [];
             foreach ($request->file('imgProject') as $imgProject) {
-                $imgProjectPath = $imgProject->store(UserProject::storageFolder);
+                $imgProjectPath = $imgProject->store(Project::storageFolder);
                 $imgProjectPaths[] = $imgProjectPath;
             }
-            $userProject->imgProject = json_encode($imgProjectPaths);
-            $userProject->save();
+             $project->imgProject = json_encode($imgProjectPaths);
+             $project->save();
         }
 
-        $project->users()->sync([$request->user_id]);
 
-        $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
-            $query->where('user_id', $request->user_id);
-        }])->find($project->id);
+        // $userIdsWithPrices = [];
+        // foreach ($request->user_ids as $userId => $price) {
+        //     $userIdsWithPrices[$userId] = ['price' => $price];
+        // }
+        // $project->users()->attach($userIdsWithPrices);
+
+        // $projectWithUsers = Project::with('users')->find($project->id);
 
         return response()->json([
-            'data' => new ProjectResource($projectWithPivot),
+            'data' => new ProjectResource($project),
             'message' => "Create Project Successfully."
         ]);
     }
+
+    public function addUsersToProject(Request $request, $projectId)
+    {
+        $this->authorize('manage_users');
+
+        $project = Project::find($projectId);
+
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found'
+            ], 404);
+        }
+
+        // التحقق من أن user_ids موجودة ومصفوفة
+        if ($request->has('user_ids') && is_array($request->user_ids)) {
+            $userIdsWithPrices = [];
+            foreach ($request->user_ids as $user) {
+                $userIdsWithPrices[$user['user_id']] = ['price' => $user['price']];
+            }
+            $project->users()->attach($userIdsWithPrices);
+        } else {
+            return response()->json(['message' => 'Invalid user_ids format'], 400);
+        }
+
+        $projectWithUsers = Project::with('users')->find($project->id);
+
+        return response()->json([
+            'data' => new ProjectResource($projectWithUsers),
+            'message' => "Users added to Project Successfully."
+        ]);
+    }
+
 
 
     public function show(string $id)
@@ -96,82 +127,76 @@ class ProjectController extends Controller
      ]);
     }
 
-
     public function update(ProjectRequest $request, string $id)
     {
         $this->authorize('manage_users');
-        $project =Project::findOrFail($id);
+
+        // البحث عن المشروع بناءً على الرقم المعرف
+        $project = Project::findOrFail($id);
+
+        // التأكد مما إذا كان المشروع موجودًا
         if (!$project) {
             return response()->json([
                 'message' => 'Project not found.'
             ], 404);
         }
 
+        // تحديث بيانات المشروع باستخدام البيانات المرسلة في الطلب
         $project->update([
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
             'description' => $request->description,
-        ]);
-
-        $userProject = UserProject::where('project_id', $project->id)
-                                  ->where('user_id', $request->user_id)
-                                  ->firstOrFail();
-
-        $userProject->update([
-            'numberSales' => $request->numberSales,
-            'price' => $request->price,
+            'numberOfSales' => $request->numberOfSales,
+            'saleType'=> $request->saleType,
             'urlProject' => $request->urlProject,
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
-            'nameOfTeam' => $request->nameOfTeam,
+            'team' => $request->team,
         ]);
-// التحقق من وجود صور جديدة
-if ($request->hasFile('imgProject')) {
-    // حذف الصور القديمة إذا كانت موجودة
-    if ($userProject->imgProject) {
-        $oldImgProjects = json_decode($userProject->imgProject, true);
-        foreach ($oldImgProjects as $oldImgProject) {
-            if (\Storage::disk('public')->exists($oldImgProject)) {
-                \Storage::disk('public')->delete($oldImgProject);
+
+        // التعامل مع الصور المرفقة إذا كان هناك
+        if ($request->hasFile('imgProject')) {
+
+            // حذف الصور القديمة إذا كانت موجودة
+            if ($project->imgProject) {
+                $oldImgProjects = json_decode($project->imgProject, true);
+                foreach ($oldImgProjects as $oldImgProject) {
+                    if (\Storage::disk('public')->exists($oldImgProject)) {
+                        \Storage::disk('public')->delete($oldImgProject);
+                    }
+                }
+            }
+
+            // رفع الصور الجديدة وتخزين مساراتها
+            $imgProjectPaths = [];
+            foreach ($request->file('imgProject') as $imgProject) {
+                $imgProjectPath = $imgProject->store(Project::storageFolder, 'public');
+                $imgProjectPaths[] = $imgProjectPath;
+            }
+            $project->imgProject = json_encode($imgProjectPaths);
+
+        } elseif ($request->has('imgProject') && $request->imgProject === null) {
+            // حالة إذا تم حذف الصورة
+            if ($project->imgProject) {
+                $oldImgProjects = json_decode($project->imgProject, true);
+                foreach ($oldImgProjects as $oldImgProject) {
+                    if (\Storage::disk('public')->exists($oldImgProject)) {
+                        \Storage::disk('public')->delete($oldImgProject);
+                    }
+                }
+                $project->imgProject = null;
             }
         }
+
+        // حفظ التغييرات
+        $project->save();
+
+        // إعداد الاستجابة بنجاح التحديث
+        return response()->json([
+            'data' => new ProjectResource($project),
+            'message' => "Update Project Successfully."
+        ]);
     }
-
-    // رفع الصور الجديدة
-    $imgProjectPaths = [];
-    foreach ($request->file('imgProject') as $imgProject) {
-        $imgProjectPath = $imgProject->store(UserProject::storageFolder, 'public');
-        $imgProjectPaths[] = $imgProjectPath;
-    }
-    $userProject->imgProject = json_encode($imgProjectPaths);
-
-} elseif ($request->has('imgProject') && $request->imgProjects === null) {
-    // حذف الصور القديمة إذا تم تعيين الحقل imgProjects إلى null
-    if ($userProject->imgProject) {
-        $oldImgProjects = json_decode($userProject->imgProject, true);
-        foreach ($oldImgProjects as $oldImgProject) {
-            if (\Storage::disk('public')->exists($oldImgProject)) {
-                \Storage::disk('public')->delete($oldImgProject);
-            }
-        }
-        $userProject->imgProject = null;
-    }
-}
-
-$userProject->save();
-
-    $project->users()->sync([$request->user_id]);
-
-    $projectWithPivot = Project::with(['users' => function ($query) use ($request) {
-        $query->where('user_id', $request->user_id);
-    }])->find($project->id);
-
-    return response()->json([
-        'data' => new ProjectResource($projectWithPivot),
-        'message' => "Update Project Successfully."
-    ]);
-    }
-
 
 
     public function destroy(string $id)

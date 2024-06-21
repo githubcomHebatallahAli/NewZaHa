@@ -31,8 +31,6 @@ class OrderRequest extends FormRequest
             'description'=> 'nullable|string',
             'startingDate' => 'nullable|date',
             'endingDate' => 'nullable|date|after:startingDate',
-            // 'media'=>'nullable',
-            // 'media.*'=>'nullable|url',
             'urlProject' =>'nullable|string'
         ];
     }

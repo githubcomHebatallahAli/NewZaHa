@@ -34,8 +34,6 @@ class TeamRequest extends FormRequest
             'qualification' => 'nullable|string',
             'dateOfJoin' => 'nullable|date',
             'salary' => 'nullable|integer',
-            // 'media'=>'nullable',
-            // 'media.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
              'photo.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
              'imgIDCard.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
 
