@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\JobController;
+use App\Http\Controllers\AuthAdminController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -15,14 +16,14 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\User\TeamUserController;
 
+use App\Http\Controllers\User\TeamUserController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\User\OrderUserController;
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\User\CommentUserController;
-use App\Http\Controllers\User\ContactUserController;
 
+use App\Http\Controllers\User\ContactUserController;
 use App\Http\Controllers\Admin\BestCommentController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\EmailVerificationController;
@@ -56,6 +57,16 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);
 
+});
+Route::group([
+
+    'prefix' => 'admin'
+], function () {
+    Route::post('/login', [AuthAdminController::class, 'login']);
+    Route::post('/register', [AuthAdminController::class, 'register']);
+    Route::post('/logout', [AuthAdminController::class, 'logout']);
+    Route::post('/refresh', [AuthAdminController::class, 'refresh']);
+    Route::get('/user-profile', [AuthAdminController::class, 'userProfile']);
 });
 
 
