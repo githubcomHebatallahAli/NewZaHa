@@ -54,6 +54,5 @@ class EmailVerificationNotification extends Notification
         ->line('code: '.$otp->token);
     }
 
-    
 
 }

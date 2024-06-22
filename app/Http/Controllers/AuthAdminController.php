@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\Auth\RegisterResource;
 use App\Notifications\EmailVerificationNotification;
 
 class AuthAdminController extends Controller
@@ -72,7 +73,8 @@ class AuthAdminController extends Controller
         $admin->notify(new EmailVerificationNotification());
 
         return response()->json([
-            'message' => 'Admin successfully registered',
+            'message' => 'Admin Registration successful! Please check your email for verification.',
+            'user' =>new RegisterResource($admin)
         ]);
     }
 
