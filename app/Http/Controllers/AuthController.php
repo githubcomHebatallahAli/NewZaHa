@@ -23,7 +23,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
         if (! $token = auth()->guard('api')->attempt($validator->validated())) {
-            return response()->json(['message' => 'InvalidData'], 422);
+            return response()->json(['message' => 'Invalid Data'], 422);
         }
         $user = auth()->guard('api')->user();
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\EmailVerificationNotification;
 
 class AuthAdminController extends Controller
 {
@@ -31,7 +32,15 @@ class AuthAdminController extends Controller
         }
 
         if (!$token = auth()->attempt($validator->validated())) {
-            return response()->json(['message' => 'Invalid data'], 401);
+            return response()->json(['message' => 'Invalid data'], 422);
+
+            $user = auth()->guard('api')->user();
+
+            if (is_null($user->email_verified_at)) {
+                return response()->json([
+                    'message' => 'Email not verified. Please verify it.'
+                ], 403);
+            }
         }
 
         return $this->createNewToken($token);
@@ -58,9 +67,9 @@ class AuthAdminController extends Controller
 
         ));
         $admin->isAdmin = 1;
+
         $admin->save();
-
-
+        $admin->notify(new EmailVerificationNotification());
 
         return response()->json([
             'message' => 'Admin successfully registered',
