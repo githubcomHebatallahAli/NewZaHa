@@ -194,7 +194,7 @@ Route::group([
     Route::get('/show/project/{id}', [ProjectController::class, 'show']);
     Route::get('/edit/project/{id}', [ProjectController::class, 'edit']);
     Route::post('/update/project/{id}', [ProjectController::class, 'update']);
-    Route::put('/updateUsers/in/project/{id}', [ProjectController::class, 'updateUsersInProject']);
+    Route::post('/updateUsers/in/project/{id}', [ProjectController::class, 'updateUsersInProject']);
     Route::delete('/softDelete/project/{id}', [ProjectController::class, 'destroy']);
     Route::get('/showDeleted/project', [ProjectController::class, 'showDeleted']);
     Route::get('/restore/project/{id}', [ProjectController::class, 'restore']);
