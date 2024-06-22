@@ -25,7 +25,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
         'password',
         'email_verified_at',
         'social_id',
-        'social_type'
+        'social_type',
     ];
 
     protected $guarded= ['isAdmin'];

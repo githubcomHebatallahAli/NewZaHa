@@ -54,8 +54,12 @@ class AuthAdminController extends Controller
 
         $admin = User::create(array_merge(
             $validator->validated(),
-            ['password' => bcrypt($request->password), 'isAdmin' => 1]
+            ['password' => bcrypt($request->password), ]
+
         ));
+        $admin->isAdmin = 1;
+        $admin->save();
+
 
 
         return response()->json([
