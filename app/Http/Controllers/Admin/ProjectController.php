@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
-use App\Models\UserProject;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectResource;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\UserWithProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -54,7 +52,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function addUsersToProject(Request $request, $projectId)
+    public function addUserToProject(UserWithProjectRequest $request, $projectId)
     {
         $this->authorize('manage_users');
 
@@ -65,11 +63,6 @@ class ProjectController extends Controller
                 'message' => 'Project not found'
             ], 404);
         }
-
-        $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'price' => 'required|integer',
-        ]);
 
         $user_id = $request->input('user_id');
         $price = $request->input('price');
@@ -83,8 +76,6 @@ class ProjectController extends Controller
             'message' => "User added to Project Successfully."
         ]);
     }
-
-
 
 
     public function show(string $id)
@@ -178,7 +169,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function updateUsersInProject(Request $request, $projectId)
+    public function updateUserInProject(UserWithProjectRequest $request, $projectId)
     {
         $this->authorize('manage_users');
 
@@ -190,11 +181,6 @@ class ProjectController extends Controller
             ], 404);
         }
 
-
-        $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
-            'price' => 'required|integer',
-        ]);
 
         $userId = $request->input('user_id');
         $price = $request->input('price');
