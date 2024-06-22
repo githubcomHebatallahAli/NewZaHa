@@ -54,35 +54,34 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function addUsersToProject(Request $request, $projectId)
+    public function addUserToProject(Request $request, $projectId)
     {
         $this->authorize('manage_users');
 
         $project = Project::find($projectId);
 
         if (!$project) {
-            return response()->json([
-                'message' => 'Project not found'
-            ], 404);
+            return response()->json(['message' => 'Project not found'], 404);
         }
 
-        if ($request->has('user_ids') && is_array($request->user_ids)) {
-            $userIdsWithPrices = [];
-            foreach ($request->user_ids as $user) {
-                $userIdsWithPrices[$user['user_id']] = ['price' => $user['price']];
-            }
-            $project->users()->attach($userIdsWithPrices);
-        } else {
-            return response()->json(['message' => 'Invalid user_ids format'], 400);
-        }
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'price' => 'required|integer',
+        ]);
+
+        $user_id = $request->input('user_id');
+        $price = $request->input('price');
+
+        $project->users()->attach($user_id, ['price' => $price]);
 
         $projectWithUsers = Project::with('users')->find($project->id);
 
         return response()->json([
             'data' => new ProjectResource($projectWithUsers),
-            'message' => "Users added to Project Successfully."
+            'message' => "User added to Project Successfully."
         ]);
     }
+
 
 
 
@@ -206,8 +205,6 @@ class ProjectController extends Controller
         'message' => "Users updated in Project Successfully."
     ]);
 }
-
-
 
     public function destroy(string $id)
     {
