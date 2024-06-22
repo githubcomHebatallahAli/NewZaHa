@@ -174,5 +174,51 @@ public function forceDelete(string $id){
         'message' => " Force Delete Order By Id Successfully."
     ]);
 }
+
+
+    public function index(Request $request)
+    {
+        // استلام مدخلات الفلترة من الطلب
+        $phoneNumber = $request->query('phoneNumber');
+        $nameProject = $request->query('nameProject');
+        $condition = $request->query('condition');
+        $startDate = $request->query('startDate');
+        $endDate = $request->query('endDate');
+        $userId = $request->query('user_id');
+
+        // بناء استعلام الطلبات
+        $query = Order::query();
+
+        if ($phoneNumber) {
+            $query->where('phoneNumber', 'like', '%' . $phoneNumber . '%');
+        }
+
+        if ($nameProject) {
+            $query->where('nameProject', 'like', '%' . $nameProject . '%');
+        }
+
+        if ($condition) {
+            $query->where('condition', $condition);
+        }
+
+        if ($startDate) {
+            $query->whereDate('startingDate', '>=', $startDate);
+        }
+
+        if ($endDate) {
+            $query->whereDate('endingDate', '<=', $endDate);
+        }
+
+        if ($userId) {
+            $query->where('user_id', $userId);
+        }
+
+        // تنفيذ الاستعلام وجلب النتائج
+        $orders = $query->get();
+
+        return response()->json($orders);
+    }
 }
+
+
 

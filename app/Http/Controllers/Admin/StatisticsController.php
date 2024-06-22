@@ -25,7 +25,7 @@ class StatisticsController extends Controller
         $ordersCount = Order::count();
         $contactsCount = Contact::count();
         $jobsCount = Job::count();
-        $salesCount = UserProject::sum('numberSales');
+        $salesCount = Project::sum('numberOfSales');
         $statistics = [
             'Projects_count' => $projectsCount,
             'Users_count' => $usersCount,
@@ -34,7 +34,7 @@ class StatisticsController extends Controller
             'Orders_count' => $ordersCount,
             'Contacts_count' => $contactsCount,
             'Jobs_count' => $jobsCount,
-            'NumberSales_count' => $salesCount,
+            'NumberOfSales_count' => $salesCount,
 
         ];
 

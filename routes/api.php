@@ -162,6 +162,7 @@ Route::group([
     Route::get('/showDeleted/order', [OrderController::class, 'showDeleted']);
     Route::get('/restore/order/{id}', [OrderController::class, 'restore']);
     Route::delete('/forceDelete/order/{id}', [OrderController::class, 'forceDelete']);
+    Route::get('filter/orders', [OrderController::class, 'index']);
 
     // JOB
     Route::get('/showAll/job', [JobController::class, 'showAll']);
