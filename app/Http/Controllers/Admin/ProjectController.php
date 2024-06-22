@@ -54,14 +54,16 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function addUserToProject(Request $request, $projectId)
+    public function addUsersToProject(Request $request, $projectId)
     {
         $this->authorize('manage_users');
 
         $project = Project::find($projectId);
 
         if (!$project) {
-            return response()->json(['message' => 'Project not found'], 404);
+            return response()->json([
+                'message' => 'Project not found'
+            ], 404);
         }
 
         $request->validate([
@@ -176,35 +178,38 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function updateUsersInProject(Request $request, $id)
-{
-    $this->authorize('manage_users');
+    public function updateUsersInProject(Request $request, $projectId)
+    {
+        $this->authorize('manage_users');
 
-    $project = Project::find($id);
+        $project = Project::find($projectId);
 
-    if (!$project) {
-        return response()->json([
-            'message' => 'Project not found'
-        ], 404);
-    }
-
-    if ($request->has('user_ids') && is_array($request->user_ids)) {
-        $userIdsWithPrices = [];
-        foreach ($request->user_ids as $user) {
-            $userIdsWithPrices[$user['user_id']] = ['price' => $user['price']];
+        if (!$project) {
+            return response()->json([
+                'message' => 'Project not found'
+            ], 404);
         }
-        $project->users()->sync($userIdsWithPrices);
-    } else {
-        return response()->json(['message' => 'Invalid user_ids format'], 400);
+
+
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'price' => 'required|integer',
+        ]);
+
+        $userId = $request->input('user_id');
+        $price = $request->input('price');
+
+        $project->users()->syncWithoutDetaching([
+            $userId => ['price' => $price]]);
+
+        $projectWithUsers = Project::with('users')->find($project->id);
+
+        return response()->json([
+            'data' => new ProjectResource($projectWithUsers),
+            'message' => "User updated in Project Successfully."
+        ]);
     }
 
-    $projectWithUsers = Project::with('users')->find($project->id);
-
-    return response()->json([
-        'data' => new ProjectResource($projectWithUsers),
-        'message' => "Users updated in Project Successfully."
-    ]);
-}
 
     public function destroy(string $id)
     {
