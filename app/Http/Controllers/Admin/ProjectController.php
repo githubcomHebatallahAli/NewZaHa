@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Team;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
 use App\Http\Resources\ProjectResource;
+use App\Http\Requests\TeamProjectRequest;
 use App\Http\Requests\UserWithProjectRequest;
 
 class ProjectController extends Controller
@@ -14,7 +14,7 @@ class ProjectController extends Controller
     public function showAll()
     {
         $this->authorize('manage_users');
-        $projects= Project::with('users')->get();
+        $projects= Project::with('users','teams')->get();
         return response()->json([
             'data' =>ProjectResource::collection($projects),
             'message' => "Show All Users With Projects Successfully."
@@ -24,7 +24,6 @@ class ProjectController extends Controller
     public function create(ProjectRequest $request)
     {
         $this->authorize('manage_users');
-        $team = Team::find($request->team_id);
 
         $project = Project::create([
             'nameProject' => $request->nameProject,
@@ -35,11 +34,8 @@ class ProjectController extends Controller
             'urlProject' => $request->urlProject,
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
-            // 'team' => $request->team,
-            'team_id' => $request->team_id,
-
         ]);
-        $project->load('team');
+
         if ($request->hasFile('imgProject')) {
             $imgProjectPaths = [];
             foreach ($request->file('imgProject') as $imgProject) {
@@ -55,6 +51,21 @@ class ProjectController extends Controller
             'message' => "Create Project Successfully."
         ]);
     }
+
+    public function assignTeamsToProject(TeamProjectRequest $request)
+{
+    $this->authorize('manage_users');
+
+    $project = Project::with('teams')->find($request->project_id);
+    $project->teams()->sync($request->team_ids);
+
+    return response()->json([
+        'data' => new ProjectResource($project),
+        "message" => "Teams added to project successfully"
+    ]);
+}
+
+
 
     public function addUserToProject(UserWithProjectRequest $request, $projectId)
     {
@@ -75,7 +86,7 @@ class ProjectController extends Controller
         $project->users()->attach($user_id, ['price' => $price,
         'numberOfSales'=> $numberOfSales ]);
 
-        $projectWithUsers = Project::with('users')->find($project->id);
+        $projectWithUsers = Project::with('users','teams')->find($project->id);
 
         return response()->json([
             'data' => new ProjectResource($projectWithUsers),
@@ -87,7 +98,7 @@ class ProjectController extends Controller
     public function show(string $id)
     {
         $this->authorize('manage_users');
-        $project =Project::with('users')->find($id);
+        $project =Project::with('users','teams')->find($id);
     if (!$project) {
         return response()->json([
             'message' => 'Project not found.'
@@ -103,7 +114,7 @@ class ProjectController extends Controller
     public function edit(string $id)
     {
         $this->authorize('manage_users');
-        $project =Project::with('users')->find($id);
+        $project =Project::with('users','teams')->find($id);
         if (!$project) {
             return response()->json([
                 'message' => 'Project not found.'
@@ -136,8 +147,7 @@ class ProjectController extends Controller
             'urlProject' => $request->urlProject,
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
-            // 'team' => $request->team,
-            'team_id' => $request->team_id,
+
         ]);
         if ($request->hasFile('imgProject')) {
 
@@ -176,6 +186,24 @@ class ProjectController extends Controller
         ]);
     }
 
+
+    public function updateTeamsInProject(TeamProjectRequest $request)
+{
+    $this->authorize('manage_users');
+
+    $project = Project::with('teams')->findOrFail($request->project_id);
+
+    $project->teams()->sync($request->team_ids);
+
+
+    $project->load('teams');
+
+    return response()->json([
+        'data' => new ProjectResource($project),
+        'message' => "Teams updated in project successfully"
+    ]);
+}
+
     public function updateUserInProject(UserWithProjectRequest $request, $projectId)
     {
         $this->authorize('manage_users');
@@ -196,7 +224,7 @@ class ProjectController extends Controller
             $userId => ['price' => $price,
             'numberOfSales'=>$numberOfSales ]]);
 
-        $projectWithUsers = Project::with('users')->find($project->id);
+        $projectWithUsers = Project::with('users','teams')->find($project->id);
 
         return response()->json([
             'data' => new ProjectResource($projectWithUsers),

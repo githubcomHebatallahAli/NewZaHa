@@ -34,7 +34,7 @@ class Team extends Model implements HasMedia
 
     public function projects()
     {
-        return $this->hasMany(Project::class);
+        return $this->belongsToMany(Project::class, 'team_projects', 'project_id', 'team_id');
     }
 
 }

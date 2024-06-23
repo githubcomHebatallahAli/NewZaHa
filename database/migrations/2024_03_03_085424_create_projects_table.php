@@ -24,8 +24,6 @@ return new class extends Migration
             $table->string('imgProject')->nullable();
             $table->date('startingDate')->nullable();
             $table->date('endingDate')->nullable();
-            $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();
-            // $table->text('team')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

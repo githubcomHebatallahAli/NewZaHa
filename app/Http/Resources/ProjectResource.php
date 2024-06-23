@@ -27,10 +27,7 @@ class ProjectResource extends JsonResource
             'imgProject' => json_decode($this->imgProject),
             'startingDate' => $this->startingDate,
             'endingDate' => $this->endingDate,
-            // 'team' => $this->team,
-            // 'team' => $this->team ? explode(',', $this->team) : [],
-            'team_id' => $this->team_id, // إضافة معرف الفريق
-            'team' => new TeamResource($this->whenLoaded('team')),
+           'teams' => TeamResource::collection($this->whenLoaded('teams')),
 
 
             'users' => $this->users->map(function ($user) {
@@ -43,9 +40,9 @@ class ProjectResource extends JsonResource
             })->toArray(),
         ];
 }
+
+
+
+
 }
-
-
-
-
 

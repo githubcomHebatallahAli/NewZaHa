@@ -29,7 +29,7 @@ class TeamResource extends JsonResource
             'imgIDCard' => $this -> imgIDCard,
 
             'user' => new UserResource($this->user),
-          
+
         ];
     }
 }

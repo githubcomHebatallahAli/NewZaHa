@@ -21,10 +21,7 @@ class Project extends Model implements HasMedia
         'imgProject',
         'startingDate',
         'endingDate',
-        // 'team',
         'saleType',
-        'team_id'
-
     ];
 
     const saleType = [
@@ -38,9 +35,9 @@ class Project extends Model implements HasMedia
         ->withPivot('price','numberOfSales');
     }
 
-    public function team()
+    public function teams()
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsToMany(Team::class, 'team_projects', 'project_id', 'team_id');
     }
 }
 

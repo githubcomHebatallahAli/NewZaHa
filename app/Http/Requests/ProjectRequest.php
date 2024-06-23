@@ -31,8 +31,6 @@ class ProjectRequest extends FormRequest
             'urlProject'=> 'nullable|string',
             'startingDate' => 'nullable|date',
             'endingDate' => 'nullable|date|after:startingDate',
-            // 'team' => 'nullable|string',
-            'team_id' => 'required|exists:teams,id',
             'imgProject.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
 
         ];
