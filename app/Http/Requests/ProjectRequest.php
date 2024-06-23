@@ -26,13 +26,13 @@ class ProjectRequest extends FormRequest
             'nameProject'=> 'nullable|string',
             'skills'=> 'nullable|string',
             'description'=> 'nullable|string',
+            'price' => 'nullable|integer',
             'saleType'=> 'nullable|string',
             'urlProject'=> 'nullable|string',
-            'numberOfSales' => 'nullable|integer',
-            'price' => 'nullable|integer',
             'startingDate' => 'nullable|date',
             'endingDate' => 'nullable|date|after:startingDate',
-            'team' => 'nullable|string',
+            // 'team' => 'nullable|string',
+            'team_id' => 'required|exists:teams,id',
             'imgProject.*'=>'nullable|image|mimes:jpg,jpeg,png,gif,svg',
 
         ];

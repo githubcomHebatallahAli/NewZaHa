@@ -71,7 +71,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
     public function projects()
     {
         return $this->belongsToMany(User::class,'user_projects')
-        ->withPivot('price');
+        ->withPivot('price','numberOfSales');
 
     }
 

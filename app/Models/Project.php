@@ -16,7 +16,7 @@ class Project extends Model implements HasMedia
         'nameProject',
         'skills',
         'description',
-        'numberOfSales',
+        'price',
         'urlProject',
         'imgProject',
         'startingDate',
@@ -34,7 +34,12 @@ class Project extends Model implements HasMedia
     public function users()
     {
         return $this->belongsToMany(User::class,'user_projects')
-        ->withPivot('price');
+        ->withPivot('price','numberOfSales');
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }
 

@@ -13,6 +13,7 @@ class UserProject extends Model
         'user_id',
         'project_id',
         'price',
+        'numberOfSales'
 
     ];
 

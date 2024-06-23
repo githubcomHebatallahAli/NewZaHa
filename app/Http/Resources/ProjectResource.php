@@ -21,14 +21,16 @@ class ProjectResource extends JsonResource
             // 'skills' => $this->skills,
             'skills' => $this->skills ? explode(',', $this->skills) : [],
             'description' => $this->description,
-            'numberOfSales' => $this->numberOfSales,
+            'price' => $this->price,
             'saleType' => $this->saleType,
             'urlProject' => $this->urlProject,
             'imgProject' => json_decode($this->imgProject),
             'startingDate' => $this->startingDate,
             'endingDate' => $this->endingDate,
             // 'team' => $this->team,
-            'team' => $this->team ? explode(',', $this->team) : [],
+            // 'team' => $this->team ? explode(',', $this->team) : [],
+            'team_id' => $this->team_id, // إضافة معرف الفريق
+            'team' => new TeamResource($this->whenLoaded('team')),
 
 
             'users' => $this->users->map(function ($user) {
@@ -36,6 +38,7 @@ class ProjectResource extends JsonResource
                     'name' => $user->name,
                     'email' => $user->email,
                     'price' => $user->pivot->price,
+                    'numberOfSales' => $user->pivot->numberOfSales,
                 ];
             })->toArray(),
         ];

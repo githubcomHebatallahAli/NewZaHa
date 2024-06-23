@@ -26,6 +26,7 @@ class UserWithProjectRequest extends FormRequest
         return [
             'user_id' => 'required|integer|exists:users,id',
             'price' => 'nullable|integer',
+            'numberOfSales' => 'nullable|integer',
         ];
     }
 

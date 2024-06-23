@@ -18,13 +18,14 @@ return new class extends Migration
             $table->string('nameProject')->nullable();
             $table->text('skills')->nullable();
             $table->text('description')->nullable();
-            $table->integer('numberOfSales')->nullable();
+            $table->integer('price')->nullable();
             $table->enum('saleType', $saleType)->nullable()->default($saleType[0]);
             $table->string('urlProject')->nullable();
             $table->string('imgProject')->nullable();
             $table->date('startingDate')->nullable();
             $table->date('endingDate')->nullable();
-            $table->text('team')->nullable();
+            $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();
+            // $table->text('team')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

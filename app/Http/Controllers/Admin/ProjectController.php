@@ -28,12 +28,13 @@ class ProjectController extends Controller
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
             'description' => $request->description,
-            'numberOfSales' => $request->numberOfSales,
+            'price' => $request->price,
             'saleType'=> $request->saleType,
             'urlProject' => $request->urlProject,
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
-            'team' => $request->team,
+            // 'team' => $request->team,
+            'team_id' => $request->team_id,
 
         ]);
         if ($request->hasFile('imgProject')) {
@@ -66,8 +67,10 @@ class ProjectController extends Controller
 
         $user_id = $request->input('user_id');
         $price = $request->input('price');
+        $numberOfSales = $request->input('numberOfSales');
 
-        $project->users()->attach($user_id, ['price' => $price]);
+        $project->users()->attach($user_id, ['price' => $price,
+        'numberOfSales'=> $numberOfSales ]);
 
         $projectWithUsers = Project::with('users')->find($project->id);
 
@@ -125,12 +128,13 @@ class ProjectController extends Controller
             'nameProject' => $request->nameProject,
             'skills' => $request->skills,
             'description' => $request->description,
-            'numberOfSales' => $request->numberOfSales,
+            'price' => $request->price,
             'saleType'=> $request->saleType,
             'urlProject' => $request->urlProject,
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
-            'team' => $request->team,
+            // 'team' => $request->team,
+            'team_id' => $request->team_id, 
         ]);
         if ($request->hasFile('imgProject')) {
 
@@ -181,12 +185,13 @@ class ProjectController extends Controller
             ], 404);
         }
 
-
         $userId = $request->input('user_id');
         $price = $request->input('price');
+        $numberOfSales = $request->input('numberOfSales');
 
         $project->users()->syncWithoutDetaching([
-            $userId => ['price' => $price]]);
+            $userId => ['price' => $price,
+            'numberOfSales'=>$numberOfSales ]]);
 
         $projectWithUsers = Project::with('users')->find($project->id);
 

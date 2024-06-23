@@ -29,8 +29,7 @@ class TeamResource extends JsonResource
             'imgIDCard' => $this -> imgIDCard,
 
             'user' => new UserResource($this->user),
-            // 'media' => MediaResource::collection($this->getMedia('Teams')),
-
+          
         ];
     }
 }
