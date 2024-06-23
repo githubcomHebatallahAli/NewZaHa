@@ -21,8 +21,9 @@ class Project extends Model implements HasMedia
         'imgProject',
         'startingDate',
         'endingDate',
-        'team',
-        'saleType'
+        // 'team',
+        'saleType',
+        'team_id'
 
     ];
 

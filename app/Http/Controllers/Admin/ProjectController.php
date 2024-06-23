@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Team;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectRequest;
@@ -23,6 +24,7 @@ class ProjectController extends Controller
     public function create(ProjectRequest $request)
     {
         $this->authorize('manage_users');
+        $team = Team::find($request->team_id);
 
         $project = Project::create([
             'nameProject' => $request->nameProject,
@@ -37,6 +39,7 @@ class ProjectController extends Controller
             'team_id' => $request->team_id,
 
         ]);
+        $project->load('team');
         if ($request->hasFile('imgProject')) {
             $imgProjectPaths = [];
             foreach ($request->file('imgProject') as $imgProject) {
@@ -134,7 +137,7 @@ class ProjectController extends Controller
             'startingDate' => $request->startingDate,
             'endingDate' => $request->endingDate,
             // 'team' => $request->team,
-            'team_id' => $request->team_id, 
+            'team_id' => $request->team_id,
         ]);
         if ($request->hasFile('imgProject')) {
 
