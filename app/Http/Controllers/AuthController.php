@@ -27,11 +27,11 @@ class AuthController extends Controller
         }
         $user = auth()->guard('api')->user();
 
-        // if (is_null($user->email_verified_at)) {
-        //     return response()->json([
-        //         'message' => 'Email not verified. Please verify it.'
-        //     ], 403);
-        // }
+        if (is_null($user->email_verified_at)) {
+            return response()->json([
+                'message' => 'Email not verified. Please verify it.'
+            ], 403);
+        }
         return $this->createNewToken($token);
 
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
                     $validator->validated(),
                     ['password' => bcrypt($request->password)]
                 ));
-                // $user->notify(new EmailVerificationNotification());
+                $user->notify(new EmailVerificationNotification());
         return response()->json([
             'message' => 'Registration successful! Please check your email for verification.',
             'user' =>new RegisterResource($user)

@@ -27,6 +27,7 @@ class TeamController extends Controller
 
            $Team =Team::create ([
                 'name' => $request->name,
+                'Boss'=> $request->Boss,
                 'job' => $request->job,
                 'skills' => $request->skills,
                 'numProject' => $request->numProject,
@@ -100,6 +101,7 @@ class TeamController extends Controller
     }
        $Team->update([
         'name' =>$request->name,
+        'Boss'=> $request->Boss,
         'job' => $request->job,
         'skills' => $request->skills,
         'numProject' => $request->numProject,
@@ -123,7 +125,7 @@ class TeamController extends Controller
             $Team->photo = null;
         }
 
-  
+
         if ($request->hasFile('imgIDCard')) {
             if ($Team->imgIDCard && \Storage::disk('public')->exists($Team->imgIDCard)) {
                 \Storage::disk('public')->delete($Team->imgIDCard);

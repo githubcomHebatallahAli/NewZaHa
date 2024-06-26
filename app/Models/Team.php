@@ -14,6 +14,7 @@ class Team extends Model implements HasMedia
     const storageFolder= 'Teams';
     protected $fillable = [
         'name',
+        'Boss',
         'job',
         'skills',
         'numProject',
@@ -25,6 +26,11 @@ class Team extends Model implements HasMedia
         'photo',
         'imgIDCard',
         'user_id'
+    ];
+
+    const Boss = [
+        'MemberOfTeam',
+        'Boss'
     ];
 
     public function user()

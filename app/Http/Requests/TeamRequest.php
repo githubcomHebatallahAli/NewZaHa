@@ -27,6 +27,7 @@ class TeamRequest extends FormRequest
 
             'name'=> 'required|string',
             'job'=> 'required|string',
+            'Boss'=>'nullable|string',
             "skills" => 'nullable|string',
             "numProject" => 'nullable|string',
             "address" => 'nullable|string',
