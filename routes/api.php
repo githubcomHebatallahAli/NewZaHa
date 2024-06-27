@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\AuthAdminController;
+use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -15,14 +16,14 @@ use App\Http\Controllers\User\JobUserController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProjectController;
-use App\Http\Controllers\ResetPasswordController;
 
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\User\TeamUserController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\User\OrderUserController;
 use App\Http\Controllers\Admin\StatisticsController;
-use App\Http\Controllers\User\CommentUserController;
 
+use App\Http\Controllers\User\CommentUserController;
 use App\Http\Controllers\User\ContactUserController;
 use App\Http\Controllers\Admin\BestCommentController;
 use App\Http\Controllers\Admin\PermissionsController;
@@ -70,7 +71,9 @@ Route::group([
 });
 
 
+Route::get('auth/google',[SocialiteController::class,'redirectToGoogle'] );
 
+Route::get('auth/google/callback',[SocialiteController::class,'handleGoogleCallback']);
 
 Route::group([
     'middleware' => 'api',
