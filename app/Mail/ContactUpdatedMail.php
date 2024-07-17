@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ContactUpdatedMail extends Mailable 
+class ContactUpdatedMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $contact;
