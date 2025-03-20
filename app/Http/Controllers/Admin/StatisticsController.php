@@ -6,7 +6,6 @@ use App\Models\Job;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Order;
-use App\Models\Client;
 use App\Models\Comment;
 use App\Models\Contact;
 use App\Models\Project;
